@@ -1,0 +1,27 @@
+{
+  "name": "scms",
+  "version": "1.0.0",
+  "description": "CMS from outer space",
+  "homepage": "https://github.com/swape/scms#readme",
+  "bugs": {
+    "url": "https://github.com/swape/scms/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swape/scms.git"
+  },
+  "license": "ISC",
+  "author": "Alireza Balouch",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.12",
+    "astro": "^5.13.2",
+    "tailwindcss": "^4.1.12"
+  }
+}

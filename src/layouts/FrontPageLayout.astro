@@ -10,13 +10,13 @@ const { title = 'SCMS' } = Astro.props
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
   </head>
-  <body>
-    <nav>
+  <body class="bg-slate-900 text-white px-4">
+    <nav class="flex gap-2 container mx-auto">
       <a href="#">Home</a>
-      <a href="#">Posts</a>
+      <a href="#">FAQ</a>
       <a href="#">Contact</a>
     </nav>
-    <article>
+    <article class="mt-4">
       <slot />
     </article>
     <!-- <Footer /> -->

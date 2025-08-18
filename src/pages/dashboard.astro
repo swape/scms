@@ -1,0 +1,8 @@
+---
+import FrontPageLayout from '../layouts/FrontPageLayout.astro'
+import Login from '../components/Login.svelte'
+---
+
+<FrontPageLayout>
+  <Login client:only="svelte" />
+</FrontPageLayout>

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import Login from '../components/Login.svelte'
 
 const { title = 'SCMS' } = Astro.props
 ---
@@ -11,10 +12,13 @@ const { title = 'SCMS' } = Astro.props
     <title>{title}</title>
   </head>
   <body class="bg-slate-900 text-white px-4">
-    <nav class="flex gap-2 container mx-auto">
-      <a href="#">Home</a>
-      <a href="#">FAQ</a>
-      <a href="#">Contact</a>
+    <nav class="flex gap-2 container mx-auto justify-between flex-wrap items-center">
+      <div class="flex gap-2">
+        <a href="/">Home</a>
+        <a href="/dashboard">Dashboard</a>
+      </div>
+
+      <Login client:only="svelte" />
     </nav>
     <article class="mt-4">
       <slot />

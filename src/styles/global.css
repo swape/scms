@@ -3,4 +3,8 @@
 
 .btn{
     @apply bg-slate-800 cursor-pointer hover:bg-slate-700;
+
+    &.active{
+        @apply bg-blue-900;
+    }
 }

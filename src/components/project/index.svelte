@@ -1,7 +1,8 @@
 <script>
-const ID = window.location.search.split('=')[1]
+const ID = window.location.search.split('=')[1] || ''
 
 import { projects } from '../../store'
+import Edit from './Edit.svelte'
 
 let currentProject = $state({})
 let tab = $state('')
@@ -15,34 +16,35 @@ projects.subscribe((value) => {
 function changeTab(selectedTab) {
   tab = selectedTab
 }
+
+const tabs = [
+  { name: 'Summery', id: '' },
+  { name: 'Settings', id: 'settings' },
+  { name: 'Users', id: 'users' }
+]
 </script>
 
 {#if currentProject?.id}
   <div class="flex border-b border-slate-700 mb-5">
-    <button class={['btn p-3', tab === '' ? 'active' : '']} type="button" onclick={() => changeTab('')}>Summery</button>
-    <button class={['btn p-3', tab === 'settings' ? 'active' : '']} type="button" onclick={() => changeTab('settings')}>Settings</button>
-    <button class={['btn p-3', tab === 'users' ? 'active' : '']} type="button" onclick={() => changeTab('users')}>Users</button>
+    {#each tabs as { name, id }}
+      <button class={['btn p-3', tab === id ? 'active' : '']} type="button" onclick={() => changeTab(id)}>{name}</button>
+    {/each}
   </div>
-  {#if tab === ''}
-    <div>
+  <div>
+    {#if tab === ''}
       Summery {ID}
       {currentProject.title}
-    </div>
-  {/if}
+    {/if}
 
-  {#if tab === 'settings'}
-    <div>
-      Settings {ID}
-      {currentProject.title}
-    </div>
-  {/if}
+    {#if tab === 'settings'}
+      <Edit id={ID} />
+    {/if}
 
-  {#if tab === 'users'}
-    <div>
+    {#if tab === 'users'}
       Users {ID}
       {currentProject.title}
-    </div>
-  {/if}
+    {/if}
+  </div>
 {/if}
 {#if !currentProject?.id}
   Oops! Project not found.

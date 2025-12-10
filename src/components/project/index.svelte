@@ -34,6 +34,9 @@ const tabs = [
     {#if tab === ''}
       Summery {ID}
       {currentProject.title}
+      <div class="mt-5">
+        <a href="/editor?p={ID}" class="btn active p-3">Editor</a>
+      </div>
     {/if}
 
     {#if tab === 'settings'}

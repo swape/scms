@@ -8,3 +8,10 @@
         @apply bg-blue-900 hover:bg-blue-800;
     }
 }
+
+.material-symbols-outlined{
+    max-width: 24px;
+    max-height: 24px;
+    overflow: hidden;
+    font-size: 20px;
+}

@@ -11,12 +11,6 @@ projects.subscribe((value) => {
     currentProject.set(project)
   }
 })
-
-currentProject.subscribe((value) => {
-  if (value) {
-    console.log({ value })
-  }
-})
 </script>
 
 <div class="editor">

@@ -1,5 +1,6 @@
 <script>
 import { selectedElement, currentProject } from '../../store'
+import PageElement from './elements/PageElement.svelte'
 
 // TODO: handle different element types and their specific settings
 // TODO: add changed settings to the currentProject store
@@ -7,16 +8,12 @@ import { selectedElement, currentProject } from '../../store'
 
 <div>
   {#if $selectedElement}
-    <h2>Element Settings</h2>
     <small>ID: {$selectedElement.id}</small>
-    <div>
-      <strong>Title:</strong>
-      <input type="text" bind:value={$selectedElement.title} />
-    </div>
-    <div>
-      <strong>Type:</strong>
-      {$selectedElement.type}
-    </div>
+    <small>Type: {$selectedElement.type}</small>
+
+    {#if $selectedElement.type === 'page'}
+      <PageElement element={$selectedElement} />
+    {/if}
   {:else}
     <p>No element selected.</p>
   {/if}

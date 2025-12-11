@@ -1,48 +1,42 @@
 <script>
 import { currentProject, selectedElement } from '../../store'
+import PageListItem from './PageListItem.svelte'
+import { getPagesAsArray } from '../editor/helper'
 
 function handlePageClick(id) {
   $selectedElement = $currentProject.pages[id] || null
 }
 
 function handlePageAdd(id = null) {
-  const newPage = { id: Date.now(), title: 'new page', type: 'page', parent: id, order: 0 }
+  const newPage = {
+    id: Date.now(),
+    title: 'new page',
+    type: 'page',
+    parent: id,
+    order: $currentProject ? Object.values($currentProject.pages).filter((p) => p.parent === id).length + 1 : 1
+  }
   const oldCurrentProject = { ...$currentProject }
   oldCurrentProject.pages[newPage.id] = newPage
   $currentProject = oldCurrentProject
   $selectedElement = newPage
 }
-
-function getPagesAsArray(pagesObj, parentId = null) {
-  const pages = Object.values(pagesObj || {})
-  return pages.filter((p) => p?.parent === parentId)
-}
 </script>
 
 <div>
-  {#each getPagesAsArray($currentProject?.pages || {}) as page}
-    <div class="page-link">
-      <button type="button" class="cursor-pointer page-link-item" onclick={() => handlePageClick(page.id)}>{page.title}</button>
-      <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(page.id)}><span class="material-symbols-outlined"> add </span></button>
-    </div>
-    {#if getPagesAsArray($currentProject?.pages || {}, page.id).length > 0}
-      {#each getPagesAsArray($currentProject?.pages, page.id) as subPage}
-        <div class="page-link" style="margin-left: 20px;">
-          <button type="button" class="cursor-pointer page-link-item" onclick={() => handlePageClick(subPage.id)}>{subPage.title}</button>
-          <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(subPage.id)}><span class="material-symbols-outlined"> add </span></button>
-        </div>
-        <!-- TODO make this recursive -->
-      {/each}
-    {/if}
+  {#each getPagesAsArray($currentProject?.pages || {}) as page, index}
+    <PageListItem page={page} handlePageAdd={handlePageAdd} handlePageClick={handlePageClick} first={true && index === 0} />
   {/each}
-  <div class="page-link mt-2">
+  <div class="mt-2 new-page">
     <span class="new-page-item">Add new page</span>
     <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
   </div>
 </div>
 
 <style>
-.page-link {
+.new-page {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,34 +46,27 @@ function getPagesAsArray(pagesObj, parentId = null) {
   background-color: rgba(30, 30, 30, 0.8);
   border-radius: 0 30px 30px 0;
 
-  .page-link-item {
-    flex-grow: 1;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 4px;
+  button:has(.material-symbols-outlined) {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button {
+    color: rgba(0, 200, 20, 0.7);
+    background-color: rgba(0, 200, 20, 0.2);
 
     &:hover {
-      text-decoration: underline;
+      background-color: rgba(126, 134, 243, 0.829);
+      color: black;
     }
   }
 
   .new-page-item {
-    color: rgba(255, 255, 255, 0.6);
-    padding-left: 4px;
-  }
-
-  button:has(.material-symbols-outlined) {
-    background-color: rgba(100, 100, 30, 0.8);
-    padding: 4px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-
-    &:hover {
-      background-color: rgba(150, 150, 50, 0.8);
-    }
+    flex-grow: 1;
   }
 }
 </style>

@@ -3,7 +3,7 @@ import { currentProject } from '../../store'
 import { getPagesAsArray } from '../editor/helper'
 import PageListItemSub from './PageListItem.svelte'
 
-let { page, handlePageAdd, handlePageClick, first = false } = $props()
+let { page, handlePageAdd, handlePageClick } = $props()
 let localSubPages = $state()
 let isOpen = $state(false)
 

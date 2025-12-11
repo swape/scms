@@ -22,15 +22,17 @@ function handlePageAdd(id = null) {
 }
 </script>
 
-<div>
-  {#each getPagesAsArray($currentProject?.pages || {}) as page, index}
-    <PageListItem page={page} handlePageAdd={handlePageAdd} handlePageClick={handlePageClick} first={true && index === 0} />
-  {/each}
-  <div class="mt-2 new-page">
-    <span class="new-page-item">Add new page</span>
-    <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
+{#if $currentProject?.id}
+  <div>
+    {#each getPagesAsArray($currentProject?.pages || {}) as page}
+      <PageListItem page={page} handlePageAdd={handlePageAdd} handlePageClick={handlePageClick} />
+    {/each}
+    <div class="mt-2 new-page">
+      <span class="new-page-item">Add new page</span>
+      <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
 .new-page {

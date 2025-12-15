@@ -2,7 +2,7 @@
 import { currentProject } from '../../../store'
 
 let { element } = $props()
-let localElement = $derived({ ...element })
+let localElement = $derived(structuredClone(element))
 
 function onSave() {
   const oldCurrentProject = { ...$currentProject }

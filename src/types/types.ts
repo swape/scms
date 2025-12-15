@@ -12,4 +12,18 @@ export interface ProjectType {
   pages: {
     [key: string | number]: PageType;
   }
+  content: ContentListType
+}
+
+export interface ContentListType { 
+  [key: string | number]: ContentType;
+}
+
+export interface ContentType { 
+  id: string | number;
+  order: number;
+  parent: string | null;
+  pageId: string;
+  type: string;
+  [key: string | number]: unknown;
 }

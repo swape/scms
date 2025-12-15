@@ -50,5 +50,10 @@ selectedElement.subscribe((value) => {
     border-left: 1px solid #333;
     padding: 10px;
   }
+
+  .page-builder {
+    width: 100%;
+    overflow: auto;
+  }
 }
 </style>

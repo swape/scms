@@ -1,9 +1,11 @@
 <script>
 import PagesList from './PagesList.svelte'
 import ElementSettings from './ElementSettings.svelte'
-import { currentProject, projects } from '../../store'
+import PageBuilder from './PageBuilder.svelte'
+import { currentProject, projects, selectedElement } from '../../store'
 
 const ID = window.location.search.split('=')[1] || ''
+let selectedPage = $state(null)
 
 projects.subscribe((value) => {
   if (value && value.length > 0) {
@@ -11,12 +13,18 @@ projects.subscribe((value) => {
     currentProject.set(project)
   }
 })
+
+selectedElement.subscribe((value) => {
+  if (value && value.type === 'page') {
+    selectedPage = value
+  }
+})
 </script>
 
 <div class="editor">
   {#if $currentProject?.id}
     <div class="pages"><PagesList /></div>
-    <div class="page-builder">page-builder</div>
+    <div class="page-builder"><PageBuilder selectedPage={selectedPage} /></div>
     <div class="settings"><ElementSettings /></div>
   {/if}
 </div>

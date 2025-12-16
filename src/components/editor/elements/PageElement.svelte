@@ -1,5 +1,6 @@
 <script>
 import { currentProject } from '../../../store'
+// TODO: this should be dynamic based on element type
 
 let { element } = $props()
 let localElement = $derived(structuredClone(element))

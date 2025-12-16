@@ -22,6 +22,14 @@ function onSave() {
     <input type="number" bind:value={localElement.order} />
   </label>
 
+  <label>
+    <span>Type:</span>
+    <select bind:value={localElement.settings.type} class="select">
+      {#each localElement.options.elementTypes as type}
+        <option value={type}>{type}</option>
+      {/each}
+    </select>
+  </label>
   <div class="mt-4">
     <button type="button" class="save-button btn px-4 py-2 active" onclick={onSave}>Save</button>
   </div>

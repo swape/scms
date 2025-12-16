@@ -1,6 +1,9 @@
 <script>
 import { currentProject, selectedElement } from '../../store'
 import { getBlocksAsArray } from '../editor/helper'
+import { newBlockElement } from './elementBase'
+import ElementView from './elementView/index.svelte'
+
 const { selectedPage } = $props()
 
 function addBlock() {
@@ -9,15 +12,13 @@ function addBlock() {
   const oldContent = $currentProject.content || {}
 
   const newBlockId = Date.now()
-  const newBlock = {
+  const order = Object.values(oldContent).filter((c) => c.pageId === selectedPage.id).length + 1
+
+  const newBlock = newBlockElement('blockText', {
     id: newBlockId,
-    type: 'block-text',
-    content: 'New Block',
-    order: Object.values(oldContent).filter((c) => c.pageId === selectedPage.id).length + 1,
-    pageId: selectedPage.id,
-    settings: {},
-    parent: null
-  }
+    order,
+    pageId: selectedPage.id
+  })
 
   currentProject.set({
     ...$currentProject,
@@ -25,8 +26,6 @@ function addBlock() {
   })
 
   $selectedElement = newBlock
-
-  // TODO: select the new block after adding
 }
 
 function selectThis(elm) {
@@ -43,6 +42,7 @@ function selectThis(elm) {
     <div class="w-full p-4 bg-slate-800 text-white mt-2">
       <div>Block ID: {block.id} | Type: {block.type} | Order: {block.order}</div>
       <div>Content: {block.content}</div>
+      <ElementView block={block} />
       <button onclick={() => selectThis(block)} type="button" class="btn active p-3">Select</button>
     </div>
   {/each}

@@ -1,5 +1,6 @@
 <script>
 import { currentProject } from '../../../store'
+
 // TODO: this should be dynamic based on element type
 
 let { element } = $props()
@@ -24,6 +25,9 @@ function onSave() {
   </label>
 
   <div class="mt-4">
-    <button type="button" class="save-button btn px-4 py-2 active" onclick={onSave}>Save</button>
+    <button
+      type="button"
+      class="save-button btn px-4 py-2 active"
+      onclick={onSave}>Save</button>
   </div>
 </div>

@@ -21,10 +21,18 @@ function handleAddPageAndOpenSubPages(id) {
 
 <div>
   <div class="page-link">
-    <button type="button" class="cursor-pointer page-link-item" onclick={() => handlePageClick(page.id)}><small class="mr-2 text-gray-500">{page.order}</small>{page.title}</button>
+    <button
+      type="button"
+      class="cursor-pointer page-link-item"
+      onclick={() => handlePageClick(page.id)}
+      ><small class="mr-2 text-gray-500">{page.order}</small
+      >{page.title}</button>
     <span class="flex gap-1">
       {#if localSubPages.length > 0}
-        <button type="button" class="cursor-pointer" onclick={() => (isOpen = !isOpen)}>
+        <button
+          type="button"
+          class="cursor-pointer"
+          onclick={() => (isOpen = !isOpen)}>
           <span class="material-symbols-outlined">
             {#if isOpen}
               expand_more
@@ -34,13 +42,17 @@ function handleAddPageAndOpenSubPages(id) {
           </span>
         </button>
       {/if}
-      <button type="button" class="cursor-pointer" onclick={() => handleAddPageAndOpenSubPages(page.id)}><span class="material-symbols-outlined"> add </span></button>
+      <button
+        type="button"
+        class="cursor-pointer"
+        onclick={() => handleAddPageAndOpenSubPages(page.id)}
+        ><span class="material-symbols-outlined"> add </span></button>
     </span>
   </div>
   {#if localSubPages.length > 0 && isOpen}
     <div class="sub-page">
       {#each localSubPages as subPage}
-        <PageListItemSub page={subPage} handlePageAdd={handlePageAdd} handlePageClick={handlePageClick} />
+        <PageListItemSub page={subPage} {handlePageAdd} {handlePageClick} />
       {/each}
     </div>
   {/if}

@@ -1,38 +1,38 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+.btn {
+  @apply bg-slate-800 cursor-pointer hover:bg-slate-700;
 
-.btn{
-    @apply bg-slate-800 cursor-pointer hover:bg-slate-700;
-
-    &.active{
-        @apply bg-blue-900 hover:bg-blue-800;
-    }
+  &.active {
+    @apply bg-blue-900 hover:bg-blue-800;
+  }
 }
 
-.material-symbols-outlined{
-    max-width: 24px;
-    max-height: 24px;
-    overflow: hidden;
-    font-size: 20px;
+.material-symbols-outlined {
+  max-width: 24px;
+  max-height: 24px;
+  overflow: hidden;
+  font-size: 20px;
 }
 
-.forms{
-    label{
-        display: block;
-        margin-top: 12px;
+.forms {
+  label {
+    display: block;
+    margin-block: 12px 24px;
 
-        span{
-            display: block;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
+    span {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: #9ca3af;
     }
+  }
 
-    input{
-        @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
-    }
+  input {
+    @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
+  }
 
-    .select{
-        @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
-    }
+  .select {
+    @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
+  }
 }

@@ -1,8 +1,8 @@
 <script>
-const ID = window.location.search.split('=')[1] || ''
-
 import { projects } from '../../store'
 import Edit from './Edit.svelte'
+
+const ID = window.location.search.split('=')[1] || ''
 
 let currentProject = $state({})
 let tab = $state('')
@@ -20,14 +20,17 @@ function changeTab(selectedTab) {
 const tabs = [
   { name: 'Summery', id: '' },
   { name: 'Settings', id: 'settings' },
-  { name: 'Users', id: 'users' }
+  { name: 'Users', id: 'users' },
 ]
 </script>
 
 {#if currentProject?.id}
   <div class="flex border-b border-slate-700 mb-5">
     {#each tabs as { name, id }}
-      <button class={['btn p-3', tab === id ? 'active' : '']} type="button" onclick={() => changeTab(id)}>{name}</button>
+      <button
+        class={['btn p-3', tab === id ? 'active' : '']}
+        type="button"
+        onclick={() => changeTab(id)}>{name}</button>
     {/each}
   </div>
   <div>

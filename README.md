@@ -1,7 +1,9 @@
 # scms
+
 CMS from outer space
 
-List of  features:
+List of features:
+
 - Front end in svelte and astro
 - Back end in python and fastApi
 - Database module with support for multiple databases (sqlite, postgres, firebase, supabase, etc)
@@ -18,6 +20,7 @@ List of  features:
 - Support for extract content from a url
 
 List of technologies used:
+
 - Front end: svelte, astro, tailwindcss, vite
 - Back end: python, fastapi, uvicorn
 - Database: sqlite, postgres, firebase, supabase
@@ -35,4 +38,3 @@ If supabase or firebase is used, the backend can be completely skipped and the f
 But backend is still useful for server side rendering, custom api endpoints, webhooks, etc.
 
 ## Step by step guide to implement instructions from above
-

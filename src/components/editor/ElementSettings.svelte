@@ -1,5 +1,5 @@
 <script>
-import { selectedElement, currentProject } from '../../store'
+import { currentProject, selectedElement } from '../../store'
 import BlockText from './elements/BlockText.svelte'
 import PageElement from './elements/PageElement.svelte'
 

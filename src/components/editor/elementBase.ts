@@ -1,6 +1,6 @@
-export function newBlockElement(name: string, additionalProps = {}) { 
-  if (name === 'blockText') { 
-    return {...blockText, ...additionalProps}
+export function newBlockElement(name: string, additionalProps = {}) {
+  if (name === 'blockText') {
+    return { ...blockText, ...additionalProps }
   }
 
   return { type: name, ...additionalProps }
@@ -15,5 +15,5 @@ export const blockText = {
   options: {
     elementTypes: ['Paragraph', 'Heading 1', 'Heading 2', 'Heading 3'],
   },
-  parent: null
+  parent: null,
 }

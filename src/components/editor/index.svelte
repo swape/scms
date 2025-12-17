@@ -1,8 +1,8 @@
 <script>
-import PagesList from './PagesList.svelte'
+import { currentProject, projects, selectedElement } from '../../store'
 import ElementSettings from './ElementSettings.svelte'
 import PageBuilder from './PageBuilder.svelte'
-import { currentProject, projects, selectedElement } from '../../store'
+import PagesList from './PagesList.svelte'
 
 const ID = window.location.search.split('=')[1] || ''
 let selectedPage = $state(null)
@@ -24,7 +24,7 @@ selectedElement.subscribe((value) => {
 <div class="editor">
   {#if $currentProject?.id}
     <div class="pages"><PagesList /></div>
-    <div class="page-builder"><PageBuilder selectedPage={selectedPage} /></div>
+    <div class="page-builder"><PageBuilder {selectedPage} /></div>
     <div class="settings"><ElementSettings /></div>
   {/if}
 </div>

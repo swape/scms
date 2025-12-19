@@ -1,0 +1,18 @@
+---
+import { ClientRouter } from 'astro:transitions'
+
+const { title = 'preview' } = Astro.props
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#FF00FF" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <ClientRouter />
+    <slot />
+  </body>
+</html>

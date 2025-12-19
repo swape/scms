@@ -1,11 +1,15 @@
 <script>
-import { currentProject, projects, selectedElement } from '../../store'
+import {
+  currentProject,
+  projects,
+  selectedElement,
+  selectedPage,
+} from '../../store'
 import ElementSettings from './ElementSettings.svelte'
 import PageBuilder from './PageBuilder.svelte'
 import PagesList from './PagesList.svelte'
 
 const ID = window.location.search.split('=')[1] || ''
-let selectedPage = $state(null)
 
 projects.subscribe((value) => {
   if (value && value.length > 0) {
@@ -16,7 +20,7 @@ projects.subscribe((value) => {
 
 selectedElement.subscribe((value) => {
   if (value && value.type === 'page') {
-    selectedPage = value
+    $selectedPage = value
   }
 })
 </script>
@@ -24,7 +28,17 @@ selectedElement.subscribe((value) => {
 <div class="editor">
   {#if $currentProject?.id}
     <div class="pages"><PagesList /></div>
-    <div class="page-builder"><PageBuilder {selectedPage} /></div>
+    <div class="page-builder">
+      <iframe
+        src={`/pagePreview?p=${ID}`}
+        title="Page Preview"
+        width="100%"
+        height="600"
+        frameborder="0"
+        style="background-color: white;"></iframe>
+
+      <PageBuilder selectedPage={structuredClone($selectedPage)} />
+    </div>
     <div class="settings"><ElementSettings /></div>
   {/if}
 </div>

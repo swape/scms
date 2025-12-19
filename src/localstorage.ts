@@ -1,6 +1,6 @@
 export function saveStorage(name: string, data: any) {
   const storeDate = Date.now()
-  const newData = {data, storeDate}
+  const newData = { data, storeDate }
 
   return localStorage.setItem(name, JSON.stringify(newData))
 }

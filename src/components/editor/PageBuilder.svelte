@@ -36,27 +36,28 @@ function selectThis(elm) {
 </script>
 
 {#if selectedPage?.id}
-  <div class="w-full p-4 bg-slate-900 text-white">
-    <div>page-builder for page: {selectedPage?.id} {selectedPage?.title}</div>
-    <textarea class="w-full h-96 border p-2 mt-2"
-      >{JSON.stringify($currentProject.content)}</textarea>
-  </div>
   {#each getBlocksAsArray($currentProject.content, selectedPage.id) as block}
-    <div class="w-full p-4 bg-slate-800 text-white mt-2">
-      <div>
-        Block ID: {block.id} | Type: {block.type} | Order: {block.order}
-      </div>
-      <div>Content: {block.content}</div>
-      <ElementView {block} />
+    <div class="w-full relative float-wrapper">
       <button
         onclick={() => selectThis(block)}
         type="button"
-        class="btn active p-3">Select</button>
+        class="selecting-block-button">Select</button>
+      <div class="floating-helper">
+        <div>
+          Block ID: {block.id} | Type: {block.type} | Order: {block.order}
+        </div>
+
+        <div>Content: {block.content}</div>
+      </div>
+
+      <ElementView {block} />
     </div>
   {/each}
 
-  <div class="mt-4">
-    <button class="btn p-3 active" type="button" onclick={addBlock}
-      >Add Element</button>
+  <div class="mt-4 border-t pt-4">
+    <button
+      class="p-3 bg-slate-800 text-white cursor-pointer"
+      type="button"
+      onclick={addBlock}>Add Element</button>
   </div>
 {/if}

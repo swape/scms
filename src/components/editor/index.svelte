@@ -33,11 +33,9 @@ selectedElement.subscribe((value) => {
         src={`/pagePreview?p=${ID}`}
         title="Page Preview"
         width="100%"
-        height="600"
+        height="100%"
         frameborder="0"
         style="background-color: white;"></iframe>
-
-      <PageBuilder selectedPage={structuredClone($selectedPage)} />
     </div>
     <div class="settings"><ElementSettings /></div>
   {/if}

@@ -6,7 +6,6 @@ import {
   selectedPage,
 } from '../../store'
 import ElementSettings from './ElementSettings.svelte'
-import PageBuilder from './PageBuilder.svelte'
 import PagesList from './PagesList.svelte'
 
 const ID = window.location.search.split('=')[1] || ''

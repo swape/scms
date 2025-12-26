@@ -15,5 +15,12 @@ export const blockText = {
   options: {
     elementTypes: ['Paragraph', 'Heading 1', 'Heading 2', 'Heading 3'],
   },
+  styles: {
+    spacingTop: '',
+    spacingBottom: '',
+    blockWidth: 'max-auto container',
+    inlineSpacing: 'px-4',
+    textAlign: '',
+  },
   parent: null,
 }

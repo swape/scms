@@ -54,10 +54,14 @@ function selectThis(elm) {
     </div>
   {/each}
 
-  <div class="mt-4 border-t pt-4">
+  <div class="m-4 border-t pt-4">
     <button
       class="p-3 bg-slate-800 text-white cursor-pointer"
       type="button"
       onclick={addBlock}>Add Element</button>
+  </div>
+{:else}
+  <div class="text-2xl text-center p-5">
+    Please select a page to start editing.
   </div>
 {/if}

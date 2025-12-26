@@ -1,33 +1,22 @@
 <script>
-import { currentProject } from '../../../store'
-
-// TODO: this should be dynamic based on element type
-
-let { element } = $props()
+let { element, onChange } = $props()
 let localElement = $derived(structuredClone(element))
-
-function onSave() {
-  const oldCurrentProject = { ...$currentProject }
-  oldCurrentProject.pages[localElement.id] = { ...localElement }
-  $currentProject = oldCurrentProject
-}
 </script>
 
 <div class="forms">
   <label>
     <span>Title:</span>
-    <input type="text" bind:value={localElement.title} />
+    <input
+      type="text"
+      bind:value={localElement.title}
+      onkeyup={() => onChange(localElement)} />
   </label>
 
   <label>
     <span>Order:</span>
-    <input type="number" bind:value={localElement.order} />
+    <input
+      type="number"
+      bind:value={localElement.order}
+      onkeyup={() => onChange(localElement)} />
   </label>
-
-  <div class="mt-4">
-    <button
-      type="button"
-      class="save-button btn px-4 py-2 active"
-      onclick={onSave}>Save</button>
-  </div>
 </div>

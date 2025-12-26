@@ -1,39 +1,34 @@
 <script>
-import { currentProject } from '../../../store'
-
-let { element } = $props()
+let { element, onChange } = $props()
 let localElement = $derived(structuredClone(element))
-
-function onSave() {
-  const oldCurrentProject = { ...$currentProject }
-  oldCurrentProject.content[localElement.id] = { ...localElement }
-  $currentProject = oldCurrentProject
-}
 </script>
 
 <div class="forms">
   <label>
     <span>Content:</span>
-    <input type="text" bind:value={localElement.content} />
+    <input
+      type="text"
+      bind:value={localElement.content}
+      onkeyup={() => onChange(localElement)} />
   </label>
 
   <label>
     <span>Order:</span>
-    <input type="number" bind:value={localElement.order} />
+    <input
+      type="number"
+      bind:value={localElement.order}
+      onkeyup={() => onChange(localElement)} />
   </label>
 
   <label>
     <span>Type:</span>
-    <select bind:value={localElement.settings.type} class="select">
+    <select
+      bind:value={localElement.settings.type}
+      class="select"
+      onchange={() => onChange(localElement)}>
       {#each localElement.options.elementTypes as type}
         <option value={type}>{type}</option>
       {/each}
     </select>
   </label>
-  <div class="mt-4">
-    <button
-      type="button"
-      class="save-button btn px-4 py-2 active"
-      onclick={onSave}>Save</button>
-  </div>
 </div>

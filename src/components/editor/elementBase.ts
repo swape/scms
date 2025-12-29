@@ -18,7 +18,7 @@ export const blockText = {
   styles: {
     spacingTop: '',
     spacingBottom: '',
-    blockWidth: 'max-auto container',
+    blockWidth: '',
     inlineSpacing: 'px-4',
     textAlign: '',
   },

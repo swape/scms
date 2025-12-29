@@ -55,10 +55,10 @@ function onSave() {
             bind:value={$selectedElement.styles.spacingTop}
             onchange={() => changeAction($selectedElement)}>
             <option value="">none</option>
-            <option value="pt-2">Small</option>
-            <option value="pt-4">Medium</option>
-            <option value="pt-6">Large</option>
-            <option value="pt-8">Extra Large</option>
+            <option value="pt-4">Small</option>
+            <option value="pt-8">Medium</option>
+            <option value="pt-16">Large</option>
+            <option value="pt-32">Extra Large</option>
           </select>
         </label>
       </div>
@@ -71,10 +71,10 @@ function onSave() {
             bind:value={$selectedElement.styles.spacingBottom}
             onchange={() => changeAction($selectedElement)}>
             <option value="">none</option>
-            <option value="pb-2">Small</option>
-            <option value="pb-4">Medium</option>
-            <option value="pb-6">Large</option>
-            <option value="pb-8">Extra Large</option>
+            <option value="pb-4">Small</option>
+            <option value="pb-8">Medium</option>
+            <option value="pb-16">Large</option>
+            <option value="pb-32">Extra Large</option>
           </select>
         </label>
       </div>
@@ -87,10 +87,10 @@ function onSave() {
             bind:value={$selectedElement.styles.blockWidth}
             onchange={() => changeAction($selectedElement)}>
             <option value="max-w-full">Full Width</option>
-            <option value="max-w-md container">Small Width</option>
-            <option value="max-w-3xl container">Medium Width</option>
-            <option value="max-w-xl container">Narrow Width</option>
-            <option value="max-auto container"> Auto Width</option>
+            <option value="max-w-md">Small Width</option>
+            <option value="max-w-3xl">Medium Width</option>
+            <option value="max-w-xl">Narrow Width</option>
+            <option value="">Auto Width</option>
           </select>
         </label>
       </div>

@@ -37,21 +37,7 @@ function selectThis(elm) {
 
 {#if selectedPage?.id}
   {#each getBlocksAsArray($currentProject.content, selectedPage.id) as block}
-    <div class="w-full relative float-wrapper">
-      <button
-        onclick={() => selectThis(block)}
-        type="button"
-        class="selecting-block-button">Select</button>
-      <div class="floating-helper">
-        <div>
-          Block ID: {block.id} | Type: {block.type} | Order: {block.order}
-        </div>
-
-        <div>Content: {block.content}</div>
-      </div>
-
-      <ElementView {block} />
-    </div>
+    <ElementView {block} />
   {/each}
 
   <div class="m-4 border-t pt-4">

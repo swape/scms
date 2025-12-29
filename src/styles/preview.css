@@ -18,13 +18,17 @@
     opacity: 0;
     position: absolute;
     inset: 0;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+      background-color: #2563eb33;
+      outline: 1px dashed #3b82f6;
+      color: rgba(255, 255, 255, 0);
+    }
   }
 
   &:hover {
-    outline: 1px dashed #3b82f6;
-    outline-offset: -1px;
-    cursor: pointer;
-
     .floating-helper {
       display: block;
     }

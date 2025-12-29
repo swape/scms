@@ -29,10 +29,6 @@ function addBlock() {
 
   $selectedElement = newBlock
 }
-
-function selectThis(elm) {
-  $selectedElement = elm
-}
 </script>
 
 {#if selectedPage?.id}

@@ -3,8 +3,6 @@ import { currentProject, selectedElement } from '../../store'
 import BlockText from './elements/BlockText.svelte'
 import PageElement from './elements/PageElement.svelte'
 
-let autoSave = $state(true)
-
 function savePage(localElement) {
   const oldCurrentProject = { ...$currentProject }
   oldCurrentProject.pages[localElement.id] = { ...localElement }
@@ -19,9 +17,7 @@ function saveElement(localElement) {
 
 function changeAction(elm) {
   $selectedElement = elm
-  if (autoSave) {
-    onSave()
-  }
+  onSave()
 }
 
 function onSave() {
@@ -31,12 +27,33 @@ function onSave() {
     saveElement($selectedElement)
   }
 }
+
+function deleteElement(elm) {
+  if (elm.type === 'page') {
+    const oldCurrentProject = { ...$currentProject }
+    delete oldCurrentProject.pages[elm.id]
+    // delete all content related to this page
+    Object.values(oldCurrentProject.content).forEach((contentElm) => {
+      if (contentElm.pageId === elm.id) {
+        delete oldCurrentProject.content[contentElm.id]
+      }
+    })
+
+    $currentProject = oldCurrentProject
+    $selectedElement = null
+  } else {
+    const oldCurrentProject = { ...$currentProject }
+    delete oldCurrentProject.content[elm.id]
+    $currentProject = oldCurrentProject
+    $selectedElement = null
+  }
+}
 </script>
 
 <div>
   {#if $selectedElement}
-    <small>ID: {$selectedElement.id}</small>
-    <small>Type: {$selectedElement.type}</small>
+    <div><small>ID: {$selectedElement.id}</small></div>
+    <div><small>Type: {$selectedElement.type}</small></div>
 
     {#if $selectedElement.type === 'page'}
       <PageElement element={$selectedElement} onChange={changeAction} />
@@ -130,10 +147,8 @@ function onSave() {
     <div class="mt-4 flex gap-3 items-center flex-wrap">
       <button
         type="button"
-        class="save-button btn px-4 py-2 active"
-        onclick={onSave}
-        disabled={autoSave}>Save</button>
-      <label><input type="checkbox" bind:checked={autoSave} /> Auto Save</label>
+        class="btn px-4 py-2 delete"
+        onclick={() => deleteElement($selectedElement)}>Delete</button>
     </div>
   {:else}
     <p>No element selected.</p>

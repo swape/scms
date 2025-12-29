@@ -6,6 +6,10 @@
   &.active {
     @apply bg-blue-900 hover:bg-blue-800;
   }
+
+  &.delete {
+    @apply bg-red-800 hover:bg-red-700 text-white;
+  }
 }
 
 .material-symbols-outlined {

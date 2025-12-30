@@ -39,4 +39,8 @@
   .select {
     @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
   }
+
+  textarea {
+    @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
+  }
 }

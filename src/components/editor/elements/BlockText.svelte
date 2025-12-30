@@ -6,10 +6,18 @@ let localElement = $derived(structuredClone(element))
 <div class="forms">
   <label>
     <span>Content:</span>
-    <input
-      type="text"
-      bind:value={localElement.content}
-      onkeyup={() => onChange(localElement)} />
+    {#if localElement.settings.type !== 'Paragraph'}
+      <input
+        type="text"
+        bind:value={localElement.content}
+        onkeyup={() => onChange(localElement)} />
+    {/if}
+    {#if localElement.settings.type === 'Paragraph'}
+      <textarea
+        rows="5"
+        bind:value={localElement.content}
+        onkeyup={() => onChange(localElement)}></textarea>
+    {/if}
   </label>
 
   <label>

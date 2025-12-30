@@ -13,6 +13,12 @@ export interface ProjectType {
     [key: string | number]: PageType
   }
   content: ContentListType
+  colors: {
+    [key: string]: { c: string; key: string }
+  }
+  users: {
+    [key: string]: 'owner' | 'editor' | 'viewer'
+  }
 }
 
 export interface ContentListType {

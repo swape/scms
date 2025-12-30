@@ -1,5 +1,6 @@
 <script>
 import { projects } from '../../store'
+import Colors from './Colors.svelte'
 import Edit from './Edit.svelte'
 
 const ID = window.location.search.split('=')[1] || ''
@@ -20,6 +21,7 @@ function changeTab(selectedTab) {
 const tabs = [
   { name: 'Summery', id: '' },
   { name: 'Settings', id: 'settings' },
+  { name: 'Colors', id: 'colors' },
   { name: 'Users', id: 'users' },
 ]
 </script>
@@ -44,6 +46,10 @@ const tabs = [
 
     {#if tab === 'settings'}
       <Edit id={ID} />
+    {/if}
+
+    {#if tab === 'colors'}
+      <Colors id={ID} />
     {/if}
 
     {#if tab === 'users'}

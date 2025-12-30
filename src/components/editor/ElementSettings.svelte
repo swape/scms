@@ -143,6 +143,34 @@ function deleteElement(elm) {
         </label>
       </div>
     {/if}
+    <div class="forms">
+      <label
+        ><span>Background Color</span>
+        <select
+          class="select"
+          bind:value={$selectedElement.colors.backgroundColorKey}
+          onchange={() => changeAction($selectedElement)}>
+          <option value="">None</option>
+          <option value="bg_1">Primary Background</option>
+          <option value="bg_2">Secondary Background</option>
+          <option value="bg_3">Accent Background</option>
+        </select>
+      </label>
+    </div>
+    <div class="forms">
+      <label
+        ><span>Text Color</span>
+        <select
+          class="select"
+          bind:value={$selectedElement.colors.textColorKey}
+          onchange={() => changeAction($selectedElement)}>
+          <option value="">None</option>
+          <option value="text_1">Primary Text</option>
+          <option value="text_2">Secondary Text</option>
+          <option value="text_3">Accent Text</option>
+        </select>
+      </label>
+    </div>
 
     <div class="mt-4 flex gap-3 items-center flex-wrap">
       <button

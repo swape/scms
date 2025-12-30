@@ -22,5 +22,9 @@ export const blockText = {
     inlineSpacing: 'px-4',
     textAlign: '',
   },
+  colors: {
+    textColorKey: '',
+    backgroundColorKey: '',
+  },
   parent: null,
 }

@@ -4,6 +4,10 @@ export interface PageType {
   title: string
   type: string
   order: number
+  colors: {
+    textColorKey: string
+    backgroundColorKey: string
+  }
 }
 
 export interface ProjectType {

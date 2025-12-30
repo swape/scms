@@ -34,3 +34,27 @@
     }
   }
 }
+
+.bg_1 {
+  background-color: light-dark(var(--bg_1), var(--bg_1_dark));
+}
+
+.bg_2 {
+  background-color: light-dark(var(--bg_2), var(--bg_2_dark));
+}
+
+.bg_3 {
+  background-color: light-dark(var(--bg_3), var(--bg_3_dark));
+}
+
+.text_1 {
+  color: light-dark(var(--text_1), var(--text_1_dark));
+}
+
+.text_2 {
+  color: light-dark(var(--text_2), var(--text_2_dark));
+}
+
+.text_3 {
+  color: light-dark(var(--text_3), var(--text_3_dark));
+}

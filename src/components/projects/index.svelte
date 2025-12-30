@@ -4,9 +4,13 @@ import { projects } from '../../store'
 function addProject() {
   $projects = [
     {
-      id: $projects.length + 1,
+      id: ($projects?.length || 0) + 1,
       title: 'new one',
       description: 'Brand new project',
+      colors: {
+        backgroundColorKey: 'bg_1',
+        textColorKey: 'text_1',
+      },
     },
     ...$projects,
   ]
@@ -22,8 +26,7 @@ function gotoProject(pid) {
   <button
     type="button"
     onclick={addProject}
-    class="btn rounded-full flex justify-center items-center w-[36px] h-[36px]"
-    >+</button>
+    class="btn rounded-full flex justify-center items-center w-9 h-9">+</button>
 </div>
 <div
   class="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

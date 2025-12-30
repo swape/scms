@@ -6,10 +6,14 @@ let blockStyles = $derived(
   `${block.styles?.spacingTop || ''} ${block.styles?.spacingBottom || ''} ${block.styles?.blockWidth || ''} ${block.styles?.inlineSpacing || ''} ${block.styles?.textAlign || ''}`.trim()
 )
 let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim())
+
+let colors = $derived(
+  `${block.colors?.textColorKey} ${block.colors?.backgroundColorKey}`.trim()
+)
 </script>
 
 <div
-  class={`${wrapperClass === 'max-w-full' ? '' : 'mx-auto container'} relative`}>
+  class={`${colors} ${wrapperClass === 'max-w-full' ? '' : 'mx-auto container'} relative`}>
   <InfoHelper {block} />
   {#if block}
     {#if block.settings.type === 'Paragraph'}

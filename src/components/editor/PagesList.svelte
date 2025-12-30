@@ -12,6 +12,10 @@ function handlePageAdd(id = null) {
     id: Date.now(),
     title: 'new page',
     type: 'page',
+    colors: {
+      textColorKey: 'text_1',
+      backgroundColorKey: 'bg_1',
+    },
     parent: id,
     order: $currentProject
       ? Object.values($currentProject.pages).filter((p) => p.parent === id)

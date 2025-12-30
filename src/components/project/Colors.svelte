@@ -1,4 +1,5 @@
 <script>
+import { get } from 'svelte/store'
 import { projects } from '../../store.js'
 
 let { id } = $props()
@@ -16,13 +17,13 @@ const colorList = [
   { name: 'Secondary Background', key: 'bg_2' },
   { name: 'Secondary Text', key: 'text_2' },
   { name: 'Accent Color', key: 'bg_3' },
-  { name: 'Accent Text', key: 'bg_3_text' },
+  { name: 'Accent Text', key: 'text_3' },
   { name: 'Primary Background Dark', key: 'bg_1_dark' },
   { name: 'Primary Text Dark', key: 'text_1_dark' },
   { name: 'Secondary Background Dark', key: 'bg_2_dark' },
   { name: 'Secondary Text Dark', key: 'text_2_dark' },
   { name: 'Accent Color Dark', key: 'bg_3_dark' },
-  { name: 'Accent Text Dark', key: 'bg_3_text_dark' },
+  { name: 'Accent Text Dark', key: 'text_3_dark' },
 ]
 
 projects.subscribe((value) => {
@@ -47,6 +48,11 @@ function save() {
   )
   projects.set(updatedProjects)
 }
+
+function getColorName(key) {
+  const color = colorList.find((c) => c.key === key)
+  return color ? color.name : key
+}
 </script>
 
 {#if project?.id}
@@ -56,7 +62,7 @@ function save() {
     {#each Object.entries(colors) as [key, color]}
       <div class="flex flex-col gap-2">
         <label class="font-semibold"
-          ><span>{colorList.find((c) => c.key === key).name}</span>
+          ><span>{getColorName(key)}</span>
           <input
             type="color"
             bind:value={color.c}

@@ -38,3 +38,16 @@ If supabase or firebase is used, the backend can be completely skipped and the f
 But backend is still useful for server side rendering, custom api endpoints, webhooks, etc.
 
 ## Step by step guide to implement instructions from above
+
+
+## TODO:
+- [] Add top menu (with static and dynamic page listing)
+- [] Add Footer component (with static and dynamic page listing)
+- [] Add SEO component (with dynamic meta tags and social media tags)
+- [] Add simple image block
+- [] Add split block
+- [] Add markdown block
+- [] Add iframe block
+- [] Add image gallery block
+
+

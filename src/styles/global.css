@@ -44,3 +44,16 @@
     @apply w-full p-2 rounded bg-slate-800 border border-slate-700 focus:border-blue-600 outline-none;
   }
 }
+
+.tab {
+  border-bottom: 1px solid #374151;
+  margin-top: 10px;
+
+  & > button {
+    @apply p-2 cursor-pointer hover:bg-slate-700;
+
+    &.active {
+      @apply bg-blue-900 hover:bg-blue-800;
+    }
+  }
+}

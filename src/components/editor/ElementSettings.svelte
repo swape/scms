@@ -1,7 +1,7 @@
 <script>
 import { currentProject, selectedElement } from '../../store'
-import BlockText from './elements/BlockText.svelte'
-import PageElement from './elements/PageElement.svelte'
+import BlockText from './elementSettings/BlockText.svelte'
+import PageElement from './elementSettings/PageElement.svelte'
 
 let currentTab = $state('settings')
 

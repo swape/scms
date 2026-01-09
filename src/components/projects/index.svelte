@@ -1,16 +1,11 @@
 <script>
 import { projects } from '../../store'
+import { getEmptyProjectStructure } from './helper.ts'
 
 function addProject() {
   $projects = [
     {
-      id: ($projects?.length || 0) + 1,
-      title: 'new one',
-      description: 'Brand new project',
-      colors: {
-        backgroundColorKey: 'bg_1',
-        textColorKey: 'text_1',
-      },
+      ...getEmptyProjectStructure(($projects?.length || 0) + 1),
     },
     ...$projects,
   ]

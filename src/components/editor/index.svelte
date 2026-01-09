@@ -24,6 +24,14 @@ selectedElement.subscribe((value) => {
 })
 </script>
 
+<div class="container mx-auto">
+  <div class="flex justify-between items-center border-t">
+    <h1 class="text-xl font-bold my-4">
+      Project: {$currentProject?.title || 'No Project Selected'}
+    </h1>
+    <div><button class="btn active p-2">Publish Project</button></div>
+  </div>
+</div>
 <div class="editor">
   {#if $currentProject?.id}
     <div class="pages"><PagesList /></div>

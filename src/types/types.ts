@@ -11,8 +11,10 @@ export interface PageType {
 }
 
 export interface ProjectType {
-  id: string
+  id: string | number
   title: string
+  description: string
+  url: string
   pages: {
     [key: string | number]: PageType
   }

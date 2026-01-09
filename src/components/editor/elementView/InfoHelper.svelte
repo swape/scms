@@ -18,6 +18,7 @@ function selectThis(elm) {
       Block ID: {block.id} | Type: {block.type} | Order: {block.order}
     </div>
 
-    <div>Content: {block.content}</div>
+    <textarea class="w-full" rows="10"
+      >{JSON.stringify(block, null, 2)}</textarea>
   </div>
 </div>

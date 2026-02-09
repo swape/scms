@@ -1,5 +1,6 @@
 <script>
 import { currentProject, selectedElement } from '../../store'
+import Menu from '../editor/elementView/Menu.svelte'
 import { getBlocksAsArray } from '../editor/helper'
 import { newBlockElement } from './elementBase'
 import ElementView from './elementView/index.svelte'
@@ -58,6 +59,7 @@ function getSelectedPageColorClasses() {
 }
 </script>
 
+<Menu />
 {#if selectedPage?.id}
   <main style={getColors()} class={getSelectedPageColorClasses()}>
     {#each getBlocksAsArray($currentProject.content, selectedPage.id) as block}

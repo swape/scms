@@ -22,8 +22,8 @@ const { title = 'SCMS' } = Astro.props
     <nav
       class="flex gap-2 container mx-auto justify-between flex-wrap items-center px-4">
       <div class="flex gap-2">
-        <a href="/">Home</a>
-        <a href="/dashboard">Dashboard</a>
+        <a href="/" class="btn px-4 py-2">Home</a>
+        <a href="/dashboard" class="btn px-4 py-2">Dashboard</a>
       </div>
 
       <Login client:only="svelte" />

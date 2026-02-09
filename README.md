@@ -39,8 +39,8 @@ But backend is still useful for server side rendering, custom api endpoints, web
 
 ## Step by step guide to implement instructions from above
 
-
 ## TODO:
+
 - [] Add top menu (with static and dynamic page listing)
 - [] Add Footer component (with static and dynamic page listing)
 - [] Add SEO component (with dynamic meta tags and social media tags)
@@ -49,5 +49,3 @@ But backend is still useful for server side rendering, custom api endpoints, web
 - [] Add markdown block
 - [] Add iframe block
 - [] Add image gallery block
-
-

@@ -1,6 +1,8 @@
 export function newBlockElement(name: string, additionalProps = {}) {
   if (name === 'blockText') {
     return { ...blockText, ...additionalProps }
+  } else if(name === 'blockDivider') {
+    return { ...blockDivider, ...additionalProps }
   }
 
   return { type: name, ...additionalProps }
@@ -25,6 +27,19 @@ export const blockText = {
   colors: {
     textColorKey: '',
     backgroundColorKey: '',
+  },
+  parent: null,
+}
+
+export const blockDivider = {
+  type: 'block-divider',
+  styles: {
+    spacingTop: 'pt-8',
+    spacingBottom: 'pb-8',
+    blockWidth: 'max-w-3xl',
+  },
+  colors: {
+    backgroundColorKey: 'bg_3',
   },
   parent: null,
 }

@@ -1,5 +1,6 @@
 <script>
 import { currentProject, selectedElement } from '../../store'
+import BlockDivider from './elementSettings/BlockDivider.svelte'
 import BlockText from './elementSettings/BlockText.svelte'
 import PageElement from './elementSettings/PageElement.svelte'
 
@@ -77,10 +78,13 @@ function changeTab(tab) {
       {#if $selectedElement.type === 'block-text'}
         <BlockText element={$selectedElement} onChange={changeAction} />
       {/if}
+      {#if $selectedElement.type === 'block-divider'}
+        <BlockDivider element={$selectedElement} onChange={changeAction} />
+      {/if}
     </div>
     <div class={currentTab === 'style' ? '' : 'hidden'}>
       <!-- element styles-->
-      {#if $selectedElement.styles}
+      {#if $selectedElement.styles?.spacingTop !== undefined}
         <div class="forms">
           <label
             ><span>Spacing-top</span>
@@ -96,7 +100,9 @@ function changeTab(tab) {
             </select>
           </label>
         </div>
+      {/if}
 
+      {#if $selectedElement.styles?.spacingBottom !== undefined}
         <div class="forms">
           <label
             ><span>Spacing-bottom</span>
@@ -112,7 +118,9 @@ function changeTab(tab) {
             </select>
           </label>
         </div>
+      {/if}
 
+      {#if $selectedElement.styles?.blockWidth !== undefined}
         <div class="forms">
           <label
             ><span>Block width</span>
@@ -128,7 +136,9 @@ function changeTab(tab) {
             </select>
           </label>
         </div>
+      {/if}
 
+      {#if $selectedElement.styles?.textAlign !== undefined}
         <div class="forms">
           <label
             ><span>Text Align</span>
@@ -143,7 +153,9 @@ function changeTab(tab) {
             </select>
           </label>
         </div>
+      {/if}
 
+      {#if $selectedElement.styles?.inlineSpacing !== undefined}
         <div class="forms">
           <label
             ><span>Inline spacing</span>
@@ -160,6 +172,7 @@ function changeTab(tab) {
           </label>
         </div>
       {/if}
+
       <div class="forms">
         <label
           ><span>Background Color</span>
@@ -174,20 +187,22 @@ function changeTab(tab) {
           </select>
         </label>
       </div>
-      <div class="forms">
-        <label
-          ><span>Text Color</span>
-          <select
-            class="select"
-            bind:value={$selectedElement.colors.textColorKey}
-            onchange={() => changeAction($selectedElement)}>
-            <option value="">None</option>
-            <option value="text_1">Primary Text</option>
-            <option value="text_2">Secondary Text</option>
-            <option value="text_3">Accent Text</option>
-          </select>
-        </label>
-      </div>
+      {#if $selectedElement.colors?.textColorKey !== undefined}
+        <div class="forms">
+          <label
+            ><span>Text Color</span>
+            <select
+              class="select"
+              bind:value={$selectedElement.colors.textColorKey}
+              onchange={() => changeAction($selectedElement)}>
+              <option value="">None</option>
+              <option value="text_1">Primary Text</option>
+              <option value="text_2">Secondary Text</option>
+              <option value="text_3">Accent Text</option>
+            </select>
+          </label>
+        </div>
+      {/if}
     </div>
     <div class="mt-4 flex gap-3 items-center flex-wrap">
       <button

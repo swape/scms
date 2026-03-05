@@ -13,12 +13,12 @@ function selectThis(elm) {
     onclick={() => selectThis(block)}
     type="button"
     class="selecting-block-button">Select</button>
-  <div class="floating-helper">
+  <!-- <div class="floating-helper">
     <div>
       Block ID: {block.id} | Type: {block.type} | Order: {block.order}
     </div>
 
     <textarea class="w-full" rows="10"
       >{JSON.stringify(block, null, 2)}</textarea>
-  </div>
+  </div> -->
 </div>

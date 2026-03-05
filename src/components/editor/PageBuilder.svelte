@@ -7,32 +7,41 @@ import ElementView from './elementView/index.svelte'
 
 const { selectedPage } = $props()
 
-function addBlock() {
-  // TODO: fix this to select blocks from a list
-
+function addBlock(blockName = 'blockText') {
   const oldContent = $currentProject.content || {}
-
   const newBlockId = Date.now()
+  let newBlock = null
+
   const order =
     Object.values(oldContent).filter((c) => c.pageId === selectedPage.id)
       .length + 1
 
-  const newBlock = newBlockElement('blockText', {
-    id: newBlockId,
-    order,
-    pageId: selectedPage.id,
-    colors: {
-      textColorKey: 'text_1',
-      backgroundColorKey: 'bg_1',
-    },
-  })
+  if (blockName === 'blockText') {
+    newBlock = newBlockElement('blockText', {
+      id: newBlockId,
+      order,
+      pageId: selectedPage.id,
+      colors: {
+        textColorKey: 'text_1',
+        backgroundColorKey: 'bg_1',
+      },
+    })
+  } else if (blockName === 'blockDivider') {
+    newBlock = newBlockElement('blockDivider', {
+      id: newBlockId,
+      order,
+      pageId: selectedPage.id,
+    })
+  }
 
-  currentProject.set({
-    ...$currentProject,
-    content: { ...oldContent, [newBlockId]: newBlock },
-  })
+  if (newBlock) {
+    currentProject.set({
+      ...$currentProject,
+      content: { ...oldContent, [newBlockId]: newBlock },
+    })
 
-  $selectedElement = newBlock
+    $selectedElement = newBlock
+  }
 }
 
 function getColors() {
@@ -66,14 +75,47 @@ function getSelectedPageColorClasses() {
       <ElementView {block} />
     {/each}
   </main>
-  <div class="m-4 border-t pt-4">
-    <button
-      class="p-3 bg-slate-800 text-white cursor-pointer"
-      type="button"
-      onclick={addBlock}>Add Element</button>
+  <div class="m-4 border-t pt-4 relative">
+    Add new elements to the page:
+
+    <div class="element-buttons">
+      <button type="button" onclick={() => addBlock('blockText')}
+        >Text block</button>
+      <button type="button" onclick={() => addBlock('blockImage')}
+        >Image block</button>
+      <button type="button" onclick={() => addBlock('blockVideo')}
+        >Video block</button>
+      <button type="button" onclick={() => addBlock('blockDivider')}
+        >Divider</button>
+      <button type="button" onclick={() => addBlock('blockButton')}
+        >Button</button>
+      <button type="button" onclick={() => addBlock('blockLink')}>Link</button>
+      <button type="button" onclick={() => addBlock('blockPageList')}
+        >Page list</button>
+    </div>
   </div>
 {:else}
   <div class="text-2xl text-center p-5">
     Please select a page to start editing.
   </div>
 {/if}
+
+<style>
+.element-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  padding: 10px;
+
+  > button {
+    padding: 5px 10px;
+    background-color: transparent;
+    border: 1px solid #555;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+}
+</style>

@@ -65,7 +65,7 @@ selectedElement.subscribe((value) => {
   }
 
   .settings {
-    width: 300px;
+    width: clamp(300px, 25%, 600px);
     border-left: 1px solid #333;
     padding: 10px;
   }

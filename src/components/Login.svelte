@@ -33,6 +33,6 @@ function signout() {
     <button onclick={signout} class="btn px-4 py-2">Sign out</button>
   {/if}
   {#if !$userObj}
-    <button onclick={login} class="btn">Sign in</button>
+    <button onclick={login} class="btn px-4 py-2">Sign in</button>
   {/if}
 </div>

@@ -4,14 +4,12 @@ import { getPagesAsArray } from '../editor/helper'
 import PageListItemSub from './PageListItem.svelte'
 
 let { page, handlePageAdd, handlePageClick } = $props()
-let localSubPages = $state()
+let localSubPages = $derived(
+  $currentProject
+    ? getPagesAsArray($currentProject.pages || {}, page.id || null)
+    : []
+)
 let isOpen = $state(false)
-
-currentProject.subscribe((value) => {
-  if (value) {
-    localSubPages = getPagesAsArray(value.pages || {}, page.id || null)
-  }
-})
 
 function handleAddPageAndOpenSubPages(id) {
   handlePageAdd(id)

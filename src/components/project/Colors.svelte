@@ -1,5 +1,4 @@
 <script>
-import { get } from 'svelte/store'
 import { projects } from '../../store.js'
 
 let { id } = $props()
@@ -26,9 +25,9 @@ const colorList = [
   { name: 'Accent Text Dark', key: 'text_3_dark' },
 ]
 
-projects.subscribe((value) => {
-  if (value) {
-    const found = value.find((item) => item.id === id)
+$effect(() => {
+  if ($projects) {
+    const found = $projects.find((item) => item.id === id)
     if (found) {
       project = found
       colors = found.colors || {}

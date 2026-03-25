@@ -10,16 +10,16 @@ import PagesList from './PagesList.svelte'
 
 const ID = window.location.search.split('=')[1] || ''
 
-projects.subscribe((value) => {
-  if (value && value.length > 0) {
-    const project = value.find((p) => p.id === ID) || null
+$effect(() => {
+  if ($projects && $projects.length > 0) {
+    const project = $projects.find((p) => p.id === ID) || null
     currentProject.set(project)
   }
 })
 
-selectedElement.subscribe((value) => {
-  if (value && value.type === 'page') {
-    $selectedPage = value
+$effect(() => {
+  if ($selectedElement && $selectedElement.type === 'page') {
+    $selectedPage = $selectedElement
   }
 })
 </script>

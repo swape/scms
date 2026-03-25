@@ -8,9 +8,9 @@ const ID = window.location.search.split('=')[1] || ''
 let currentProject = $state({})
 let tab = $state('')
 
-projects.subscribe((value) => {
-  if (value && value.length > 0) {
-    currentProject = value.find((p) => p.id === ID) || {}
+$effect(() => {
+  if ($projects && $projects.length > 0) {
+    currentProject = $projects.find((p) => p.id === ID) || {}
   }
 })
 

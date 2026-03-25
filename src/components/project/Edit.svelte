@@ -8,9 +8,9 @@ let project = $state({
   description: '',
 })
 
-projects.subscribe((value) => {
-  if (value) {
-    const found = value.find((item) => item.id === id)
+$effect(() => {
+  if ($projects) {
+    const found = $projects.find((item) => item.id === id)
     if (found) {
       project = found
     }

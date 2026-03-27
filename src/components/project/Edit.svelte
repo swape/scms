@@ -1,11 +1,15 @@
-<script>
-import { projects } from '../../store.js'
+<script lang="ts">
+import { projects } from '../../store.ts'
+import type { ProjectType } from '../../types/types.ts'
 
 let { id } = $props()
 
-let project = $state({
+let project: ProjectType = $state({
   title: '',
   description: '',
+  id: '',
+  url: '',
+  colors: {},
 })
 
 $effect(() => {

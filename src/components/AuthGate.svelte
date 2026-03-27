@@ -1,5 +1,5 @@
-<script>
-import { userObj } from '../store.js'
+<script lang="ts">
+import { userObj } from '../store.ts'
 </script>
 
 {#if $userObj?.uid}

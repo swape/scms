@@ -15,14 +15,14 @@ export interface ProjectType {
   title: string
   description: string
   url: string
-  pages: {
+  pages?: {
     [key: string | number]: PageType
   }
-  content: ContentListType
-  colors: {
+  content?: ContentListType
+  colors?: {
     [key: string]: { c: string; key: string }
   }
-  users: {
+  users?: {
     [key: string]: 'owner' | 'editor' | 'viewer'
   }
 }
@@ -38,4 +38,11 @@ export interface ContentType {
   pageId: string
   type: string
   [key: string | number]: unknown
+}
+export interface UserType {
+  uid: string
+  email: string
+  displayName: string
+  photoURL?: string
+  token: string
 }

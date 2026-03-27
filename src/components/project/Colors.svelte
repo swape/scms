@@ -1,14 +1,12 @@
-<script>
-import { projects } from '../../store.js'
+<script lang="ts">
+import { projects } from '../../store.ts'
+import type { ProjectType } from '../../types/types.ts'
 
 let { id } = $props()
 
-let project = $state({
-  title: '',
-  colors: {},
-})
+let project = $state<ProjectType | null>(null)
 
-let colors = $state({})
+let colors = $state<{ [key: string]: { c: string; key: string } }>({})
 
 const colorList = [
   { name: 'Primary Background', key: 'bg_1' },
@@ -35,20 +33,25 @@ $effect(() => {
   }
 })
 
-function changeColor(key, value) {
+function changeColor(key: string, value: string) {
   colors[key].c = value
-  project.colors = colors
-  save()
+  if (project) {
+    project.colors = colors
+    save()
+  }
 }
 
 function save() {
+  if (!$projects || !project) {
+    return
+  }
   const updatedProjects = $projects.map((p) =>
-    p.id === project.id ? project : p
+    p.id === project?.id ? project : p
   )
   projects.set(updatedProjects)
 }
 
-function getColorName(key) {
+function getColorName(key: string) {
   const color = colorList.find((c) => c.key === key)
   return color ? color.name : key
 }
@@ -65,11 +68,13 @@ function getColorName(key) {
           <input
             type="color"
             bind:value={color.c}
-            oninput={(e) => changeColor(key, e.target.value)} />
+            oninput={({ target }) =>
+              changeColor(key, (target as HTMLInputElement)?.value)} />
           <input
             type="text"
             bind:value={color.c}
-            oninput={(e) => changeColor(key, e.target.value)} />
+            oninput={({ target }) =>
+              changeColor(key, (target as HTMLInputElement)?.value)} />
         </label>
       </div>
     {/each}

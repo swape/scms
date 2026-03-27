@@ -2,14 +2,14 @@ import type { Writable } from 'svelte/store'
 import { writable } from 'svelte/store'
 import { getEmptyProjectStructure } from './components/projects/helper'
 import { getStorage, saveStorage } from './localstorage'
-import type { ProjectType } from './types/types'
+import type { ProjectType, UserType } from './types/types'
 
-export const userObj = writable(null)
+export const userObj = writable<UserType | null>(null)
 export const currentProject: Writable<ProjectType | null> = writable(null)
 export const projects: Writable<ProjectType[] | null> = writable([
   { ...getEmptyProjectStructure(1) }, // remove this when done testing
 ])
-export const selectedElement = writable(null)
+export const selectedElement = writable<unknown>(null)
 export const selectedPage = writable<string | null>(null)
 
 selectedPage.subscribe((value) => {

@@ -175,3 +175,5 @@ src/
 - Never commit hardcoded credentials, tokens, or UIDs (see `Login.svelte` — replace mock auth before production).
 - Keep `localStorage` access centralized in `src/localstorage.ts`; do not call `window.localStorage` directly in components.
 - Add summary of changes in `agent-changes.md` file. Keep it short and concise, focusing on the key updates and their impact on the project. This will help maintain a clear history of modifications for future reference. Add date and file name to the summary for better organization and tracking.
+- Write any changes to agents-changes.md in the past tense, as they describe completed actions. This helps maintain a clear and consistent narrative of the project's evolution. For example, instead of saying "Fixes memory leaks by replacing .subscribe() with $effect()", write "Fixed memory leaks by replacing .subscribe() with $effect()". This approach provides a clear record of what was done and when, making it easier for future developers to understand the history of changes.
+- Update Readme.md file if there is any changes that need to be changed.

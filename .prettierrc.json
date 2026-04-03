@@ -14,7 +14,8 @@
         "parser": "astro",
         "tabWidth": 2,
         "singleQuote": true,
-        "semi": false
+        "semi": false,
+        "printWidth": 180
       }
     },
     {
@@ -25,7 +26,8 @@
         "tabWidth": 2,
         "singleQuote": true,
         "semi": false,
-        "bracketSameLine": true
+        "bracketSameLine": true,
+        "printWidth": 180
       }
     },
     {
@@ -34,7 +36,8 @@
         "parser": "typescript",
         "tabWidth": 2,
         "singleQuote": true,
-        "semi": false
+        "semi": false,
+        "printWidth": 180
       }
     }
   ]

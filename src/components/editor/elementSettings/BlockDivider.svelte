@@ -1,14 +1,17 @@
-<script>
+<script lang="ts">
+import { untrack } from 'svelte'
+import InputWithLabel from '../../editorParts/InputWithLabel.svelte'
+
 let { element, onChange } = $props()
-let localElement = $derived(structuredClone(element))
+let localElement = $state(untrack(() => structuredClone(element)))
+
+$effect(() => {
+  localElement = structuredClone(element)
+})
 </script>
 
-<div class="forms">
-  <label>
-    <span>Order:</span>
-    <input
-      type="number"
-      bind:value={localElement.order}
-      onkeyup={() => onChange(localElement)} />
-  </label>
-</div>
+<InputWithLabel
+  label="Order"
+  inputType="number"
+  bind:value={localElement.order}
+  onchange={() => onChange(localElement)} />

@@ -1,42 +1,45 @@
-<script>
+<script lang="ts">
+import { untrack } from 'svelte'
+import InputWithLabel from '../../editorParts/InputWithLabel.svelte'
+import SelectWithLabel from '../../editorParts/SelectWithLabel.svelte'
+import TextareaWithLabel from '../../editorParts/TextareaWithLabel.svelte'
+
 let { element, onChange } = $props()
-let localElement = $derived(structuredClone(element))
+let localElement = $state(untrack(() => structuredClone(element)))
+
+$effect(() => {
+  localElement = structuredClone(element)
+})
 </script>
 
-<div class="forms">
-  <label>
-    <span>Content:</span>
-    {#if localElement.settings.type !== 'Paragraph'}
-      <input
-        type="text"
-        bind:value={localElement.content}
-        onkeyup={() => onChange(localElement)} />
-    {/if}
-    {#if localElement.settings.type === 'Paragraph'}
-      <textarea
-        rows="5"
-        bind:value={localElement.content}
-        onkeyup={() => onChange(localElement)}></textarea>
-    {/if}
-  </label>
+{#if localElement.settings.type !== 'Paragraph'}
+  <InputWithLabel
+    label="Content"
+    inputType="text"
+    bind:value={localElement.content}
+    onchange={() => onChange(localElement)} />
+{/if}
+{#if localElement.settings.type === 'Paragraph'}
+  <TextareaWithLabel
+    label="Content"
+    bind:value={localElement.content}
+    onchange={() => onChange(localElement)} />
+{/if}
 
-  <label>
-    <span>Order:</span>
-    <input
-      type="number"
-      bind:value={localElement.order}
-      onkeyup={() => onChange(localElement)} />
-  </label>
+<InputWithLabel
+  label="Order"
+  inputType="number"
+  bind:value={localElement.order}
+  onchange={() => onChange(localElement)} />
 
-  <label>
-    <span>Type:</span>
-    <select
-      bind:value={localElement.settings.type}
-      class="select"
-      onchange={() => onChange(localElement)}>
-      {#each localElement.options.elementTypes as type}
-        <option value={type}>{type}</option>
-      {/each}
-    </select>
-  </label>
-</div>
+<SelectWithLabel
+  label="Type"
+  options={localElement.options.elementTypes.map((t: string) => ({
+    value: t,
+    label: t,
+  }))}
+  selectedValue={localElement.settings.type}
+  onchange={(v) => {
+    localElement.settings.type = v
+    onChange(localElement)
+  }} />

@@ -45,9 +45,7 @@ function save() {
   if (!$projects || !project) {
     return
   }
-  const updatedProjects = $projects.map((p) =>
-    p.id === project?.id ? project : p
-  )
+  const updatedProjects = $projects.map((p) => (p.id === project?.id ? project : p))
   projects.set(updatedProjects)
 }
 
@@ -65,16 +63,8 @@ function getColorName(key: string) {
       <div class="flex flex-col gap-2">
         <label class="font-semibold"
           ><span>{getColorName(key)}</span>
-          <input
-            type="color"
-            bind:value={color.c}
-            oninput={({ target }) =>
-              changeColor(key, (target as HTMLInputElement)?.value)} />
-          <input
-            type="text"
-            bind:value={color.c}
-            oninput={({ target }) =>
-              changeColor(key, (target as HTMLInputElement)?.value)} />
+          <input type="color" bind:value={color.c} oninput={({ target }) => changeColor(key, (target as HTMLInputElement)?.value)} />
+          <input type="text" bind:value={color.c} oninput={({ target }) => changeColor(key, (target as HTMLInputElement)?.value)} />
         </label>
       </div>
     {/each}

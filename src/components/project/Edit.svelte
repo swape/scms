@@ -46,8 +46,7 @@ function save() {
   </label>
 
   <div class="flex gap-2 flex-wrap justify-between">
-    <button type="button" class="btn p-3 active w-30" onclick={() => save()}
-      >Save</button>
+    <button type="button" class="btn p-3 active w-30" onclick={() => save()}>Save</button>
     <button type="button" class="btn p-3 w-30">Cancel</button>
   </div>
 </div>

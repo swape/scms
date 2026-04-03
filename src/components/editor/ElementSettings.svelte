@@ -1,25 +1,12 @@
 <script lang="ts">
-import {
-  colorOptions,
-  inlineSpacingOptions,
-  spacingOptions,
-  textAlignOptions,
-  textColorOptions,
-  widthOptions,
-} from '../../constants'
+import { colorOptions, inlineSpacingOptions, spacingOptions, textAlignOptions, textColorOptions, widthOptions } from '../../constants'
 import { currentProject, selectedElement } from '../../store'
 import type { ContentType, PageType } from '../../types/types'
 import SelectWithLabel from '../editorParts/SelectWithLabel.svelte'
 import BlockDivider from './elementSettings/BlockDivider.svelte'
 import BlockText from './elementSettings/BlockText.svelte'
 import PageElement from './elementSettings/PageElement.svelte'
-import {
-  deleteContentItem,
-  deletePageWithContent,
-  isContentElement,
-  saveContent,
-  savePage,
-} from './helper'
+import { deleteContentItem, deletePageWithContent, isContentElement, saveContent, savePage } from './helper'
 
 let currentTab = $state('settings')
 
@@ -54,12 +41,8 @@ function changeTab(tab: string) {
     <div><small>Type: {$selectedElement.type}</small></div>
 
     <div class="tab">
-      <button
-        class={currentTab === 'settings' ? 'active' : ''}
-        onclick={() => changeTab('settings')}>Settings</button>
-      <button
-        class={currentTab === 'style' ? 'active' : ''}
-        onclick={() => changeTab('style')}>Style</button>
+      <button class={currentTab === 'settings' ? 'active' : ''} onclick={() => changeTab('settings')}>Settings</button>
+      <button class={currentTab === 'style' ? 'active' : ''} onclick={() => changeTab('style')}>Style</button>
     </div>
 
     <div class={currentTab === 'settings' ? '' : 'hidden'}>
@@ -154,10 +137,7 @@ function changeTab(tab: string) {
       {/if}
     </div>
     <div class="mt-4 flex gap-3 items-center flex-wrap">
-      <button
-        type="button"
-        class="btn px-4 py-2 delete"
-        onclick={() => deleteElement($selectedElement)}>Delete</button>
+      <button type="button" class="btn px-4 py-2 delete" onclick={() => deleteElement($selectedElement)}>Delete</button>
     </div>
   {:else}
     <p>No element selected.</p>

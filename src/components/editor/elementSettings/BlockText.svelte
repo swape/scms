@@ -13,24 +13,13 @@ $effect(() => {
 </script>
 
 {#if localElement.settings.type !== 'Paragraph'}
-  <InputWithLabel
-    label="Content"
-    inputType="text"
-    bind:value={localElement.content}
-    onchange={() => onChange(localElement)} />
+  <InputWithLabel label="Content" inputType="text" bind:value={localElement.content} onchange={() => onChange(localElement)} />
 {/if}
 {#if localElement.settings.type === 'Paragraph'}
-  <TextareaWithLabel
-    label="Content"
-    bind:value={localElement.content}
-    onchange={() => onChange(localElement)} />
+  <TextareaWithLabel label="Content" bind:value={localElement.content} onchange={() => onChange(localElement)} />
 {/if}
 
-<InputWithLabel
-  label="Order"
-  inputType="number"
-  bind:value={localElement.order}
-  onchange={() => onChange(localElement)} />
+<InputWithLabel label="Order" inputType="number" bind:value={localElement.order} onchange={() => onChange(localElement)} />
 
 <SelectWithLabel
   label="Type"

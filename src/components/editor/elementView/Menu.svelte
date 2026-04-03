@@ -11,10 +11,7 @@
     <div>ICON</div>
     <div>extra buttons</div>
     <div>
-      <button
-        popovertarget="main-menu"
-        popovertargetaction="toggle"
-        class="menu-button">Menu</button>
+      <button popovertarget="main-menu" popovertargetaction="toggle" class="menu-button">Menu</button>
     </div>
   </div>
   <nav id="main-menu" popover>

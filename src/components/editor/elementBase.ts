@@ -1,10 +1,7 @@
 import { blockDivider, blockText } from '../../constants'
 import type { ContentType } from '../../types/types'
 
-export function newBlockElement(
-  name: string,
-  additionalProps: Partial<ContentType> = {}
-): ContentType {
+export function newBlockElement(name: string, additionalProps: Partial<ContentType> = {}): ContentType {
   if (name === 'blockText') {
     return { ...blockText, ...additionalProps } as ContentType
   } else if (name === 'blockDivider') {

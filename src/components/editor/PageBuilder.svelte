@@ -13,9 +13,7 @@ function addBlock(blockName = 'blockText') {
   const newBlockId = Date.now()
   let newBlock = null
 
-  const order =
-    Object.values(oldContent).filter((c) => c.pageId === selectedPage.id)
-      .length + 1
+  const order = Object.values(oldContent).filter((c) => c.pageId === selectedPage.id).length + 1
 
   if (blockName === 'blockText') {
     newBlock = newBlockElement('blockText', {
@@ -82,25 +80,17 @@ function getSelectedPageColorClasses() {
     Add new elements to the page:
 
     <div class="element-buttons">
-      <button type="button" onclick={() => addBlock('blockText')}
-        >Text block</button>
-      <button type="button" onclick={() => addBlock('blockImage')}
-        >Image block</button>
-      <button type="button" onclick={() => addBlock('blockVideo')}
-        >Video block</button>
-      <button type="button" onclick={() => addBlock('blockDivider')}
-        >Divider</button>
-      <button type="button" onclick={() => addBlock('blockButton')}
-        >Button</button>
+      <button type="button" onclick={() => addBlock('blockText')}>Text block</button>
+      <button type="button" onclick={() => addBlock('blockImage')}>Image block</button>
+      <button type="button" onclick={() => addBlock('blockVideo')}>Video block</button>
+      <button type="button" onclick={() => addBlock('blockDivider')}>Divider</button>
+      <button type="button" onclick={() => addBlock('blockButton')}>Button</button>
       <button type="button" onclick={() => addBlock('blockLink')}>Link</button>
-      <button type="button" onclick={() => addBlock('blockPageList')}
-        >Page list</button>
+      <button type="button" onclick={() => addBlock('blockPageList')}>Page list</button>
     </div>
   </div>
 {:else}
-  <div class="text-2xl text-center p-5">
-    Please select a page to start editing.
-  </div>
+  <div class="text-2xl text-center p-5">Please select a page to start editing.</div>
 {/if}
 
 <style>

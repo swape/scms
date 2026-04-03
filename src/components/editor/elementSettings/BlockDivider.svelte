@@ -10,8 +10,4 @@ $effect(() => {
 })
 </script>
 
-<InputWithLabel
-  label="Order"
-  inputType="number"
-  bind:value={localElement.order}
-  onchange={() => onChange(localElement)} />
+<InputWithLabel label="Order" inputType="number" bind:value={localElement.order} onchange={() => onChange(localElement)} />

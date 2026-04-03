@@ -4,11 +4,7 @@ import { getPagesAsArray } from '../editor/helper'
 import PageListItemSub from './PageListItem.svelte'
 
 let { page, handlePageAdd, handlePageClick } = $props()
-let localSubPages = $derived(
-  $currentProject
-    ? getPagesAsArray($currentProject.pages || {}, page.id || null)
-    : []
-)
+let localSubPages = $derived($currentProject ? getPagesAsArray($currentProject.pages || {}, page.id || null) : [])
 let isOpen = $state(false)
 
 function handleAddPageAndOpenSubPages(id: string | null = null) {
@@ -19,18 +15,10 @@ function handleAddPageAndOpenSubPages(id: string | null = null) {
 
 <div>
   <div class="page-link">
-    <button
-      type="button"
-      class="cursor-pointer page-link-item"
-      onclick={() => handlePageClick(page.id)}
-      ><small class="mr-2 text-gray-500">{page.order}</small
-      >{page.title}</button>
+    <button type="button" class="cursor-pointer page-link-item" onclick={() => handlePageClick(page.id)}><small class="mr-2 text-gray-500">{page.order}</small>{page.title}</button>
     <span class="flex gap-1">
       {#if localSubPages.length > 0}
-        <button
-          type="button"
-          class="cursor-pointer"
-          onclick={() => (isOpen = !isOpen)}>
+        <button type="button" class="cursor-pointer" onclick={() => (isOpen = !isOpen)}>
           <span class="material-symbols-outlined">
             {#if isOpen}
               expand_more
@@ -40,11 +28,7 @@ function handleAddPageAndOpenSubPages(id: string | null = null) {
           </span>
         </button>
       {/if}
-      <button
-        type="button"
-        class="cursor-pointer"
-        onclick={() => handleAddPageAndOpenSubPages(page.id)}
-        ><span class="material-symbols-outlined"> add </span></button>
+      <button type="button" class="cursor-pointer" onclick={() => handleAddPageAndOpenSubPages(page.id)}><span class="material-symbols-outlined"> add </span></button>
     </span>
   </div>
   {#if localSubPages.length > 0 && isOpen}

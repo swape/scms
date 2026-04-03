@@ -4,11 +4,7 @@ import { getPagesAsArray } from '../editor/helper'
 import PageListItem from './PageListItem.svelte'
 
 function handlePageClick(id: string) {
-  if (
-    !$currentProject ||
-    !$currentProject.pages ||
-    !$currentProject.pages[id]
-  ) {
+  if (!$currentProject || !$currentProject.pages || !$currentProject.pages[id]) {
     return
   }
   $selectedElement = $currentProject.pages[id] || null
@@ -27,10 +23,7 @@ function handlePageAdd(id: string | null = null) {
       backgroundColorKey: 'bg_1',
     },
     parent: id,
-    order: $currentProject?.pages
-      ? Object.values($currentProject.pages).filter((p) => p.parent === id)
-          .length + 1
-      : 1,
+    order: $currentProject?.pages ? Object.values($currentProject.pages).filter((p) => p.parent === id).length + 1 : 1,
   }
   const oldCurrentProject = { ...$currentProject }
   if (!oldCurrentProject.pages) {
@@ -49,11 +42,7 @@ function handlePageAdd(id: string | null = null) {
     {/each}
     <div class="mt-2 new-page">
       <span class="new-page-item">Add new page</span>
-      <button
-        type="button"
-        class="cursor-pointer"
-        onclick={() => handlePageAdd(null)}
-        ><span class="material-symbols-outlined"> add </span></button>
+      <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
     </div>
   </div>
 {/if}

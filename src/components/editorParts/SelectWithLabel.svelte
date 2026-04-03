@@ -10,10 +10,7 @@ const { label, options, selectedValue, onchange } = $props<{
 <div class="forms">
   <label
     ><span>{label}</span>
-    <select
-      class="select"
-      value={selectedValue}
-      onchange={(e) => onchange?.((e.target as HTMLSelectElement).value)}>
+    <select class="select" value={selectedValue} onchange={(e) => onchange?.((e.target as HTMLSelectElement).value)}>
       {#each options as option}
         <option value={option.value}>{option.label}</option>
       {/each}

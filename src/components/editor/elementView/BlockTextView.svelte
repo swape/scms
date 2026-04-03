@@ -7,13 +7,10 @@ let blockStyles = $derived(
 )
 let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim())
 
-let colors = $derived(
-  `${block.colors?.textColorKey} ${block.colors?.backgroundColorKey}`.trim()
-)
+let colors = $derived(`${block.colors?.textColorKey} ${block.colors?.backgroundColorKey}`.trim())
 </script>
 
-<div
-  class={`${colors} ${wrapperClass === 'max-w-full' ? '' : 'mx-auto container'} relative`}>
+<div class={`${colors} ${wrapperClass === 'max-w-full' ? '' : 'mx-auto container'} relative`}>
   <InfoHelper {block} />
   {#if block}
     {#if block.settings.type === 'Paragraph'}

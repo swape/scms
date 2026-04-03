@@ -1,10 +1,5 @@
 <script lang="ts">
-import {
-  currentProject,
-  projects,
-  selectedElement,
-  selectedPage,
-} from '../../store'
+import { currentProject, projects, selectedElement, selectedPage } from '../../store'
 import type { PageType } from '../../types/types.ts'
 import ElementSettings from './ElementSettings.svelte'
 import PagesList from './PagesList.svelte'
@@ -38,13 +33,7 @@ $effect(() => {
   {#if $currentProject?.id}
     <div class="pages"><PagesList /></div>
     <div class="page-builder">
-      <iframe
-        src={`/pagePreview?p=${ID}`}
-        title="Page Preview"
-        width="100%"
-        height="100%"
-        frameborder="0"
-        style="background-color: white;"></iframe>
+      <iframe src={`/pagePreview?p=${ID}`} title="Page Preview" width="100%" height="100%" frameborder="0" style="background-color: white;"></iframe>
     </div>
     <div class="settings"><ElementSettings /></div>
   {/if}

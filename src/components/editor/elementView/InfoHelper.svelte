@@ -9,10 +9,7 @@ function selectThis(elm) {
 </script>
 
 <div class="float-wrapper">
-  <button
-    onclick={() => selectThis(block)}
-    type="button"
-    class="selecting-block-button">Select</button>
+  <button onclick={() => selectThis(block)} type="button" class="selecting-block-button">Select</button>
   <!-- <div class="floating-helper">
     <div>
       Block ID: {block.id} | Type: {block.type} | Order: {block.order}

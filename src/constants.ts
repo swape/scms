@@ -29,11 +29,34 @@ export const inlineSpacingOptions = [
   { value: 'px-8', label: 'Extra Large' },
 ]
 
+export const buttonPaddingOptions = [
+  { value: 'py-[5px] px-3', label: 'Default (5px / 12px)' },
+  { value: 'py-1 px-2', label: 'Small (4px / 8px)' },
+  { value: 'py-2 px-4', label: 'Medium (8px / 16px)' },
+  { value: 'py-3 px-6', label: 'Large (12px / 24px)' },
+  { value: 'py-4 px-8', label: 'Extra Large (16px / 32px)' },
+]
+
+export const buttonBorderRadiusOptions = [
+  { value: '', label: 'None' },
+  { value: 'rounded-sm', label: 'Small' },
+  { value: 'rounded', label: 'Medium' },
+  { value: 'rounded-lg', label: 'Large' },
+  { value: 'rounded-full', label: 'Full (pill)' },
+]
+
 export const colorOptions = [
   { value: '', label: 'None' },
   { value: 'bg_1', label: 'Primary Background' },
   { value: 'bg_2', label: 'Secondary Background' },
   { value: 'bg_3', label: 'Accent Background' },
+  { value: 'bg_4', label: 'Tertiary Background' },
+  { value: 'bg_5', label: 'Quaternary Background' },
+  { value: 'bg_1_dark', label: 'Primary Background Dark' },
+  { value: 'bg_2_dark', label: 'Secondary Background Dark' },
+  { value: 'bg_3_dark', label: 'Accent Background Dark' },
+  { value: 'bg_4_dark', label: 'Tertiary Background Dark' },
+  { value: 'bg_5_dark', label: 'Quaternary Background Dark' },
 ]
 
 export const textColorOptions = [
@@ -41,6 +64,13 @@ export const textColorOptions = [
   { value: 'text_1', label: 'Primary Text' },
   { value: 'text_2', label: 'Secondary Text' },
   { value: 'text_3', label: 'Accent Text' },
+  { value: 'text_4', label: 'Tertiary Text' },
+  { value: 'text_5', label: 'Quaternary Text' },
+  { value: 'text_1_dark', label: 'Primary Text Dark' },
+  { value: 'text_2_dark', label: 'Secondary Text Dark' },
+  { value: 'text_3_dark', label: 'Accent Text Dark' },
+  { value: 'text_4_dark', label: 'Tertiary Text Dark' },
+  { value: 'text_5_dark', label: 'Quaternary Text Dark' },
 ]
 
 export const blockText = {
@@ -75,6 +105,50 @@ export const blockDivider = {
   },
   colors: {
     backgroundColorKey: 'bg_3',
+  },
+  parent: null,
+}
+
+export const blockButton = {
+  type: 'block-button',
+  content: 'Click me',
+  settings: {
+    href: '',
+    target: '_self',
+    padding: 'py-[5px] px-3',
+    borderRadius: '',
+  },
+  styles: {
+    spacingTop: '',
+    spacingBottom: '',
+    blockWidth: '',
+    inlineSpacing: 'px-4',
+    textAlign: '',
+  },
+  colors: {
+    textColorKey: 'text_1',
+    backgroundColorKey: 'bg_1',
+  },
+  parent: null,
+}
+
+export const blockLink = {
+  type: 'block-link',
+  content: 'Link text',
+  settings: {
+    href: '',
+    target: '_self',
+  },
+  styles: {
+    spacingTop: '',
+    spacingBottom: '',
+    blockWidth: '',
+    inlineSpacing: 'px-4',
+    textAlign: '',
+  },
+  colors: {
+    textColorKey: 'text_1',
+    backgroundColorKey: '',
   },
   parent: null,
 }

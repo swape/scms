@@ -15,12 +15,20 @@ const colorList = [
   { name: 'Secondary Text', key: 'text_2' },
   { name: 'Accent Color', key: 'bg_3' },
   { name: 'Accent Text', key: 'text_3' },
+  { name: 'Tertiary Background', key: 'bg_4' },
+  { name: 'Tertiary Text', key: 'text_4' },
+  { name: 'Quaternary Background', key: 'bg_5' },
+  { name: 'Quaternary Text', key: 'text_5' },
   { name: 'Primary Background Dark', key: 'bg_1_dark' },
   { name: 'Primary Text Dark', key: 'text_1_dark' },
   { name: 'Secondary Background Dark', key: 'bg_2_dark' },
   { name: 'Secondary Text Dark', key: 'text_2_dark' },
   { name: 'Accent Color Dark', key: 'bg_3_dark' },
   { name: 'Accent Text Dark', key: 'text_3_dark' },
+  { name: 'Tertiary Background Dark', key: 'bg_4_dark' },
+  { name: 'Tertiary Text Dark', key: 'text_4_dark' },
+  { name: 'Quaternary Background Dark', key: 'bg_5_dark' },
+  { name: 'Quaternary Text Dark', key: 'text_5_dark' },
 ]
 
 $effect(() => {

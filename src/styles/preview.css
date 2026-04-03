@@ -58,3 +58,19 @@
 .text_3 {
   color: light-dark(var(--text_3), var(--text_3_dark));
 }
+
+.bg_4 {
+  background-color: light-dark(var(--bg_4), var(--bg_4_dark));
+}
+
+.bg_5 {
+  background-color: light-dark(var(--bg_5), var(--bg_5_dark));
+}
+
+.text_4 {
+  color: light-dark(var(--text_4), var(--text_4_dark));
+}
+
+.text_5 {
+  color: light-dark(var(--text_5), var(--text_5_dark));
+}

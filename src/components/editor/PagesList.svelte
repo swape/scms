@@ -1,6 +1,7 @@
 <script lang="ts">
-import { currentProject, selectedElement } from '../../store'
+import { currentProject, selectedElement, selectedPage } from '../../store'
 import { getPagesAsArray } from '../editor/helper'
+import NewBlockButtons from '../editorParts/NewBlockButtons.svelte'
 import PageListItem from './PageListItem.svelte'
 
 function handlePageClick(id: string) {
@@ -45,6 +46,9 @@ function handlePageAdd(id: string | null = null) {
       <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
     </div>
   </div>
+  {#if $selectedPage?.id}
+    <div class="border-t pt-6 mt-6"><NewBlockButtons /></div>
+  {/if}
 {/if}
 
 <style>

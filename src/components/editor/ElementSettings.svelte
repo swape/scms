@@ -3,7 +3,9 @@ import { colorOptions, inlineSpacingOptions, spacingOptions, textAlignOptions, t
 import { currentProject, selectedElement } from '../../store'
 import type { ContentType, PageType } from '../../types/types'
 import SelectWithLabel from '../editorParts/SelectWithLabel.svelte'
+import BlockButton from './elementSettings/BlockButton.svelte'
 import BlockDivider from './elementSettings/BlockDivider.svelte'
+import BlockLink from './elementSettings/BlockLink.svelte'
 import BlockText from './elementSettings/BlockText.svelte'
 import PageElement from './elementSettings/PageElement.svelte'
 import { deleteContentItem, deletePageWithContent, isContentElement, saveContent, savePage } from './helper'
@@ -54,6 +56,12 @@ function changeTab(tab: string) {
       {/if}
       {#if $selectedElement.type === 'block-divider'}
         <BlockDivider element={$selectedElement} onChange={changeAction} />
+      {/if}
+      {#if $selectedElement.type === 'block-button'}
+        <BlockButton element={$selectedElement} onChange={changeAction} />
+      {/if}
+      {#if $selectedElement.type === 'block-link'}
+        <BlockLink element={$selectedElement} onChange={changeAction} />
       {/if}
     </div>
     <div class={currentTab === 'style' ? '' : 'hidden'}>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { currentProject, selectedElement } from '../../store'
 import Menu from '../editor/elementView/Menu.svelte'
 import { getBlocksAsArray } from '../editor/helper'
@@ -8,6 +8,7 @@ import ElementView from './elementView/index.svelte'
 const { selectedPage } = $props()
 
 function addBlock(blockName = 'blockText') {
+  if (!$currentProject) return
   const oldContent = $currentProject.content || {}
   const newBlockId = Date.now()
   let newBlock = null
@@ -45,18 +46,20 @@ function addBlock(blockName = 'blockText') {
 }
 
 function getColors() {
-  return `--bg_1: ${$currentProject.colors['bg_1'].c};
---text_1: ${$currentProject.colors['text_1'].c};
---bg_2: ${$currentProject.colors['bg_2'].c};
---text_2: ${$currentProject.colors['text_2'].c};
---bg_3: ${$currentProject.colors['bg_3'].c};
---text_3: ${$currentProject.colors['text_3'].c};
---bg_1_dark: ${$currentProject.colors['bg_1_dark'].c};
---text_1_dark: ${$currentProject.colors['text_1_dark'].c};
---bg_2_dark: ${$currentProject.colors['bg_2_dark'].c};
---text_2_dark: ${$currentProject.colors['text_2_dark'].c};
---bg_3_dark: ${$currentProject.colors['bg_3_dark'].c};
---text_3_dark: ${$currentProject.colors['text_3_dark'].c};
+  if (!$currentProject?.colors) return ''
+  const colors = $currentProject.colors
+  return `--bg_1: ${colors['bg_1']?.c};
+--text_1: ${colors['text_1']?.c};
+--bg_2: ${colors['bg_2']?.c};
+--text_2: ${colors['text_2']?.c};
+--bg_3: ${colors['bg_3']?.c};
+--text_3: ${colors['text_3']?.c};
+--bg_1_dark: ${colors['bg_1_dark']?.c};
+--text_1_dark: ${colors['text_1_dark']?.c};
+--bg_2_dark: ${colors['bg_2_dark']?.c};
+--text_2_dark: ${colors['text_2_dark']?.c};
+--bg_3_dark: ${colors['bg_3_dark']?.c};
+--text_3_dark: ${colors['text_3_dark']?.c};
 `
 }
 
@@ -71,7 +74,7 @@ function getSelectedPageColorClasses() {
 <Menu />
 {#if selectedPage?.id}
   <main style={getColors()} class={getSelectedPageColorClasses()}>
-    {#each getBlocksAsArray($currentProject.content, selectedPage.id) as block}
+    {#each getBlocksAsArray($currentProject?.content, selectedPage.id) as block}
       <ElementView {block} />
     {/each}
   </main>

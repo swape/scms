@@ -2,15 +2,15 @@ import type { Writable } from 'svelte/store'
 import { writable } from 'svelte/store'
 import { getEmptyProjectStructure } from './components/projects/helper'
 import { getStorage, saveStorage } from './localstorage'
-import type { ProjectType, UserType } from './types/types'
+import type { ContentType, PageType, ProjectType, UserType } from './types/types'
 
 export const userObj = writable<UserType | null>(null)
 export const currentProject: Writable<ProjectType | null> = writable(null)
 export const projects: Writable<ProjectType[] | null> = writable([
   { ...getEmptyProjectStructure(1) }, // remove this when done testing
 ])
-export const selectedElement = writable<unknown>(null)
-export const selectedPage = writable<string | null>(null)
+export const selectedElement = writable<PageType | ContentType | null>(null)
+export const selectedPage = writable<PageType | null>(null)
 
 selectedPage.subscribe((value) => {
   if (value) {
@@ -24,7 +24,7 @@ currentProject.subscribe((project) => {
   }
 })
 
-window.addEventListener('storage', (event) => {
+globalThis.addEventListener('storage', (event) => {
   if (event.key === 'selectedElement') {
     const selectedFromStorage = getStorage('selectedElement')
     if (selectedFromStorage && selectedFromStorage.type !== 'page') {

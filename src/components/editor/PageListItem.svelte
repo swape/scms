@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { currentProject } from '../../store'
 import { getPagesAsArray } from '../editor/helper'
 import PageListItemSub from './PageListItem.svelte'
@@ -11,7 +11,7 @@ let localSubPages = $derived(
 )
 let isOpen = $state(false)
 
-function handleAddPageAndOpenSubPages(id) {
+function handleAddPageAndOpenSubPages(id: string | null = null) {
   handlePageAdd(id)
   isOpen = true
 }

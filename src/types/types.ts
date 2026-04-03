@@ -37,6 +37,17 @@ export interface ContentType {
   parent: string | null
   pageId: string
   type: string
+  styles?: {
+    spacingTop?: string
+    spacingBottom?: string
+    blockWidth?: string
+    inlineSpacing?: string
+    textAlign?: string
+  }
+  colors?: {
+    backgroundColorKey?: string
+    textColorKey?: string
+  }
   [key: string | number]: unknown
 }
 export interface UserType {

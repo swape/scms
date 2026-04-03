@@ -1,15 +1,25 @@
-<script>
+<script lang="ts">
 import { currentProject, selectedElement } from '../../store'
 import { getPagesAsArray } from '../editor/helper'
 import PageListItem from './PageListItem.svelte'
 
-function handlePageClick(id) {
+function handlePageClick(id: string) {
+  if (
+    !$currentProject ||
+    !$currentProject.pages ||
+    !$currentProject.pages[id]
+  ) {
+    return
+  }
   $selectedElement = $currentProject.pages[id] || null
 }
 
-function handlePageAdd(id = null) {
+function handlePageAdd(id: string | null = null) {
+  if (!$currentProject) {
+    return
+  }
   const newPage = {
-    id: Date.now(),
+    id: String(Date.now()),
     title: 'new page',
     type: 'page',
     colors: {
@@ -17,12 +27,15 @@ function handlePageAdd(id = null) {
       backgroundColorKey: 'bg_1',
     },
     parent: id,
-    order: $currentProject
+    order: $currentProject?.pages
       ? Object.values($currentProject.pages).filter((p) => p.parent === id)
           .length + 1
       : 1,
   }
   const oldCurrentProject = { ...$currentProject }
+  if (!oldCurrentProject.pages) {
+    oldCurrentProject.pages = {}
+  }
   oldCurrentProject.pages[newPage.id] = newPage
   $currentProject = oldCurrentProject
   $selectedElement = newPage

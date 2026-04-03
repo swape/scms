@@ -1,58 +1,49 @@
-<script>
+<script lang="ts">
+import {
+  colorOptions,
+  inlineSpacingOptions,
+  spacingOptions,
+  textAlignOptions,
+  textColorOptions,
+  widthOptions,
+} from '../../constants'
 import { currentProject, selectedElement } from '../../store'
+import type { ContentType, PageType } from '../../types/types'
+import SelectWithLabel from '../editorParts/SelectWithLabel.svelte'
 import BlockDivider from './elementSettings/BlockDivider.svelte'
 import BlockText from './elementSettings/BlockText.svelte'
 import PageElement from './elementSettings/PageElement.svelte'
+import {
+  deleteContentItem,
+  deletePageWithContent,
+  isContentElement,
+  saveContent,
+  savePage,
+} from './helper'
 
 let currentTab = $state('settings')
 
-function savePage(localElement) {
-  const oldCurrentProject = { ...$currentProject }
-  oldCurrentProject.pages[localElement.id] = { ...localElement }
-  $currentProject = oldCurrentProject
-}
-
-function saveElement(localElement) {
-  const oldCurrentProject = { ...$currentProject }
-  oldCurrentProject.content[localElement.id] = { ...localElement }
-  $currentProject = oldCurrentProject
-}
-
-function changeAction(elm) {
-  $selectedElement = elm
-  onSave()
-}
-
-function onSave() {
-  if ($selectedElement.type === 'page') {
-    savePage($selectedElement)
+function changeAction(elm: PageType | ContentType | null) {
+  if (!elm || !$currentProject) return
+  selectedElement.set(elm)
+  if (isContentElement(elm)) {
+    $currentProject = saveContent($currentProject, elm)
   } else {
-    saveElement($selectedElement)
+    $currentProject = savePage($currentProject, elm as PageType)
   }
 }
 
-function deleteElement(elm) {
-  if (elm.type === 'page') {
-    const oldCurrentProject = { ...$currentProject }
-    delete oldCurrentProject.pages[elm.id]
-    // delete all content related to this page
-    Object.values(oldCurrentProject.content).forEach((contentElm) => {
-      if (contentElm.pageId === elm.id) {
-        delete oldCurrentProject.content[contentElm.id]
-      }
-    })
-
-    $currentProject = oldCurrentProject
-    $selectedElement = null
+function deleteElement(elm: PageType | ContentType | null) {
+  if (!elm || !$currentProject) return
+  if (isContentElement(elm)) {
+    $currentProject = deleteContentItem($currentProject, elm)
   } else {
-    const oldCurrentProject = { ...$currentProject }
-    delete oldCurrentProject.content[elm.id]
-    $currentProject = oldCurrentProject
-    $selectedElement = null
+    $currentProject = deletePageWithContent($currentProject, elm as PageType)
   }
+  $selectedElement = null
 }
 
-function changeTab(tab) {
+function changeTab(tab: string) {
   currentTab = tab
 }
 </script>
@@ -84,124 +75,82 @@ function changeTab(tab) {
     </div>
     <div class={currentTab === 'style' ? '' : 'hidden'}>
       <!-- element styles-->
-      {#if $selectedElement.styles?.spacingTop !== undefined}
-        <div class="forms">
-          <label
-            ><span>Spacing-top</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.styles.spacingTop}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="">none</option>
-              <option value="pt-4">Small</option>
-              <option value="pt-8">Medium</option>
-              <option value="pt-16">Large</option>
-              <option value="pt-32">Extra Large</option>
-            </select>
-          </label>
-        </div>
-      {/if}
+      {#if isContentElement($selectedElement)}
+        {#if $selectedElement.styles?.spacingTop !== undefined}
+          <SelectWithLabel
+            label="Spacing-top"
+            options={spacingOptions}
+            selectedValue={$selectedElement.styles.spacingTop ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).styles!.spacingTop = v
+              changeAction($selectedElement)
+            }} />
+        {/if}
 
-      {#if $selectedElement.styles?.spacingBottom !== undefined}
-        <div class="forms">
-          <label
-            ><span>Spacing-bottom</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.styles.spacingBottom}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="">none</option>
-              <option value="pb-4">Small</option>
-              <option value="pb-8">Medium</option>
-              <option value="pb-16">Large</option>
-              <option value="pb-32">Extra Large</option>
-            </select>
-          </label>
-        </div>
-      {/if}
+        {#if $selectedElement.styles?.spacingBottom !== undefined}
+          <SelectWithLabel
+            label="Spacing-bottom"
+            options={spacingOptions}
+            selectedValue={$selectedElement.styles.spacingBottom ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).styles!.spacingBottom = v
+              changeAction($selectedElement)
+            }} />
+        {/if}
 
-      {#if $selectedElement.styles?.blockWidth !== undefined}
-        <div class="forms">
-          <label
-            ><span>Block width</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.styles.blockWidth}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="max-w-full">Full Width</option>
-              <option value="max-w-md">Small Width</option>
-              <option value="max-w-3xl">Medium Width</option>
-              <option value="max-w-xl">Narrow Width</option>
-              <option value="">Auto Width</option>
-            </select>
-          </label>
-        </div>
-      {/if}
+        {#if $selectedElement.styles?.blockWidth !== undefined}
+          <SelectWithLabel
+            label="Block width"
+            options={widthOptions}
+            selectedValue={$selectedElement.styles.blockWidth ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).styles!.blockWidth = v
+              changeAction($selectedElement)
+            }} />
+        {/if}
 
-      {#if $selectedElement.styles?.textAlign !== undefined}
-        <div class="forms">
-          <label
-            ><span>Text Align</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.styles.textAlign}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="">Left</option>
-              <option value="text-center">Center</option>
-              <option value="text-right">Right</option>
-              <option value="text-justify">Justify</option>
-            </select>
-          </label>
-        </div>
-      {/if}
+        {#if $selectedElement.styles?.textAlign !== undefined}
+          <SelectWithLabel
+            label="Text Align"
+            options={textAlignOptions}
+            selectedValue={$selectedElement.styles.textAlign ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).styles!.textAlign = v
+              changeAction($selectedElement)
+            }} />
+        {/if}
 
-      {#if $selectedElement.styles?.inlineSpacing !== undefined}
-        <div class="forms">
-          <label
-            ><span>Inline spacing</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.styles.inlineSpacing}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="">none</option>
-              <option value="px-2">Small</option>
-              <option value="px-4">Medium</option>
-              <option value="px-6">Large</option>
-              <option value="px-8">Extra Large</option>
-            </select>
-          </label>
-        </div>
-      {/if}
+        {#if $selectedElement.styles?.inlineSpacing !== undefined}
+          <SelectWithLabel
+            label="Inline spacing"
+            options={inlineSpacingOptions}
+            selectedValue={$selectedElement.styles.inlineSpacing ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).styles!.inlineSpacing = v
+              changeAction($selectedElement)
+            }} />
+        {/if}
 
-      <div class="forms">
-        <label
-          ><span>Background Color</span>
-          <select
-            class="select"
-            bind:value={$selectedElement.colors.backgroundColorKey}
-            onchange={() => changeAction($selectedElement)}>
-            <option value="">None</option>
-            <option value="bg_1">Primary Background</option>
-            <option value="bg_2">Secondary Background</option>
-            <option value="bg_3">Accent Background</option>
-          </select>
-        </label>
-      </div>
-      {#if $selectedElement.colors?.textColorKey !== undefined}
-        <div class="forms">
-          <label
-            ><span>Text Color</span>
-            <select
-              class="select"
-              bind:value={$selectedElement.colors.textColorKey}
-              onchange={() => changeAction($selectedElement)}>
-              <option value="">None</option>
-              <option value="text_1">Primary Text</option>
-              <option value="text_2">Secondary Text</option>
-              <option value="text_3">Accent Text</option>
-            </select>
-          </label>
-        </div>
+        {#if $selectedElement.colors}
+          <SelectWithLabel
+            label="Background Color"
+            options={colorOptions}
+            selectedValue={$selectedElement.colors.backgroundColorKey ?? ''}
+            onchange={(v) => {
+              ;($selectedElement as ContentType).colors!.backgroundColorKey = v
+              changeAction($selectedElement)
+            }} />
+          {#if $selectedElement.colors.textColorKey !== undefined}
+            <SelectWithLabel
+              label="Text Color"
+              options={textColorOptions}
+              selectedValue={$selectedElement.colors.textColorKey ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).colors!.textColorKey = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+        {/if}
       {/if}
     </div>
     <div class="mt-4 flex gap-3 items-center flex-wrap">

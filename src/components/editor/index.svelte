@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 import {
   currentProject,
   projects,
   selectedElement,
   selectedPage,
 } from '../../store'
+import type { PageType } from '../../types/types.ts'
 import ElementSettings from './ElementSettings.svelte'
 import PagesList from './PagesList.svelte'
 
@@ -18,8 +19,9 @@ $effect(() => {
 })
 
 $effect(() => {
-  if ($selectedElement && $selectedElement.type === 'page') {
-    $selectedPage = $selectedElement
+  const el = $selectedElement
+  if (el && el.type === 'page') {
+    selectedPage.set(el as PageType)
   }
 })
 </script>

@@ -1,4 +1,3 @@
-
 export const spacingOptions = [
   { value: '', label: 'none' },
   { value: 'pt-4', label: 'Small' },
@@ -43,7 +42,6 @@ export const textColorOptions = [
   { value: 'text_2', label: 'Secondary Text' },
   { value: 'text_3', label: 'Accent Text' },
 ]
-
 
 export const blockText = {
   type: 'block-text',

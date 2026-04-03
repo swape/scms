@@ -1,4 +1,9 @@
-import type { ContentListType, ContentType, PageType, ProjectType } from '../../types/types'
+import type {
+  ContentListType,
+  ContentType,
+  PageType,
+  ProjectType,
+} from '../../types/types'
 
 export function getPagesAsArray(
   pagesObj: { [key: string]: PageType } | undefined,

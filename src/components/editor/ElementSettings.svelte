@@ -1,5 +1,5 @@
 <script lang="ts">
-import { colorOptions, inlineSpacingOptions, spacingOptions, textAlignOptions, textColorOptions, widthOptions } from '../../constants'
+import { colorOptions, inlineSpacingOptions, spacingBottomOptions, spacingOptions, textAlignOptions, textColorOptions, widthOptions } from '../../constants'
 import { currentProject, selectedElement } from '../../store'
 import type { ContentType, PageType } from '../../types/types'
 import SelectWithLabel from '../editorParts/SelectWithLabel.svelte'
@@ -49,7 +49,7 @@ function changeTab(tab: string) {
 
     <div class={currentTab === 'settings' ? '' : 'hidden'}>
       {#if $selectedElement.type === 'page'}
-        <PageElement element={$selectedElement} onChange={changeAction} />
+        <PageElement element={$selectedElement as PageType} onChange={changeAction} />
       {/if}
       {#if $selectedElement.type === 'block-text'}
         <BlockText element={$selectedElement} onChange={changeAction} />
@@ -81,7 +81,7 @@ function changeTab(tab: string) {
         {#if $selectedElement.styles?.spacingBottom !== undefined}
           <SelectWithLabel
             label="Spacing-bottom"
-            options={spacingOptions}
+            options={spacingBottomOptions}
             selectedValue={$selectedElement.styles.spacingBottom ?? ''}
             onchange={(v) => {
               ;($selectedElement as ContentType).styles!.spacingBottom = v

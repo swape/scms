@@ -15,7 +15,7 @@ let colors = $derived(`${block.colors?.textColorKey || ''} ${block.colors?.backg
     <a
       href={block.settings?.href || '#'}
       target={block.settings?.target || '_self'}
-      class={`btn ${block.settings?.padding || 'py-[5px] px-3'} ${block.settings?.borderRadius || ''} ${colors}`}>
+      class={`btn ${block.settings?.padding || 'py-1.25 px-3'} ${block.settings?.borderRadius || ''} ${colors}`}>
       {block.content}
     </a>
   {/if}

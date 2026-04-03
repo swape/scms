@@ -6,6 +6,8 @@ export const spacingOptions = [
   { value: 'pt-32', label: 'Extra Large' },
 ]
 
+export const spacingBottomOptions = spacingOptions.map((option) => ({ value: option.value.replace('pt-', 'pb-'), label: option.label }))
+
 export const widthOptions = [
   { value: '', label: 'Auto Width' },
   { value: 'max-w-md', label: 'Small Width' },
@@ -52,11 +54,6 @@ export const colorOptions = [
   { value: 'bg_3', label: 'Accent Background' },
   { value: 'bg_4', label: 'Tertiary Background' },
   { value: 'bg_5', label: 'Quaternary Background' },
-  { value: 'bg_1_dark', label: 'Primary Background Dark' },
-  { value: 'bg_2_dark', label: 'Secondary Background Dark' },
-  { value: 'bg_3_dark', label: 'Accent Background Dark' },
-  { value: 'bg_4_dark', label: 'Tertiary Background Dark' },
-  { value: 'bg_5_dark', label: 'Quaternary Background Dark' },
 ]
 
 export const textColorOptions = [
@@ -66,11 +63,6 @@ export const textColorOptions = [
   { value: 'text_3', label: 'Accent Text' },
   { value: 'text_4', label: 'Tertiary Text' },
   { value: 'text_5', label: 'Quaternary Text' },
-  { value: 'text_1_dark', label: 'Primary Text Dark' },
-  { value: 'text_2_dark', label: 'Secondary Text Dark' },
-  { value: 'text_3_dark', label: 'Accent Text Dark' },
-  { value: 'text_4_dark', label: 'Tertiary Text Dark' },
-  { value: 'text_5_dark', label: 'Quaternary Text Dark' },
 ]
 
 export const blockText = {

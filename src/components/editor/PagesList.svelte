@@ -1,5 +1,5 @@
 <script lang="ts">
-import { currentProject, selectedElement, selectedPage } from '../../store'
+import { currentProject, isDarkMode, selectedElement, selectedPage } from '../../store'
 import { getPagesAsArray } from '../editor/helper'
 import NewBlockButtons from '../editorParts/NewBlockButtons.svelte'
 import PageListItem from './PageListItem.svelte'
@@ -34,9 +34,18 @@ function handlePageAdd(id: string | null = null) {
   $currentProject = oldCurrentProject
   $selectedElement = newPage
 }
+
+function toggleDarkMode() {
+  $isDarkMode = !$isDarkMode
+}
 </script>
 
 {#if $currentProject?.id}
+  {#if $selectedPage?.id}
+    <div>
+      <button class="btn p-3 mb-5" type="button" onclick={() => toggleDarkMode()}>{$isDarkMode ? 'Light Mode' : 'Dark Mode'}</button>
+    </div>
+  {/if}
   <div>
     {#each getPagesAsArray($currentProject?.pages || {}) as page}
       <PageListItem {page} {handlePageAdd} {handlePageClick} />

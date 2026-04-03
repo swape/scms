@@ -35,6 +35,10 @@
   }
 }
 
+main {
+  min-height: 100vh;
+}
+
 .bg_1 {
   background-color: light-dark(var(--bg_1), var(--bg_1_dark));
 }

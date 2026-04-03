@@ -11,6 +11,13 @@ export const projects: Writable<ProjectType[] | null> = writable([
 ])
 export const selectedElement = writable<PageType | ContentType | null>(null)
 export const selectedPage = writable<PageType | null>(null)
+export const isDarkMode = writable<boolean>(
+  typeof localStorage === 'undefined' ? false : (getStorage('darkMode', Infinity) ?? false),
+)
+
+isDarkMode.subscribe((value) => {
+  saveStorage('darkMode', value)
+})
 
 selectedPage.subscribe((value) => {
   if (value) {
@@ -31,4 +38,7 @@ globalThis.addEventListener('storage', (event) => {
       selectedElement.set(selectedFromStorage)
     }
   }
+  
 })
+
+

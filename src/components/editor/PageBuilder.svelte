@@ -1,5 +1,5 @@
 <script lang="ts">
-import { currentProject } from '../../store'
+import { currentProject, isDarkMode } from '../../store'
 import Menu from '../editor/elementView/Menu.svelte'
 import { getBlocksAsArray } from '../editor/helper'
 import ElementView from './elementView/index.svelte'
@@ -42,7 +42,7 @@ function getSelectedPageColorClasses() {
 
 <Menu />
 {#if selectedPage?.id}
-  <main style={getColors()} class={getSelectedPageColorClasses()}>
+  <main style="{getColors()} color-scheme: {$isDarkMode ? 'dark' : 'light'};" class={getSelectedPageColorClasses()}>
     {#each getBlocksAsArray($currentProject?.content, selectedPage.id) as block}
       <ElementView {block} />
     {/each}

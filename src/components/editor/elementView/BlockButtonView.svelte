@@ -20,3 +20,10 @@ let colors = $derived(`${block.colors?.textColorKey || ''} ${block.colors?.backg
     </a>
   {/if}
 </div>
+
+<style>
+.btn {
+  display: inline-block;
+  text-decoration: none;
+}
+</style>

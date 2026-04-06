@@ -123,14 +123,16 @@ function changeTab(tab: string) {
         {/if}
 
         {#if $selectedElement.colors}
-          <SelectWithLabel
-            label="Background Color"
-            options={colorOptions}
-            selectedValue={$selectedElement.colors.backgroundColorKey ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).colors!.backgroundColorKey = v
-              changeAction($selectedElement)
-            }} />
+          {#if $selectedElement.colors.backgroundColorKey !== undefined}
+            <SelectWithLabel
+              label="Background Color"
+              options={colorOptions}
+              selectedValue={$selectedElement.colors.backgroundColorKey ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).colors!.backgroundColorKey = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
           {#if $selectedElement.colors.textColorKey !== undefined}
             <SelectWithLabel
               label="Text Color"

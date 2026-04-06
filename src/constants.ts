@@ -140,7 +140,6 @@ export const blockLink = {
   },
   colors: {
     textColorKey: 'text_1',
-    backgroundColorKey: '',
   },
   parent: null,
 }

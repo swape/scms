@@ -4,10 +4,10 @@ import InputWithLabel from '../../editorParts/InputWithLabel.svelte'
 import SelectWithLabel from '../../editorParts/SelectWithLabel.svelte'
 
 let { element, onChange } = $props()
-let localElement = $state(untrack(() => structuredClone(element)))
+let localElement = $state(untrack(() => structuredClone(element || {})))
 
 $effect(() => {
-  localElement = structuredClone(element)
+  localElement = structuredClone(element || {})
 })
 
 const targetOptions = [

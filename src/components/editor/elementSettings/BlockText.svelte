@@ -5,10 +5,10 @@ import SelectWithLabel from '../../editorParts/SelectWithLabel.svelte'
 import TextareaWithLabel from '../../editorParts/TextareaWithLabel.svelte'
 
 let { element, onChange } = $props()
-let localElement = $state(untrack(() => structuredClone(element)))
+let localElement = $state(untrack(() => structuredClone(element || {})))
 
 $effect(() => {
-  localElement = structuredClone(element)
+  localElement = structuredClone(element || {})
 })
 </script>
 

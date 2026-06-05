@@ -6,5 +6,5 @@ let def = $derived(getBlockByType(block?.type))
 </script>
 
 {#if def}
-  <svelte:component this={def.ViewComponent} {block} />
+  <def.ViewComponent {block} />
 {/if}

@@ -64,7 +64,7 @@ function changeTab(tab: string) {
       {:else}
         {@const blockDef = getBlockByType($selectedElement.type)}
         {#if blockDef}
-          <svelte:component this={blockDef.SettingsComponent} element={$selectedElement} onChange={changeAction} />
+          <blockDef.SettingsComponent element={$selectedElement} onChange={changeAction} />
         {/if}
       {/if}
     </div>

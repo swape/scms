@@ -1,64 +1,34 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store'
-import { newBlockElement } from '../editor/elementBase'
+import { blockRegistry } from '../editor/blocks/registry'
 
-function addBlock(blockName = 'blockText') {
+function addBlock(blockType: string) {
   if (!$currentProject) return
+  const def = blockRegistry.find((b) => b.type === blockType)
+  if (!def) return
   const oldContent = $currentProject.content || {}
   const newBlockId = Date.now()
-  let newBlock = null
-
   const order = Object.values(oldContent).filter((c) => c.pageId === $selectedPage?.id).length + 1
 
-  if (blockName === 'blockText') {
-    newBlock = newBlockElement('blockText', {
-      id: newBlockId,
-      order,
-      pageId: $selectedPage?.id,
-      colors: {
-        textColorKey: 'text_1',
-        backgroundColorKey: 'bg_1',
-      },
-    })
-  } else if (blockName === 'blockDivider') {
-    newBlock = newBlockElement('blockDivider', {
-      id: newBlockId,
-      order,
-      pageId: $selectedPage?.id,
-    })
-  } else if (blockName === 'blockButton') {
-    newBlock = newBlockElement('blockButton', {
-      id: newBlockId,
-      order,
-      pageId: $selectedPage?.id,
-    })
-  } else if (blockName === 'blockLink') {
-    newBlock = newBlockElement('blockLink', {
-      id: newBlockId,
-      order,
-      pageId: $selectedPage?.id,
-    })
-  }
+  const newBlock = def.defaultData({
+    id: newBlockId,
+    order,
+    pageId: $selectedPage?.id,
+  })
 
-  if (newBlock) {
-    currentProject.set({
-      ...$currentProject,
-      content: { ...oldContent, [newBlockId]: newBlock },
-    })
+  currentProject.set({
+    ...$currentProject,
+    content: { ...oldContent, [newBlockId]: newBlock },
+  })
 
-    $selectedElement = newBlock
-  }
+  $selectedElement = newBlock
 }
 </script>
 
 <div class="element-buttons">
-  <button type="button" onclick={() => addBlock('blockText')}>Text block</button>
-  <button type="button" onclick={() => addBlock('blockImage')}>Image block</button>
-  <button type="button" onclick={() => addBlock('blockVideo')}>Video block</button>
-  <button type="button" onclick={() => addBlock('blockDivider')}>Divider</button>
-  <button type="button" onclick={() => addBlock('blockButton')}>Button</button>
-  <button type="button" onclick={() => addBlock('blockLink')}>Link</button>
-  <button type="button" onclick={() => addBlock('blockPageList')}>Page list</button>
+  {#each blockRegistry as blockDef}
+    <button type="button" onclick={() => addBlock(blockDef.type)}>{blockDef.label}</button>
+  {/each}
 </div>
 
 <style>

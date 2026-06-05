@@ -1,16 +1,10 @@
-import { blockButton, blockDivider, blockLink, blockText } from '../../constants'
 import type { ContentType } from '../../types/types'
+import { blockRegistry } from './blocks/registry'
 
-export function newBlockElement(name: string, additionalProps: Partial<ContentType> = {}): ContentType {
-  if (name === 'blockText') {
-    return { ...blockText, ...additionalProps } as ContentType
-  } else if (name === 'blockDivider') {
-    return { ...blockDivider, ...additionalProps } as ContentType
-  } else if (name === 'blockButton') {
-    return { ...blockButton, ...additionalProps } as ContentType
-  } else if (name === 'blockLink') {
-    return { ...blockLink, ...additionalProps } as ContentType
+export function newBlockElement(type: string, additionalProps: Partial<ContentType> = {}): ContentType {
+  const def = blockRegistry.find((b) => b.type === type)
+  if (def) {
+    return def.defaultData(additionalProps)
   }
-
-  return { type: name, ...additionalProps } as ContentType
+  return { type, ...additionalProps } as ContentType
 }

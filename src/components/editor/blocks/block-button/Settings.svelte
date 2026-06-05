@@ -1,14 +1,14 @@
 <script lang="ts">
 import { untrack } from 'svelte'
-import { buttonBorderRadiusOptions, buttonPaddingOptions } from '../../../constants'
-import InputWithLabel from '../../editorParts/InputWithLabel.svelte'
-import SelectWithLabel from '../../editorParts/SelectWithLabel.svelte'
+import { buttonBorderRadiusOptions, buttonPaddingOptions } from '../../../../constants'
+import InputWithLabel from '../../../editorParts/InputWithLabel.svelte'
+import SelectWithLabel from '../../../editorParts/SelectWithLabel.svelte'
 
 let { element, onChange } = $props()
-let localElement = $state(untrack(() => structuredClone(element || {})))
+let localElement = $state(untrack(() => ({ ...element })))
 
 $effect(() => {
-  localElement = structuredClone(element || {})
+  localElement = element && { ...element }
 })
 
 const targetOptions = [
@@ -33,7 +33,7 @@ const targetOptions = [
 <SelectWithLabel
   label="Padding"
   options={buttonPaddingOptions}
-  selectedValue={localElement.settings.padding ?? 'py-[5px] px-3'}
+  selectedValue={localElement.settings.padding ?? 'btn-padding-default'}
   onchange={(v) => {
     localElement.settings.padding = v
     onChange(localElement)

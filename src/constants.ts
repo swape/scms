@@ -1,50 +1,64 @@
 export const spacingOptions = [
   { value: '', label: 'none' },
-  { value: 'pt-4', label: 'Small' },
-  { value: 'pt-8', label: 'Medium' },
-  { value: 'pt-16', label: 'Large' },
-  { value: 'pt-32', label: 'Extra Large' },
+  { value: 'block-spacing-top-sm', label: 'Small' },
+  { value: 'block-spacing-top-md', label: 'Medium' },
+  { value: 'block-spacing-top-lg', label: 'Large' },
+  { value: 'block-spacing-top-xl', label: 'Extra Large' },
 ]
 
-export const spacingBottomOptions = spacingOptions.map((option) => ({ value: option.value.replace('pt-', 'pb-'), label: option.label }))
+export const spacingBottomOptions = [
+  { value: '', label: 'none' },
+  { value: 'block-spacing-bottom-sm', label: 'Small' },
+  { value: 'block-spacing-bottom-md', label: 'Medium' },
+  { value: 'block-spacing-bottom-lg', label: 'Large' },
+  { value: 'block-spacing-bottom-xl', label: 'Extra Large' },
+]
+
+export const blockPaddingOptions = [
+  { value: '', label: 'none' },
+  { value: 'block-spacing-y-sm', label: 'Small' },
+  { value: 'block-spacing-y-md', label: 'Medium' },
+  { value: 'block-spacing-y-lg', label: 'Large' },
+  { value: 'block-spacing-y-xl', label: 'Extra Large' },
+]
 
 export const widthOptions = [
   { value: '', label: 'Auto Width' },
-  { value: 'max-w-md', label: 'Small Width' },
-  { value: 'max-w-3xl', label: 'Medium Width' },
-  { value: 'max-w-xl', label: 'Narrow Width' },
-  { value: 'max-w-full', label: 'Full Width' },
+  { value: 'block-width-sm', label: 'Small Width' },
+  { value: 'block-width-md', label: 'Medium Width' },
+  { value: 'block-width-narrow', label: 'Narrow Width' },
+  { value: 'block-width-full', label: 'Full Width' },
 ]
 
 export const textAlignOptions = [
   { value: '', label: 'Left' },
-  { value: 'text-center', label: 'Center' },
-  { value: 'text-right', label: 'Right' },
-  { value: 'text-justify', label: 'Justify' },
+  { value: 'block-text-center', label: 'Center' },
+  { value: 'block-text-right', label: 'Right' },
+  { value: 'block-text-justify', label: 'Justify' },
 ]
 
-export const inlineSpacingOptions = [
+export const inlinePaddingOptions = [
   { value: '', label: 'none' },
-  { value: 'px-2', label: 'Small' },
-  { value: 'px-4', label: 'Medium' },
-  { value: 'px-6', label: 'Large' },
-  { value: 'px-8', label: 'Extra Large' },
+  { value: 'block-inline-spacing-sm', label: 'Small' },
+  { value: 'block-inline-spacing-md', label: 'Medium' },
+  { value: 'block-inline-spacing-lg', label: 'Large' },
+  { value: 'block-inline-spacing-xl', label: 'Extra Large' },
 ]
 
 export const buttonPaddingOptions = [
-  { value: 'py-[5px] px-3', label: 'Default (5px / 12px)' },
-  { value: 'py-1 px-2', label: 'Small (4px / 8px)' },
-  { value: 'py-2 px-4', label: 'Medium (8px / 16px)' },
-  { value: 'py-3 px-6', label: 'Large (12px / 24px)' },
-  { value: 'py-4 px-8', label: 'Extra Large (16px / 32px)' },
+  { value: 'btn-padding-default', label: 'Default (5px / 12px)' },
+  { value: 'btn-padding-sm', label: 'Small (4px / 8px)' },
+  { value: 'btn-padding-md', label: 'Medium (8px / 16px)' },
+  { value: 'btn-padding-lg', label: 'Large (12px / 24px)' },
+  { value: 'btn-padding-xl', label: 'Extra Large (16px / 32px)' },
 ]
 
 export const buttonBorderRadiusOptions = [
   { value: '', label: 'None' },
-  { value: 'rounded-sm', label: 'Small' },
-  { value: 'rounded', label: 'Medium' },
-  { value: 'rounded-lg', label: 'Large' },
-  { value: 'rounded-full', label: 'Full (pill)' },
+  { value: 'btn-radius-sm', label: 'Small' },
+  { value: 'btn-radius-md', label: 'Medium' },
+  { value: 'btn-radius-lg', label: 'Large' },
+  { value: 'btn-radius-full', label: 'Full (pill)' },
 ]
 
 export const colorOptions = [
@@ -65,81 +79,40 @@ export const textColorOptions = [
   { value: 'text_5', label: 'Quaternary Text' },
 ]
 
-export const blockText = {
-  type: 'block-text',
-  content: 'New Block',
-  settings: {
-    type: 'Paragraph',
-  },
-  options: {
-    elementTypes: ['Paragraph', 'Heading 1', 'Heading 2', 'Heading 3'],
-  },
-  styles: {
-    spacingTop: '',
-    spacingBottom: '',
-    blockWidth: '',
-    inlineSpacing: 'px-4',
-    textAlign: '',
-  },
-  colors: {
-    textColorKey: '',
-    backgroundColorKey: '',
-  },
-  parent: null,
-}
+export const borderRadiusOptions = [
+  { label: 'None', value: '' },
+  { label: 'Small', value: 'block-border-sm' },
+  { label: 'Medium', value: 'block-border-md' },
+  { label: 'Large', value: 'block-border-lg' },
+  { label: 'Full', value: 'block-border-full' },
+]
 
-export const blockDivider = {
-  type: 'block-divider',
-  styles: {
-    spacingTop: 'pt-8',
-    spacingBottom: 'pb-8',
-    blockWidth: 'max-w-3xl',
-  },
-  colors: {
-    backgroundColorKey: 'bg_3',
-  },
-  parent: null,
-}
+export const borderWidthOptions = [
+  { value: '', label: 'None' },
+  { value: 'block-border-width-sm', label: 'Thin (1px)' },
+  { value: 'block-border-width-md', label: 'Medium (2px)' },
+  { value: 'block-border-width-lg', label: 'Thick (4px)' },
+  { value: 'block-border-width-xl', label: 'Extra Thick (8px)' },
+]
 
-export const blockButton = {
-  type: 'block-button',
-  content: 'Click me',
-  settings: {
-    href: '',
-    target: '_self',
-    padding: 'py-[5px] px-3',
-    borderRadius: '',
-  },
-  styles: {
-    spacingTop: '',
-    spacingBottom: '',
-    blockWidth: '',
-    inlineSpacing: 'px-4',
-    textAlign: '',
-  },
-  colors: {
-    textColorKey: 'text_1',
-    backgroundColorKey: 'bg_1',
-  },
-  parent: null,
-}
+export const cornerShapeOptions = [
+  { value: '', label: 'Round (default)' },
+  { value: 'block-corner-shape-bevel', label: 'Bevel' },
+  { value: 'block-corner-shape-scoop', label: 'Scoop' },
+  { value: 'block-corner-shape-notch', label: 'Notch' },
+  { value: 'block-corner-shape-squircle', label: 'Squircle' },
+]
 
-export const blockLink = {
-  type: 'block-link',
-  content: 'Link text',
-  settings: {
-    href: '',
-    target: '_self',
-  },
-  styles: {
-    spacingTop: '',
-    spacingBottom: '',
-    blockWidth: '',
-    inlineSpacing: 'px-4',
-    textAlign: '',
-  },
-  colors: {
-    textColorKey: 'text_1',
-  },
-  parent: null,
-}
+export const borderColorOptions = [
+  { value: '', label: 'None (inherits)' },
+  { value: 'bg_1', label: 'Primary Background' },
+  { value: 'bg_2', label: 'Secondary Background' },
+  { value: 'bg_3', label: 'Accent' },
+  { value: 'bg_4', label: 'Tertiary Background' },
+  { value: 'bg_5', label: 'Quaternary Background' },
+  { value: 'text_1', label: 'Primary Text' },
+  { value: 'text_2', label: 'Secondary Text' },
+  { value: 'text_3', label: 'Accent Text' },
+  { value: 'text_4', label: 'Tertiary Text' },
+  { value: 'text_5', label: 'Quaternary Text' },
+]

@@ -37,16 +37,22 @@ export interface ContentType {
   parent: string | null
   pageId: string
   type: string
+  label?: string
   styles?: {
-    spacingTop?: string
-    spacingBottom?: string
+    marginTop?: string
+    marginBottom?: string
     blockWidth?: string
-    inlineSpacing?: string
+    inlinePadding?: string
+    blockPadding?: string
+    borderRadius?: string
+    borderWidth?: string
+    cornerShape?: string
     textAlign?: string
   }
   colors?: {
     backgroundColorKey?: string
     textColorKey?: string
+    borderColorKey?: string
   }
   [key: string | number]: unknown
 }

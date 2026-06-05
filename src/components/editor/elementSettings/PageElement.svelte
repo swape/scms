@@ -6,7 +6,7 @@ let { element, onChange } = $props<{ element: PageType; onChange: (el: PageType)
 let localElement = $state<PageType | undefined>(undefined)
 
 $effect(() => {
-  localElement = structuredClone(element)
+  localElement = { ...element }
 })
 </script>
 

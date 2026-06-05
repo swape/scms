@@ -1,16 +1,27 @@
 <script lang="ts">
-import { colorOptions, inlineSpacingOptions, spacingBottomOptions, spacingOptions, textAlignOptions, textColorOptions, widthOptions } from '../../constants'
+import {
+  blockPaddingOptions,
+  borderColorOptions,
+  borderRadiusOptions,
+  borderWidthOptions,
+  colorOptions,
+  cornerShapeOptions,
+  inlinePaddingOptions,
+  spacingBottomOptions,
+  spacingOptions,
+  textAlignOptions,
+  textColorOptions,
+  widthOptions,
+} from '../../constants'
 import { currentProject, selectedElement } from '../../store'
 import type { ContentType, PageType } from '../../types/types'
 import SelectWithLabel from '../editorParts/SelectWithLabel.svelte'
-import BlockButton from './elementSettings/BlockButton.svelte'
-import BlockDivider from './elementSettings/BlockDivider.svelte'
-import BlockLink from './elementSettings/BlockLink.svelte'
-import BlockText from './elementSettings/BlockText.svelte'
+import { getBlockByType } from './blocks/registry'
 import PageElement from './elementSettings/PageElement.svelte'
 import { deleteContentItem, deletePageWithContent, isContentElement, saveContent, savePage } from './helper'
 
 let currentTab = $state('settings')
+let currentStyleTab = $state('layout')
 
 function changeAction(elm: PageType | ContentType | null) {
   if (!elm || !$currentProject) return
@@ -50,80 +61,138 @@ function changeTab(tab: string) {
     <div class={currentTab === 'settings' ? '' : 'hidden'}>
       {#if $selectedElement.type === 'page'}
         <PageElement element={$selectedElement as PageType} onChange={changeAction} />
-      {/if}
-      {#if $selectedElement.type === 'block-text'}
-        <BlockText element={$selectedElement} onChange={changeAction} />
-      {/if}
-      {#if $selectedElement.type === 'block-divider'}
-        <BlockDivider element={$selectedElement} onChange={changeAction} />
-      {/if}
-      {#if $selectedElement.type === 'block-button'}
-        <BlockButton element={$selectedElement} onChange={changeAction} />
-      {/if}
-      {#if $selectedElement.type === 'block-link'}
-        <BlockLink element={$selectedElement} onChange={changeAction} />
+      {:else}
+        {@const blockDef = getBlockByType($selectedElement.type)}
+        {#if blockDef}
+          <svelte:component this={blockDef.SettingsComponent} element={$selectedElement} onChange={changeAction} />
+        {/if}
       {/if}
     </div>
     <div class={currentTab === 'style' ? '' : 'hidden'}>
       <!-- element styles-->
       {#if isContentElement($selectedElement)}
-        {#if $selectedElement.styles?.spacingTop !== undefined}
-          <SelectWithLabel
-            label="Spacing-top"
-            options={spacingOptions}
-            selectedValue={$selectedElement.styles.spacingTop ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).styles!.spacingTop = v
-              changeAction($selectedElement)
-            }} />
-        {/if}
+        <div class="tab tab--sub">
+          <button class={currentStyleTab === 'layout' ? 'active' : ''} onclick={() => (currentStyleTab = 'layout')}>Layout</button>
+          <button class={currentStyleTab === 'space' ? 'active' : ''} onclick={() => (currentStyleTab = 'space')}>Space</button>
+          <button class={currentStyleTab === 'border' ? 'active' : ''} onclick={() => (currentStyleTab = 'border')}>Border</button>
+          <button class={currentStyleTab === 'colors' ? 'active' : ''} onclick={() => (currentStyleTab = 'colors')}>Colors</button>
+        </div>
 
-        {#if $selectedElement.styles?.spacingBottom !== undefined}
-          <SelectWithLabel
-            label="Spacing-bottom"
-            options={spacingBottomOptions}
-            selectedValue={$selectedElement.styles.spacingBottom ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).styles!.spacingBottom = v
-              changeAction($selectedElement)
-            }} />
-        {/if}
+        <!-- Layout: width + alignment -->
+        <div class={currentStyleTab === 'layout' ? '' : 'hidden'}>
+          {#if $selectedElement.styles?.blockWidth !== undefined}
+            <SelectWithLabel
+              label="Block width"
+              options={widthOptions}
+              selectedValue={$selectedElement.styles.blockWidth ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.blockWidth = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.textAlign !== undefined}
+            <SelectWithLabel
+              label="Text Align"
+              options={textAlignOptions}
+              selectedValue={$selectedElement.styles.textAlign ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.textAlign = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+        </div>
 
-        {#if $selectedElement.styles?.blockWidth !== undefined}
-          <SelectWithLabel
-            label="Block width"
-            options={widthOptions}
-            selectedValue={$selectedElement.styles.blockWidth ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).styles!.blockWidth = v
-              changeAction($selectedElement)
-            }} />
-        {/if}
+        <!-- Space: margins + paddings -->
+        <div class={currentStyleTab === 'space' ? '' : 'hidden'}>
+          {#if $selectedElement.styles?.marginTop !== undefined}
+            <SelectWithLabel
+              label="Margin top"
+              options={spacingOptions}
+              selectedValue={$selectedElement.styles.marginTop ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.marginTop = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.marginBottom !== undefined}
+            <SelectWithLabel
+              label="Margin bottom"
+              options={spacingBottomOptions}
+              selectedValue={$selectedElement.styles.marginBottom ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.marginBottom = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.inlinePadding !== undefined}
+            <SelectWithLabel
+              label="Inline padding"
+              options={inlinePaddingOptions}
+              selectedValue={$selectedElement.styles.inlinePadding ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.inlinePadding = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.blockPadding !== undefined}
+            <SelectWithLabel
+              label="Block padding"
+              options={blockPaddingOptions}
+              selectedValue={$selectedElement.styles.blockPadding ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.blockPadding = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+        </div>
 
-        {#if $selectedElement.styles?.textAlign !== undefined}
-          <SelectWithLabel
-            label="Text Align"
-            options={textAlignOptions}
-            selectedValue={$selectedElement.styles.textAlign ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).styles!.textAlign = v
-              changeAction($selectedElement)
-            }} />
-        {/if}
+        <!-- Border: radius, width, shape, color -->
+        <div class={currentStyleTab === 'border' ? '' : 'hidden'}>
+          {#if $selectedElement.styles?.borderRadius !== undefined}
+            <SelectWithLabel
+              label="Border Radius"
+              options={borderRadiusOptions}
+              selectedValue={$selectedElement.styles.borderRadius ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.borderRadius = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.borderWidth !== undefined}
+            <SelectWithLabel
+              label="Border Width"
+              options={borderWidthOptions}
+              selectedValue={$selectedElement.styles.borderWidth ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.borderWidth = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.styles?.cornerShape !== undefined}
+            <SelectWithLabel
+              label="Corner Shape"
+              options={cornerShapeOptions}
+              selectedValue={$selectedElement.styles.cornerShape ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.cornerShape = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+          {#if $selectedElement.colors?.borderColorKey !== undefined}
+            <SelectWithLabel
+              label="Border Color"
+              options={borderColorOptions}
+              selectedValue={$selectedElement.colors.borderColorKey ?? ''}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).colors!.borderColorKey = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
+        </div>
 
-        {#if $selectedElement.styles?.inlineSpacing !== undefined}
-          <SelectWithLabel
-            label="Inline spacing"
-            options={inlineSpacingOptions}
-            selectedValue={$selectedElement.styles.inlineSpacing ?? ''}
-            onchange={(v) => {
-              ;($selectedElement as ContentType).styles!.inlineSpacing = v
-              changeAction($selectedElement)
-            }} />
-        {/if}
-
-        {#if $selectedElement.colors}
-          {#if $selectedElement.colors.backgroundColorKey !== undefined}
+        <!-- Colors: background + text -->
+        <div class={currentStyleTab === 'colors' ? '' : 'hidden'}>
+          {#if $selectedElement.colors?.backgroundColorKey !== undefined}
             <SelectWithLabel
               label="Background Color"
               options={colorOptions}
@@ -133,7 +202,7 @@ function changeTab(tab: string) {
                 changeAction($selectedElement)
               }} />
           {/if}
-          {#if $selectedElement.colors.textColorKey !== undefined}
+          {#if $selectedElement.colors?.textColorKey !== undefined}
             <SelectWithLabel
               label="Text Color"
               options={textColorOptions}
@@ -143,7 +212,7 @@ function changeTab(tab: string) {
                 changeAction($selectedElement)
               }} />
           {/if}
-        {/if}
+        </div>
       {/if}
     </div>
     <div class="mt-4 flex gap-3 items-center flex-wrap">

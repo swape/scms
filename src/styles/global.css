@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './blocks.css';
 
 .btn {
   @apply bg-slate-800 cursor-pointer hover:bg-slate-700;
@@ -54,6 +55,19 @@
 
     &.active {
       @apply bg-blue-900 hover:bg-blue-800;
+    }
+  }
+
+  &.tab--sub {
+    @apply mt-3 mb-1;
+    border-bottom-color: #1e293b;
+
+    & > button {
+      @apply px-3 py-1 text-xs hover:bg-slate-700;
+
+      &.active {
+        @apply bg-slate-700 hover:bg-slate-600 text-blue-300;
+      }
     }
   }
 }

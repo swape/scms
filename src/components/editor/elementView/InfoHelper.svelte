@@ -3,19 +3,16 @@ import { selectedElement } from '../../../store'
 
 let { block } = $props()
 
+let isSelected = $derived($selectedElement?.id === block?.id)
+
 function selectThis(elm) {
   $selectedElement = elm
 }
 </script>
 
-<div class="float-wrapper">
+<div class={`float-wrapper${isSelected ? ' is-selected' : ''}`}>
   <button onclick={() => selectThis(block)} type="button" class="selecting-block-button">Select</button>
-  <!-- <div class="floating-helper">
-    <div>
-      Block ID: {block.id} | Type: {block.type} | Order: {block.order}
-    </div>
-
-    <textarea class="w-full" rows="10"
-      >{JSON.stringify(block, null, 2)}</textarea>
-  </div> -->
+  <div class="helper-info">
+    Type: {block.label}
+  </div>
 </div>

@@ -7,15 +7,13 @@ let blockStyles = $derived(
 )
 let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim())
 let colors = $derived(`${block.colors?.textColorKey || ''} ${block.colors?.backgroundColorKey || ''}`.trim())
+let borderClasses = $derived(`${block.styles?.borderRadius || ''} ${block.styles?.borderWidth || ''} ${block.colors?.borderColorKey || ''}`.trim())
 </script>
 
 <div class={`${wrapperClass === 'block-width-full' ? '' : 'mx-auto container'} relative ${blockStyles}`}>
   <InfoHelper {block} />
   {#if block}
-    <a
-      href={block.settings?.href || '#'}
-      target={block.settings?.target || '_self'}
-      class={`btn ${block.settings?.padding || 'btn-padding-default'} ${block.settings?.borderRadius || ''} ${colors}`}>
+    <a href={block.settings?.href || '#'} target={block.settings?.target || '_self'} class={`btn ${block.styles?.padding || 'btn-padding-default'} ${borderClasses} ${colors}`}>
       {block.content}
     </a>
   {/if}

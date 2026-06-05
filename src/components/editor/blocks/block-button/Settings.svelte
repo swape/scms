@@ -1,6 +1,5 @@
 <script lang="ts">
 import { untrack } from 'svelte'
-import { buttonBorderRadiusOptions, buttonPaddingOptions } from '../../../../constants'
 import InputWithLabel from '../../../editorParts/InputWithLabel.svelte'
 import SelectWithLabel from '../../../editorParts/SelectWithLabel.svelte'
 
@@ -27,24 +26,6 @@ const targetOptions = [
   selectedValue={localElement.settings.target}
   onchange={(v) => {
     localElement.settings.target = v
-    onChange(localElement)
-  }} />
-
-<SelectWithLabel
-  label="Padding"
-  options={buttonPaddingOptions}
-  selectedValue={localElement.settings.padding ?? 'btn-padding-default'}
-  onchange={(v) => {
-    localElement.settings.padding = v
-    onChange(localElement)
-  }} />
-
-<SelectWithLabel
-  label="Border Radius"
-  options={buttonBorderRadiusOptions}
-  selectedValue={localElement.settings.borderRadius ?? ''}
-  onchange={(v) => {
-    localElement.settings.borderRadius = v
     onChange(localElement)
   }} />
 

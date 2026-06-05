@@ -88,6 +88,38 @@ main {
   color: light-dark(var(--text_5), var(--text_5_dark));
 }
 
+/* Button border colors */
+.btn-border-color-text_1 {
+  border-color: light-dark(var(--text_1), var(--text_1_dark));
+}
+.btn-border-color-text_2 {
+  border-color: light-dark(var(--text_2), var(--text_2_dark));
+}
+.btn-border-color-text_3 {
+  border-color: light-dark(var(--text_3), var(--text_3_dark));
+}
+.btn-border-color-text_4 {
+  border-color: light-dark(var(--text_4), var(--text_4_dark));
+}
+.btn-border-color-text_5 {
+  border-color: light-dark(var(--text_5), var(--text_5_dark));
+}
+.btn-border-color-bg_1 {
+  border-color: light-dark(var(--bg_1), var(--bg_1_dark));
+}
+.btn-border-color-bg_2 {
+  border-color: light-dark(var(--bg_2), var(--bg_2_dark));
+}
+.btn-border-color-bg_3 {
+  border-color: light-dark(var(--bg_3), var(--bg_3_dark));
+}
+.btn-border-color-bg_4 {
+  border-color: light-dark(var(--bg_4), var(--bg_4_dark));
+}
+.btn-border-color-bg_5 {
+  border-color: light-dark(var(--bg_5), var(--bg_5_dark));
+}
+
 p,
 h1,
 h2,

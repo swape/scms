@@ -61,6 +61,27 @@ export const buttonBorderRadiusOptions = [
   { value: 'btn-radius-full', label: 'Full (pill)' },
 ]
 
+export const buttonBorderWidthOptions = [
+  { value: '', label: 'None' },
+  { value: 'btn-border-width-sm', label: 'Thin (1px)' },
+  { value: 'btn-border-width-md', label: 'Medium (2px)' },
+  { value: 'btn-border-width-lg', label: 'Thick (4px)' },
+]
+
+export const buttonBorderColorOptions = [
+  { value: '', label: 'None' },
+  { value: 'btn-border-color-text_1', label: 'Primary Text' },
+  { value: 'btn-border-color-text_2', label: 'Secondary Text' },
+  { value: 'btn-border-color-text_3', label: 'Accent Text' },
+  { value: 'btn-border-color-text_4', label: 'Tertiary Text' },
+  { value: 'btn-border-color-text_5', label: 'Quaternary Text' },
+  { value: 'btn-border-color-bg_1', label: 'Primary Background' },
+  { value: 'btn-border-color-bg_2', label: 'Secondary Background' },
+  { value: 'btn-border-color-bg_3', label: 'Accent Background' },
+  { value: 'btn-border-color-bg_4', label: 'Tertiary Background' },
+  { value: 'btn-border-color-bg_5', label: 'Quaternary Background' },
+]
+
 export const colorOptions = [
   { value: '', label: 'None' },
   { value: 'bg_1', label: 'Primary Background' },

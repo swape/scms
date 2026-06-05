@@ -205,3 +205,17 @@
 .btn-radius-full {
   border-radius: 9999px;
 }
+
+/* Button border width */
+.btn-border-width-sm {
+  border-style: solid;
+  border-width: 1px;
+}
+.btn-border-width-md {
+  border-style: solid;
+  border-width: 2px;
+}
+.btn-border-width-lg {
+  border-style: solid;
+  border-width: 4px;
+}

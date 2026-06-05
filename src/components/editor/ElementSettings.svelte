@@ -4,6 +4,10 @@ import {
   borderColorOptions,
   borderRadiusOptions,
   borderWidthOptions,
+  buttonBorderColorOptions,
+  buttonBorderRadiusOptions,
+  buttonBorderWidthOptions,
+  buttonPaddingOptions,
   colorOptions,
   cornerShapeOptions,
   inlinePaddingOptions,
@@ -144,6 +148,16 @@ function changeTab(tab: string) {
                 changeAction($selectedElement)
               }} />
           {/if}
+          {#if $selectedElement.styles?.padding !== undefined}
+            <SelectWithLabel
+              label="Button Padding"
+              options={buttonPaddingOptions}
+              selectedValue={$selectedElement.styles.padding ?? 'btn-padding-default'}
+              onchange={(v) => {
+                ;($selectedElement as ContentType).styles!.padding = v
+                changeAction($selectedElement)
+              }} />
+          {/if}
         </div>
 
         <!-- Border: radius, width, shape, color -->
@@ -151,7 +165,7 @@ function changeTab(tab: string) {
           {#if $selectedElement.styles?.borderRadius !== undefined}
             <SelectWithLabel
               label="Border Radius"
-              options={borderRadiusOptions}
+              options={$selectedElement.type === 'block-button' ? buttonBorderRadiusOptions : borderRadiusOptions}
               selectedValue={$selectedElement.styles.borderRadius ?? ''}
               onchange={(v) => {
                 ;($selectedElement as ContentType).styles!.borderRadius = v
@@ -161,7 +175,7 @@ function changeTab(tab: string) {
           {#if $selectedElement.styles?.borderWidth !== undefined}
             <SelectWithLabel
               label="Border Width"
-              options={borderWidthOptions}
+              options={$selectedElement.type === 'block-button' ? buttonBorderWidthOptions : borderWidthOptions}
               selectedValue={$selectedElement.styles.borderWidth ?? ''}
               onchange={(v) => {
                 ;($selectedElement as ContentType).styles!.borderWidth = v
@@ -181,7 +195,7 @@ function changeTab(tab: string) {
           {#if $selectedElement.colors?.borderColorKey !== undefined}
             <SelectWithLabel
               label="Border Color"
-              options={borderColorOptions}
+              options={$selectedElement.type === 'block-button' ? buttonBorderColorOptions : borderColorOptions}
               selectedValue={$selectedElement.colors.borderColorKey ?? ''}
               onchange={(v) => {
                 ;($selectedElement as ContentType).colors!.borderColorKey = v

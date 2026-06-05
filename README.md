@@ -50,4 +50,130 @@ But backend is still useful for server side rendering, custom api endpoints, web
 - [] Add iframe block
 - [] Add image gallery block
 
-## Improvement Plan
+## How to add a new block
+
+Each block lives in its own folder under `src/components/editor/blocks/` and consists of three files plus registration in the registry.
+
+### 1. Create the block folder and files
+
+Create `src/components/editor/blocks/block-<name>/` with three files:
+
+**`definition.ts`** — defines the default data shape for the block:
+
+```ts
+import type { ContentType } from '../../../../types/types';
+
+export const blockNameDefault = (
+  extra: Partial<ContentType> = {}
+): ContentType =>
+  ({
+    type: 'block-name',
+    content: 'Default content',
+    settings: {
+      // block-specific settings fields
+    },
+    options: {
+      // static option lists used in Settings.svelte (e.g. elementTypes)
+    },
+    styles: {
+      marginTop: '',
+      marginBottom: '',
+      blockWidth: '',
+      inlinePadding: '',
+      blockPadding: '',
+      borderRadius: '',
+      textAlign: '',
+      // add extra style keys as needed
+    },
+    colors: {
+      textColorKey: '',
+      backgroundColorKey: '',
+    },
+    parent: null,
+    ...extra,
+  }) as ContentType;
+```
+
+**`View.svelte`** — renders the block in the editor and on the page:
+
+```svelte
+<script>
+  import InfoHelper from '../../elementView/InfoHelper.svelte';
+
+  const { block } = $props();
+  let blockStyles = $derived(
+    `${block.styles?.marginTop || ''} ${block.styles?.marginBottom || ''} ${block.styles?.blockWidth || ''} ${block.styles?.inlinePadding || ''} ${block.styles?.blockPadding || ''} ${block.styles?.borderRadius || ''} ${block.styles?.textAlign || ''}`.trim()
+  );
+  let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim());
+  let colors = $derived(
+    `${block.colors?.textColorKey || ''} ${block.colors?.backgroundColorKey || ''}`.trim()
+  );
+</script>
+
+<div
+  class={`${colors} ${wrapperClass === 'block-width-full' ? '' : 'mx-auto container'} relative`}>
+  <InfoHelper {block} />
+  {#if block}
+    <!-- render block content here -->
+  {/if}
+</div>
+```
+
+**`Settings.svelte`** — the editor sidebar form for the block's content and settings:
+
+```svelte
+<script lang="ts">
+  import { untrack } from 'svelte';
+  import InputWithLabel from '../../../editorParts/InputWithLabel.svelte';
+
+  let { element, onChange } = $props();
+  let localElement = $state(untrack(() => ({ ...element })));
+
+  $effect(() => {
+    localElement = { ...element };
+  });
+</script>
+
+<InputWithLabel
+  label="Content"
+  inputType="text"
+  bind:value={localElement.content}
+  onchange={() => onChange(localElement)} />
+<!-- add more editorParts inputs for block-specific settings -->
+```
+
+### 2. Register the block in `registry.ts`
+
+Open `src/components/editor/blocks/registry.ts` and:
+
+1. Import the three pieces at the top:
+
+```ts
+import { blockNameDefault } from './block-name/definition';
+import BlockNameSettings from './block-name/Settings.svelte';
+import BlockNameView from './block-name/View.svelte';
+```
+
+2. Add an entry to the `blockRegistry` array:
+
+```ts
+{
+  type: 'block-name',
+  label: 'My New Block',
+  defaultData: blockNameDefault,
+  SettingsComponent: BlockNameSettings,
+  ViewComponent: BlockNameView,
+},
+```
+
+### 3. Add style classes (optional)
+
+If the block needs custom CSS utility classes, add them to `src/styles/blocks.css` following the naming convention already used there (e.g. `block-spacing-top-*`, `block-width-*`).
+
+### 4. Add type fields (if needed)
+
+If the block introduces new `styles` or `settings` keys not already covered by `ContentType`, extend the interface in `src/types/types.ts`.
+
+### 5. Verify
+
+Run `npm run check` to confirm there are no TypeScript or template errors, then `npm run dev` to test the block in the editor.

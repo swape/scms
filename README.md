@@ -68,6 +68,7 @@ export const blockNameDefault = (
 ): ContentType =>
   ({
     type: 'block-name',
+    label: 'My New Block',
     content: 'Default content',
     settings: {
       // block-specific settings fields
@@ -158,8 +159,8 @@ import BlockNameView from './block-name/View.svelte';
 
 ```ts
 {
-  type: 'block-name',
-  label: 'My New Block',
+  type: blockNameDefault().type,
+  label: blockNameDefault().label ?? '',
   defaultData: blockNameDefault,
   SettingsComponent: BlockNameSettings,
   ViewComponent: BlockNameView,

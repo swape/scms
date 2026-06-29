@@ -1,4 +1,4 @@
-import type { ContentType } from '../../types/types'
+import type { ContentType } from '../../types/types.ts'
 import { blockRegistry } from './blocks/registry'
 
 export function newBlockElement(type: string, additionalProps: Partial<ContentType> = {}): ContentType {

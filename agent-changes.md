@@ -51,3 +51,39 @@
 
 - `src/components/editor/blocks/registry.ts` — Registered `block-split` block
 - `src/styles/blocks.css` — Added `.split-block-grid` and `.split-block-column` with `@media (max-width: 640px)` breakpoint to collapse to single column on mobile
+
+---
+
+## 2026-06-29 — Shared View Class Helpers
+
+### Files created
+
+- `src/components/editor/blocks/viewClassHelpers.ts` — Added `extractBlockStyles` and `extractWrapperClass` helpers to centralize repeated class derivation logic
+
+### Files modified
+
+- `src/components/editor/blocks/block-button/View.svelte` — Replaced inline class string derivation with shared helpers
+- `src/components/editor/blocks/block-divider/View.svelte` — Replaced inline class string derivation with shared helpers
+- `src/components/editor/blocks/block-link/View.svelte` — Replaced inline class string derivation with shared helpers
+- `src/components/editor/blocks/block-split/View.svelte` — Replaced inline class string derivation with shared helpers and reused wrapper width helper in container logic
+- `src/components/editor/blocks/block-text/View.svelte` — Replaced inline class string derivation with shared helpers
+
+### Impact
+
+- Reduced duplicated style-building logic across all block view components
+- Kept block-specific style inputs intact while standardizing how class strings are assembled
+
+---
+
+## 2026-06-29 — Shared Page List Row Styles
+
+### Files modified
+
+- `src/styles/global.css` — Added reusable `.page-list-row` utility for shared row layout, background, and icon-button sizing
+- `src/components/editor/PageListItem.svelte` — Applied `.page-list-row` and removed duplicated container/icon-button styles while keeping page-link specific button and text behavior
+- `src/components/editor/PagesList.svelte` — Applied `.page-list-row` to the new-page row and removed duplicated container/icon-button styles from component-scoped CSS
+
+### Impact
+
+- Removed duplicated styling between `.new-page` and `.page-link`
+- Kept component-specific visual behavior intact while centralizing shared structure in global styles

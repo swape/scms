@@ -14,7 +14,7 @@ function handleAddPageAndOpenSubPages(id: string | null = null) {
 </script>
 
 <div>
-  <div class="page-link">
+  <div class="page-list-row page-link">
     <button type="button" class="cursor-pointer page-link-item" onclick={() => handlePageClick(page.id)}><small class="mr-2 text-gray-500">{page.order}</small>{page.title}</button>
     <span class="flex gap-1">
       {#if localSubPages.length > 0}
@@ -52,31 +52,13 @@ function handleAddPageAndOpenSubPages(id: string | null = null) {
 }
 
 .page-link {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 2px;
-  padding: 6px;
-  background-color: rgba(30, 30, 30, 0.8);
-  border-radius: 0 30px 30px 0;
+  button:has(.material-symbols-outlined):last-of-type {
+    color: rgba(0, 200, 20, 0.7);
+    background-color: rgba(0, 200, 20, 0.2);
 
-  button:has(.material-symbols-outlined) {
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    &:last-of-type {
-      color: rgba(0, 200, 20, 0.7);
-      background-color: rgba(0, 200, 20, 0.2);
-
-      &:hover {
-        background-color: rgba(108, 251, 122, 0.829);
-        color: black;
-      }
+    &:hover {
+      background-color: rgba(108, 251, 122, 0.829);
+      color: black;
     }
   }
 

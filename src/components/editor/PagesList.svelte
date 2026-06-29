@@ -50,7 +50,7 @@ function toggleDarkMode() {
     {#each getPagesAsArray($currentProject?.pages || {}) as page}
       <PageListItem {page} {handlePageAdd} {handlePageClick} />
     {/each}
-    <div class="mt-2 new-page">
+    <div class="mt-2 page-list-row new-page">
       <span class="new-page-item">Add new page</span>
       <button type="button" class="cursor-pointer" onclick={() => handlePageAdd(null)}><span class="material-symbols-outlined"> add </span></button>
     </div>
@@ -65,23 +65,6 @@ function toggleDarkMode() {
   margin-top: 10px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 2px;
-  padding: 6px;
-  background-color: rgba(30, 30, 30, 0.8);
-  border-radius: 0 30px 30px 0;
-
-  button:has(.material-symbols-outlined) {
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
   button {
     color: rgba(0, 200, 20, 0.7);

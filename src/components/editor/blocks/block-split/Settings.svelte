@@ -3,7 +3,7 @@ import { untrack } from 'svelte'
 import { currentProject, selectedElement, selectedPage } from '../../../../store'
 import type { ContentType } from '../../../../types/types'
 import SelectWithLabel from '../../../editorParts/SelectWithLabel.svelte'
-import { blockRegistry } from '../registry'
+import { blockMeta } from '../blockMeta'
 
 let { element, onChange } = $props()
 let localElement = $state(untrack(() => ({ ...element })))
@@ -14,7 +14,7 @@ $effect(() => {
 
 function addBlockToColumn(blockType: string, columnIndex: number) {
   if (!$currentProject || !$selectedPage) return
-  const def = blockRegistry.find((b) => b.type === blockType)
+  const def = blockMeta.find((b) => b.type === blockType)
   if (!def) return
 
   const oldContent = $currentProject.content || {}
@@ -60,7 +60,7 @@ const alignOptions = [
   { value: 'split-align-stretch', label: 'Stretch' },
 ]
 
-const availableBlocks = $derived(blockRegistry.filter((b) => b.type !== 'block-split'))
+const availableBlocks = $derived(blockMeta.filter((b) => b.type !== 'block-split'))
 
 function getColumnBlock(columnIndex: number): ContentType | undefined {
   return Object.values($currentProject?.content || {}).find((c) => c.parent === String(element.id) && (c as ContentType & { columnIndex?: number }).columnIndex === columnIndex) as

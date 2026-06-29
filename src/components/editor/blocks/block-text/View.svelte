@@ -1,11 +1,16 @@
 <script>
 import InfoHelper from '../../elementView/InfoHelper.svelte'
+import { extractBlockStyles, extractWrapperClass } from '../viewClassHelpers'
 
 const { block } = $props()
 let blockStyles = $derived(
-  `${block.styles?.marginTop || ''} ${block.styles?.marginBottom || ''} ${block.styles?.blockWidth || ''} ${block.styles?.inlinePadding || ''} ${block.styles?.blockPadding || ''} ${block.styles?.borderRadius || ''} ${block.styles?.borderWidth || ''} ${block.styles?.cornerShape || ''} ${block.styles?.textAlign || ''} ${block.colors?.backgroundColorKey || ''}`.trim()
+  extractBlockStyles(
+    block,
+    ['marginTop', 'marginBottom', 'blockWidth', 'inlinePadding', 'blockPadding', 'borderRadius', 'borderWidth', 'cornerShape', 'textAlign'],
+    [block.colors?.backgroundColorKey]
+  )
 )
-let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim())
+let wrapperClass = $derived(extractWrapperClass(block))
 let colors = $derived(`${block.colors?.textColorKey || ''}`.trim())
 let borderColorStyle = $derived(
   block.colors?.borderColorKey ? `--block-border-color: light-dark(var(--${block.colors.borderColorKey}), var(--${block.colors.borderColorKey}_dark));` : ''

@@ -1,8 +1,12 @@
 <script lang="ts">
+import { setContext } from 'svelte'
 import { currentProject, isDarkMode } from '../../store'
 import Menu from '../editor/elementView/Menu.svelte'
+import { getBlockByType } from './blocks/registry'
 import { getBlocksAsArray } from '../editor/helper'
 import ElementView from './elementView/index.svelte'
+
+setContext('getBlockByType', getBlockByType)
 
 const { selectedPage } = $props()
 

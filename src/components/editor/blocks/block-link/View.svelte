@@ -1,11 +1,10 @@
 <script>
 import InfoHelper from '../../elementView/InfoHelper.svelte'
+import { extractBlockStyles, extractWrapperClass } from '../viewClassHelpers'
 
 const { block } = $props()
-let blockStyles = $derived(
-  `${block.styles?.marginTop || ''} ${block.styles?.marginBottom || ''} ${block.styles?.blockWidth || ''} ${block.styles?.inlinePadding || ''} ${block.styles?.textAlign || ''}`.trim()
-)
-let wrapperClass = $derived(`${block.styles?.blockWidth || ''}`.trim())
+let blockStyles = $derived(extractBlockStyles(block, ['marginTop', 'marginBottom', 'blockWidth', 'inlinePadding', 'textAlign']))
+let wrapperClass = $derived(extractWrapperClass(block))
 let colors = $derived(`${block.colors?.textColorKey || ''} ${block.colors?.backgroundColorKey || ''}`.trim())
 </script>
 

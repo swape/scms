@@ -64,8 +64,7 @@ const availableBlocks = $derived(blockMeta.filter((b) => b.type !== 'block-split
 
 function getColumnBlock(columnIndex: number): ContentType | undefined {
   return Object.values($currentProject?.content || {}).find((c) => c.parent === String(element.id) && (c as ContentType & { columnIndex?: number }).columnIndex === columnIndex) as
-    | ContentType
-    | undefined
+    ContentType | undefined
 }
 </script>
 

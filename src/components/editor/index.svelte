@@ -1,7 +1,7 @@
 <script lang="ts">
 import { currentProject, projects, selectedElement, selectedPage } from '../../store'
 import type { PageType } from '../../types/types.ts'
-import ElementSettings from './ElementSettings.svelte'
+import ElementSettings from './elementSettings/ElementSettings.svelte'
 import PagesList from './PagesList.svelte'
 
 const ID = window.location.search.split('=')[1] || ''

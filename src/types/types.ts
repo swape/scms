@@ -39,20 +39,27 @@ export interface ContentType {
   type: string
   label?: string
   styles?: {
-    marginTop?: string
-    marginBottom?: string
-    blockWidth?: string
-    inlinePadding?: string
-    blockPadding?: string
-    borderRadius?: string
-    borderWidth?: string
-    cornerShape?: string
-    textAlign?: string
+    layout?: {
+      blockWidth?: string
+      textAlign?: string
+      blockPadding?: string
+    }
+    space?: {
+      marginTop?: string
+      marginBottom?: string
+      padding?: string
+      inlinePadding?: string
+    }
+    border?: {
+      borderRadius?: string
+      borderWidth?: string
+      cornerShape?: string
+      borderColorKey?: string
+    }
   }
   colors?: {
     backgroundColorKey?: string
     textColorKey?: string
-    borderColorKey?: string
   }
   [key: string | number]: unknown
 }

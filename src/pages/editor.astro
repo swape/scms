@@ -1,11 +1,14 @@
 ---
 import AuthGate from '../components/AuthGate.svelte'
-import EditorView from '../components/editor/index.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
+
 ---
 
 <FrontPageLayout>
   <AuthGate client:only="svelte">
-    <EditorView client:only="svelte" />
+    
+    This is the editor page
+
+
   </AuthGate>
 </FrontPageLayout>

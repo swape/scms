@@ -83,6 +83,8 @@ This project uses **Svelte 5**. Prefer runes over the legacy options API.
 ## CSS / Tailwind CSS
 
 This project uses **Tailwind CSS v4** (imported via `@import 'tailwindcss'` in `src/styles/global.css`).
+Do not use BEM or other CSS methodologies — rely on Tailwind utilities and semantic class abstractions.
+Only use kebab-case for class names in templates; avoid camelCase or PascalCase.
 
 ### Utility classes
 

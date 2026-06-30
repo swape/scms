@@ -1,5 +1,4 @@
 import type { Component } from 'svelte'
-import { blockMeta, type BlockMeta } from './blockMeta'
 import BlockButtonSettings from './block-button/Settings.svelte'
 import BlockButtonView from './block-button/View.svelte'
 import BlockDividerSettings from './block-divider/Settings.svelte'
@@ -10,6 +9,7 @@ import BlockSplitSettings from './block-split/Settings.svelte'
 import BlockSplitView from './block-split/View.svelte'
 import BlockTextSettings from './block-text/Settings.svelte'
 import BlockTextView from './block-text/View.svelte'
+import { blockMeta, type BlockMeta } from './blockMeta'
 
 export type { BlockMeta }
 

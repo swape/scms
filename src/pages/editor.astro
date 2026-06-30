@@ -1,14 +1,18 @@
 ---
 import AuthGate from '../components/AuthGate.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
-
+import '../styles/preview.css'
 ---
 
 <FrontPageLayout>
   <AuthGate client:only="svelte">
-    
-    This is the editor page
+    <editor-wrapper></editor-wrapper>
+    <script>
+      import initiateEditor from '../editorComponents/index.ts'
 
+      initiateEditor()
 
+      document.addEventListener('astro:page-load', initiateEditor)
+    </script>
   </AuthGate>
 </FrontPageLayout>

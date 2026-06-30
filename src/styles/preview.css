@@ -52,4 +52,39 @@
     padding-inline-start: 10px;
     border-left: 1px solid #ccc;
   }
+
+
+  .page-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+    padding: 6px;
+    background-color: rgba(30, 30, 30, 0.8);
+    border-radius: 0 30px 30px 0;
+
+    button:has(.material-symbols-outlined) {
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .page-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .page-list-add {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
 }

@@ -30,32 +30,13 @@ export interface ContentType {
   order: number
   parent: string | null
   pageId: string
-  type: string
-  label?: string
-  styles?: {
-    layout?: {
-      blockWidth?: string
-      textAlign?: string
-      blockPadding?: string
-    }
-    space?: {
-      marginTop?: string
-      marginBottom?: string
-      padding?: string
-      inlinePadding?: string
-    }
-    border?: {
-      borderRadius?: string
-      borderWidth?: string
-      cornerShape?: string
-      borderColorKey?: string
-    }
+  title: string // name of the element
+  type: string // element type
+  style?: {
+    [key: string]: string | number
   }
-  colors?: {
-    backgroundColorKey?: string
-    textColorKey?: string
-  }
-  [key: string | number]: unknown
+  content?: string
+  children?: ContentType[]
 }
 export interface UserType {
   uid: string

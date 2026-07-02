@@ -6,9 +6,8 @@ import ListSubPages from './ListPagesContent.svelte'
 const { pages, select, addSubPage, deletePageWithSubPagesAndConfirm, toggleSubMenuFor, showSubMenu, parentId } = $props()
 
 // TODO: add drag and drop to reorder pages
-// TODO: add subpages with parentId under each page with that page id
 function filterPagesByParentId(parentId: string | null): PageType[] {
-  return pages.filter((page: PageType) => page.parentId === parentId)
+  return pages.filter((page: PageType) => page.parentId === parentId).sort((a: PageType, b: PageType) => (a.order || 0) - (b.order || 0))
 }
 </script>
 

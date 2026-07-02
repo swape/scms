@@ -42,11 +42,8 @@ function deletePageWithSubPages(page: PageType) {
 function toggleSubMenuFor(pageId: string) {
   showSubMenu = showSubMenu === pageId ? null : pageId
 }
-
-// TODO: add drag and drop to reorder pages
-// TODO: add subpages with parentId under each page with that page id
 </script>
 
 <ul class="p-5">
-  <ListPagesContent {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
+  <ListPagesContent parentId={null} {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
 </ul>

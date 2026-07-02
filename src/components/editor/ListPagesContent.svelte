@@ -1,19 +1,34 @@
 <script lang="ts">
 import { selectedPage } from '../../store.ts'
+import type { PageType } from '../../types/types.ts'
+import ListSubPages from './ListPagesContent.svelte'
 
-const { pages, select, addSubPage, deletePageWithSubPagesAndConfirm, toggleSubMenuFor, showSubMenu } = $props()
+const { pages, select, addSubPage, deletePageWithSubPagesAndConfirm, toggleSubMenuFor, showSubMenu, parentId } = $props()
+
+// TODO: add drag and drop to reorder pages
+// TODO: add subpages with parentId under each page with that page id
+function filterPagesByParentId(parentId: string | null): PageType[] {
+  return pages.filter((page: PageType) => page.parentId === parentId)
+}
 </script>
 
-{#each pages as page}
-  <li class="flex justify-between gap-2 relative pb-2">
-    <button onclick={() => select(page)} class={`${$selectedPage?.id === page.id ? 'active' : ''} page-button`}
-      ><span class="material-symbols-outlined">draft</span>{page.title}</button>
-    <button class={`${showSubMenu === page.id ? 'active' : ''} submenu-button`} onclick={() => toggleSubMenuFor(page.id)}
-      ><span class="material-symbols-outlined">more_vert</span></button>
-    <div class={`${showSubMenu === page.id ? '' : 'hidden'} submenu`}>
-      <button onclick={() => addSubPage(page.id)}><span class="material-symbols-outlined">add</span> Add Subpage</button>
-      <button onclick={() => deletePageWithSubPagesAndConfirm(page)}><span class="material-symbols-outlined">delete</span> Delete</button>
+{#each filterPagesByParentId(parentId) as page}
+  <li class="flex justify-between gap-2 relative pb-2 flex-col">
+    <div class="flex gap-2 items-center">
+      <button onclick={() => select(page)} class={`${$selectedPage?.id === page.id ? 'active' : ''} page-button`}
+        ><span class="material-symbols-outlined">draft</span>{page.title}</button>
+      <button class={`${showSubMenu === page.id ? 'active' : ''} submenu-button`} onclick={() => toggleSubMenuFor(page.id)}
+        ><span class="material-symbols-outlined">more_vert</span></button>
+      <div class={`${showSubMenu === page.id ? '' : 'hidden'} submenu`}>
+        <button onclick={() => addSubPage(page.id)}><span class="material-symbols-outlined">add</span> Add Subpage</button>
+        <button onclick={() => deletePageWithSubPagesAndConfirm(page)}><span class="material-symbols-outlined">delete</span> Delete</button>
+      </div>
     </div>
+    {#if filterPagesByParentId(page.id).length > 0}
+      <ul class="pl-5">
+        <ListSubPages parentId={page.id} {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
+      </ul>
+    {/if}
   </li>
 {/each}
 

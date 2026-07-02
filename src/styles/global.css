@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './blocks.css';
 
 .btn {
   @apply bg-slate-800 cursor-pointer hover:bg-slate-700;
@@ -46,6 +45,10 @@
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 .tab {
   border-bottom: 1px solid #374151;
   margin-top: 10px;
@@ -70,4 +73,11 @@
       }
     }
   }
+}
+
+.editor {
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  height: calc(100vh - 60px);
+  background-color: black;
 }

@@ -2,10 +2,10 @@ export function getEmptyProjectStructure(id: number | string) {
   return {
     id: String(id),
     title: 'New Project',
-    description: 'Brand new project',
-    pages: {},
+    description: 'This is the test project',
+    pages: [],
     url: '',
-    content: {},
+    content: [],
     colors: {
       bg_1: { c: '#f8fafc', key: 'bg_1' },
       text_1: { c: '#0f172a', key: 'text_1' },
@@ -30,4 +30,9 @@ export function getEmptyProjectStructure(id: number | string) {
     },
     users: {},
   }
+}
+
+export async function getProjectById(id: number | string) {
+  // TODO: get real project from database
+  return await getEmptyProjectStructure(id)
 }

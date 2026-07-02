@@ -29,11 +29,11 @@ currentProject.subscribe((project) => {
   }
 })
 
+// Listen for changes to storage and update the selectedElement store accordingly
+// This is coming from preview page
 globalThis.addEventListener('storage', (event) => {
   if (event.key === 'selectedElement') {
     const selectedFromStorage = getStorage('selectedElement')
-    if (selectedFromStorage && selectedFromStorage.type !== 'page') {
-      selectedElement.set(selectedFromStorage)
-    }
+    selectedElement.set(selectedFromStorage)
   }
 })

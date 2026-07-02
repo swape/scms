@@ -1,10 +1,10 @@
 export interface PageType {
   id: string
-  parent: string | null
+  parentId: string | null
   title: string
-  type: string
   order: number
-  colors: {
+  type: string
+  colors?: {
     textColorKey: string
     backgroundColorKey: string
   }
@@ -15,20 +15,14 @@ export interface ProjectType {
   title: string
   description: string
   url: string
-  pages?: {
-    [key: string | number]: PageType
-  }
-  content?: ContentListType
+  pages?: PageType[]
+  content?: ContentType[]
   colors?: {
     [key: string]: { c: string; key: string }
   }
   users?: {
     [key: string]: 'owner' | 'editor' | 'viewer'
   }
-}
-
-export interface ContentListType {
-  [key: string | number]: ContentType
 }
 
 export interface ContentType {

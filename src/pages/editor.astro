@@ -1,18 +1,17 @@
 ---
 import AuthGate from '../components/AuthGate.svelte'
+import Settings from '../components/editor/Settings.svelte'
+import Sidebar from '../components/editor/Sidebar.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
-import '../styles/preview.css'
 ---
 
 <FrontPageLayout>
   <AuthGate client:only="svelte">
-    <editor-wrapper></editor-wrapper>
-    <script>
-      import initiateEditor from '../editorComponents/index.ts'
-
-      initiateEditor()
-
-      document.addEventListener('astro:page-load', initiateEditor)
-    </script>
+    <div>Top menu for editor</div>
+    <div class="editor">
+      <Sidebar client:only="svelte" />
+      <div class="border-l border-r border-gray-600"><iframe src="/preview" frameborder="0" class="w-full h-full"></iframe></div>
+      <Settings client:only="svelte" />
+    </div>
   </AuthGate>
 </FrontPageLayout>

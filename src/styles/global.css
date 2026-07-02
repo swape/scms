@@ -81,3 +81,13 @@ button {
   height: calc(100vh - 60px);
   background-color: black;
 }
+
+.settings {
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    @apply w-full p-1 bg-slate-800 border border-slate-700 focus:border-blue-600 focus:bg-slate-200 focus:text-black outline-none;
+  }
+}

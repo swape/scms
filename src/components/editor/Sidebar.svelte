@@ -1,9 +1,7 @@
 <script lang="ts">
-import { currentProject, isDarkMode, selectedElement, selectedPage } from '../../store.ts'
+import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import { getProjectById } from '../projects/helper.ts'
 import ListPages from './ListPages.svelte'
-
-console.log({ $currentProject, $isDarkMode, $selectedElement, $selectedPage })
 
 currentProject.subscribe(async (value) => {
   if (!value) {
@@ -16,7 +14,6 @@ currentProject.subscribe(async (value) => {
       selectedPage.set(page)
     }
   }
-  console.log({ $currentProject })
 })
 
 function addPage(parentId: string | null = null, order: number = 0) {
@@ -46,10 +43,10 @@ function addPage(parentId: string | null = null, order: number = 0) {
 }
 </script>
 
-<aside>
+<aside class="overflow-auto max-h-[96svh]">
   {#if $currentProject}
     <div class="p-5">
-      <button onclick={() => addPage()}>Add Page</button>
+      <button onclick={() => addPage()} class="flex items-center gap-1"><span class="material-symbols-outlined"> note_add </span> Add Page</button>
     </div>
     <ListPages pages={$currentProject.pages} {addPage} />
   {/if}

@@ -46,12 +46,12 @@ function updatePageWithDebounce() {
 // TODO: add color settings for text and background colors
 </script>
 
-<div class="flex flex-col gap-2 border-b border-gray-300 pb-2 mb-2">
+<div class="input-and-label-wrapper">
   <label for="title">Title:</label>
   <input id="title" type="text" value={$selectedElement?.title || ''} on:input={updateTitle} />
 </div>
 
-<div class="flex flex-col gap-2 border-b border-gray-300 pb-2 mb-2">
+<div class="input-and-label-wrapper">
   <label for="order">Order:</label>
   <input id="order" type="text" value={$selectedElement?.order || ''} on:input={updateOrder} />
 </div>

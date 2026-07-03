@@ -40,6 +40,9 @@ function filterPagesByParentId(parentId: string | null): PageType[] {
   gap: 5px;
   display: flex;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   transition:
     background-color 0.3s,
     color 0.3s,

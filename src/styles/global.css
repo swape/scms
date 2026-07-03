@@ -83,7 +83,6 @@ button {
 }
 
 .settings {
-
   input[type='text'],
   input[type='number'],
   select,
@@ -94,5 +93,8 @@ button {
   .input-and-label-wrapper {
     @apply flex flex-col gap-2 border-b border-gray-300 pb-0 mb-3;
   }
+}
 
+.top-menu-button {
+  @apply flex items-center gap-1 hover:bg-slate-600 px-5 py-4;
 }

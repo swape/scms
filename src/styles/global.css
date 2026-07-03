@@ -77,17 +77,22 @@ button {
 
 .editor {
   display: grid;
-  grid-template-columns: 300px 1fr 300px;
+  grid-template-columns: 350px 1fr 350px;
   height: calc(100vh - 60px);
   background-color: black;
 }
 
 .settings {
 
-  input[type="text"],
-  input[type="number"],
+  input[type='text'],
+  input[type='number'],
   select,
   textarea {
     @apply w-full p-1 bg-slate-800 border border-slate-700 focus:border-blue-600 focus:bg-slate-200 focus:text-black outline-none;
   }
+
+  .input-and-label-wrapper {
+    @apply flex flex-col gap-2 border-b border-gray-300 pb-0 mb-3;
+  }
+
 }

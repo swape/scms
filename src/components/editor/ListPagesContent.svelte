@@ -40,8 +40,13 @@ function filterPagesByParentId(parentId: string | null): PageType[] {
   gap: 5px;
   display: flex;
   align-items: center;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    padding-inline-start 0.3s;
 
-  &.active {
+  &.active,
+  &:hover {
     background-color: #333;
     color: white;
     padding-inline-start: 10px;

@@ -6,7 +6,9 @@ function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
   selectedElement.update((element) => {
     if (element) {
-      element.title = input.value
+      // limit the title to 100 characters
+      const newTitle = input.value.slice(0, 100)
+      element.title = newTitle
     }
     updatePageWithDebounce()
     return element

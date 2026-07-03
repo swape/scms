@@ -1,5 +1,6 @@
 ---
 import AuthGate from '../components/AuthGate.svelte'
+import EditorTopMenu from '../components/editor/EditorTopMenu.svelte'
 import Settings from '../components/editor/Settings.svelte'
 import Sidebar from '../components/editor/Sidebar.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
@@ -7,10 +8,10 @@ import FrontPageLayout from '../layouts/FrontPageLayout.astro'
 
 <FrontPageLayout>
   <AuthGate client:only="svelte">
-    <div>Top menu for editor</div>
+    <div><EditorTopMenu client:only="svelte" /></div>
     <div class="editor">
       <Sidebar client:only="svelte" />
-      <div class="border-l border-r border-gray-600"><iframe src="/preview" frameborder="0" class="w-full h-full"></iframe></div>
+      <div class="border-l border-r border-gray-600 max-h-[calc(99svh-5rem)]"><iframe src="/preview" frameborder="0" class="w-full h-full"></iframe></div>
       <Settings client:only="svelte" />
     </div>
   </AuthGate>

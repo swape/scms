@@ -27,8 +27,17 @@ function deletePageWithSubPagesAndConfirm(page: PageType) {
 function deletePageWithSubPages(page: PageType) {
   const project = $currentProject
   if (project) {
-    // Remove the page and its sub-pages from the project's pages array
-    project.pages = project.pages ? project.pages.filter((p) => p.id !== page.id && p.parentId !== page.id) : []
+    // Remove the page and its sub-pages recursively from the project's pages array
+    const removePageAndSubPages = (pageId: string) => {
+      const index = project.pages.findIndex((p) => p.id === pageId)
+      if (index !== -1) {
+        const subPages = project.pages.filter((p) => p.parentId === pageId)
+        subPages.forEach((subPage) => removePageAndSubPages(subPage.id))
+        project.pages.splice(index, 1)
+      }
+    }
+    removePageAndSubPages(page.id)
+
     currentProject.set(project)
 
     // If the deleted page was the selected page, clear the selection

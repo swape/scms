@@ -15,8 +15,8 @@ export interface ProjectType {
   title: string
   description: string
   url: string
-  pages?: PageType[]
-  content?: ContentType[]
+  pages: PageType[]
+  content: ContentType[]
   colors?: {
     [key: string]: { c: string; key: string }
   }

@@ -17,6 +17,12 @@ isDarkMode.subscribe((value) => {
   saveStorage('darkMode', value)
 })
 
+selectedElement.subscribe((value) => {
+  if (value) {
+    saveStorage('selectedElement', value)
+  }
+})
+
 selectedPage.subscribe((value) => {
   if (value) {
     saveStorage('selectedPage', value)

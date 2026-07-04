@@ -7,7 +7,8 @@ export interface PageType {
   colors?: {
     textColorKey: string
     backgroundColorKey: string
-  }
+  },
+  content: ContentType[]
 }
 
 export interface ProjectType {
@@ -16,7 +17,7 @@ export interface ProjectType {
   description: string
   url: string
   pages: PageType[]
-  content: ContentType[]
+
   colors?: {
     [key: string]: { c: string; key: string }
   }

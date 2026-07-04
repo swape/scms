@@ -10,6 +10,8 @@ let project: ProjectType = $state({
   id: '',
   url: '',
   colors: {},
+  pages: [],
+  content: [],
 })
 
 $effect(() => {

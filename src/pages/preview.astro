@@ -26,13 +26,16 @@ const title = 'Preview'
           flex: 1;
         }
       }
-      #selectedPage {
+      .info {
         width: 100%;
         height: 400px;
         padding: 5px;
         box-sizing: border-box;
         border: 1px solid red;
         background-color: #f9f9f9;
+      }
+      .debug {
+        flex: 1;
       }
     </style>
   </head>
@@ -41,20 +44,21 @@ const title = 'Preview'
     <main>preview stuff here</main>
     <footer>Footer here</footer>
     <div class="debug">
-      <textarea id="selectedPage" readonly></textarea>
+      <textarea id="selectedPage" readonly class="info"></textarea>
+      <textarea id="selectedElement" readonly class="info"></textarea>
     </div>
     <script is:inline type="module">
       // listen to storage changes and update the page accordingly
       window.addEventListener('storage', (event) => {
         if (event.key === 'selectedElement') {
           const selectedFromStorage = JSON.parse(event.newValue)
-          console.log('Selected element changed in storage:', selectedFromStorage)
+          const selectedElementTextarea = document.getElementById('selectedElement')
+          selectedElementTextarea.value = JSON.stringify(selectedFromStorage?.data, null, 2)
         }
         if (event.key === 'selectedPage') {
           const selectedPageFromStorage = JSON.parse(event.newValue)
           const selectedPageTextarea = document.getElementById('selectedPage')
           selectedPageTextarea.value = JSON.stringify(selectedPageFromStorage?.data, null, 2)
-          console.log('Selected page changed in storage:', selectedPageFromStorage)
         }
       })
     </script>

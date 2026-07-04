@@ -1,6 +1,7 @@
 <script lang="ts">
 import { selectedElement } from '../../store.ts'
 import PageElementEdit from './elements/Page/index.svelte'
+import TextElementEdit from './elements/Text/index.svelte'
 </script>
 
 <div class="p-5 settings">
@@ -15,6 +16,8 @@ import PageElementEdit from './elements/Page/index.svelte'
     </div>
     {#if $selectedElement.type === 'page'}
       <PageElementEdit />
+    {:else if $selectedElement.type === 'text'}
+      <TextElementEdit />
     {/if}
   {/if}
 </div>

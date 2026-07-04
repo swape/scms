@@ -1,4 +1,5 @@
 <script lang="ts">
+import { resetAllStorage } from '../localstorage.ts'
 import { userObj } from '../store.ts'
 import type { UserType } from '../types/types.ts'
 
@@ -22,7 +23,7 @@ function login() {
 }
 
 function signout() {
-  window.localStorage.clear()
+  resetAllStorage()
   $userObj = null
 }
 </script>

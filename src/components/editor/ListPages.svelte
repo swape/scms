@@ -57,6 +57,4 @@ function toggleSubMenuFor(pageId: string) {
   <ul class="p-5">
     <ListPagesContent parentId={null} {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
   </ul>
-  <div class="p-5">Elements</div>
-  <div class="p-5">Page elements</div>
 </div>

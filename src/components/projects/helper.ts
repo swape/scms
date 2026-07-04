@@ -3,7 +3,14 @@ export function getEmptyProjectStructure(id: number | string) {
     id: String(id),
     title: 'New Project',
     description: 'This is the test project',
-    pages: [],
+    pages: [{
+      "id": "1783189202408",
+      "title": "Start page",
+      "content": [],
+      "parentId": null,
+      "type": "page",
+      "order": 1
+    }],
     url: '',
     content: [],
     colors: {

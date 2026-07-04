@@ -1,7 +1,9 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import { getProjectById } from '../projects/helper.ts'
+import ElementsList from './ElementsList.svelte'
 import ListPages from './ListPages.svelte'
+import PageElements from './PageElements.svelte'
 
 currentProject.subscribe(async (value) => {
   if (!value) {
@@ -49,5 +51,8 @@ function addPage(parentId: string | null = null, order: number = 0) {
       <button onclick={() => addPage()} class="flex items-center gap-1"><span class="material-symbols-outlined"> note_add </span> Add Page</button>
     </div>
     <ListPages pages={$currentProject.pages} {addPage} />
+
+    <ElementsList />
+    <PageElements />
   {/if}
 </aside>

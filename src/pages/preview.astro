@@ -46,6 +46,7 @@ const title = 'Preview'
     <div class="debug">
       <textarea id="selectedPage" readonly class="info"></textarea>
       <textarea id="selectedElement" readonly class="info"></textarea>
+      <textarea id="darkMode" readonly class="info"></textarea>
     </div>
     <script is:inline type="module">
       // listen to storage changes and update the page accordingly
@@ -59,6 +60,11 @@ const title = 'Preview'
           const selectedPageFromStorage = JSON.parse(event.newValue)
           const selectedPageTextarea = document.getElementById('selectedPage')
           selectedPageTextarea.value = JSON.stringify(selectedPageFromStorage?.data, null, 2)
+        }
+        if (event.key === 'darkMode') {
+          const darkMode = JSON.parse(event.newValue)
+          const darkModeTextarea = document.getElementById('darkMode')
+          darkModeTextarea.value = JSON.stringify(darkMode, null, 2)
         }
       })
     </script>

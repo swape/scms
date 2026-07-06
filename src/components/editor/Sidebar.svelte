@@ -1,19 +1,23 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
-import { getProjectById } from '../projects/helper.ts'
+import { getProjectById, getProjectFromLocalStorage } from '../projects/helper.ts'
 import ElementsList from './ElementsList.svelte'
 import ListPages from './ListPages.svelte'
 import PageElements from './PageElements.svelte'
 
 currentProject.subscribe(async (value) => {
   if (!value) {
-    const projectId = window.location.search.split('=')[1] || ''
-    const project = await getProjectById(projectId)
-    currentProject.set(project)
+    const projectId = URLSearchParams ? new URLSearchParams(window.location.search).get('p') : null
+    const localProject = getProjectFromLocalStorage()
+    const isLocal = URLSearchParams ? new URLSearchParams(window.location.search).get('local') === 'true' : false
+    if (projectId) {
+      const project = isLocal && localProject ? localProject : await getProjectById(projectId)
+      currentProject.set(project)
 
-    if (project && !$selectedPage) {
-      const page = project.pages[0] || null
-      selectedPage.set(page)
+      if (project && !$selectedPage) {
+        const page = project.pages[0] || null
+        selectedPage.set(page)
+      }
     }
   }
 })

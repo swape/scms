@@ -1,3 +1,5 @@
+import type { ProjectType } from '../../types/types.ts'
+
 export function getEmptyProjectStructure(id: number | string) {
   return {
     id: String(id),
@@ -44,4 +46,12 @@ export function getEmptyProjectStructure(id: number | string) {
 export async function getProjectById(id: number | string) {
   // TODO: get real project from database
   return await getEmptyProjectStructure(id)
+}
+
+export function getProjectFromLocalStorage() {
+  const project = localStorage.getItem('currentProject')
+  if (project) {
+    return JSON.parse(project).data as ProjectType
+  }
+  return null
 }

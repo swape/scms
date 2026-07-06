@@ -1,19 +1,30 @@
 <script lang="ts">
 import { projects } from '../../store'
 import type { ProjectType } from '../../types/types.ts'
+import { getProjectFromLocalStorage } from '../projects/helper.ts'
 import Colors from './Colors.svelte'
 import Edit from './Edit.svelte'
 
-const ID = window.location.search.split('=')[1] || ''
+// get p parameter from URL
+const ID = URLSearchParams ? new URLSearchParams(window.location.search).get('p') : null
 
 let currentProject = $state<ProjectType | null>(null)
 let tab = $state('')
+let currentProjectIsInLocalStorage = $state(false)
+
+const localProject = getProjectFromLocalStorage()
 
 $effect(() => {
   if ($projects && $projects.length > 0) {
     currentProject = $projects.find((p) => p.id === ID) || null
   }
 })
+
+if (ID === localProject?.id) {
+  currentProjectIsInLocalStorage = true
+} else {
+  currentProjectIsInLocalStorage = false
+}
 
 function changeTab(selectedTab: string) {
   tab = selectedTab
@@ -40,6 +51,9 @@ const tabs = [
         {currentProject.title}
         <div class="mt-5">
           <a href="/editor?p={ID}" class="btn active p-3">Editor</a>
+          {#if currentProjectIsInLocalStorage}
+            <a href="/editor?p={ID}&local=true" class="btn active p-3">Editor (continue last unsaved)</a>
+          {/if}
         </div>
       {/if}
 

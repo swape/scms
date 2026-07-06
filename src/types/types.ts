@@ -7,7 +7,7 @@ export interface PageType {
   colors?: {
     textColorKey: string
     backgroundColorKey: string
-  },
+  }
   content: ContentType[]
 }
 
@@ -37,7 +37,20 @@ export interface ContentType {
     [key: string]: string | number
   }
   content?: string
+  link?: LinkSettings
   children?: ContentType[]
+}
+
+export type LinkMode = 'url' | 'page'
+export type LinkTarget = '_self' | '_blank'
+
+export interface LinkSettings {
+  text: string
+  mode: LinkMode
+  url: string
+  pageId: string
+  target: LinkTarget
+  asButton: boolean
 }
 export interface UserType {
   uid: string

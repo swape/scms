@@ -1,7 +1,37 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
-import type { ContentType } from '../../types/types.ts'
+import type { ContentType, LinkSettings } from '../../types/types.ts'
 import { elementsList } from './elements-list.ts'
+
+function getDefaultLinkSettings(): LinkSettings {
+  const firstPageId = $currentProject?.pages?.[0]?.id || ''
+  return {
+    text: 'Learn more',
+    mode: 'url',
+    url: '',
+    pageId: firstPageId,
+    target: '_self',
+    asButton: false,
+  }
+}
+
+function buildNewElement(type: string, name: string, pageId: string, order: number): ContentType {
+  const newElement: ContentType = {
+    id: String(Date.now()),
+    order,
+    parent: null,
+    pageId,
+    title: name,
+    type,
+    content: '',
+  }
+
+  if (type === 'link') {
+    newElement.link = getDefaultLinkSettings()
+  }
+
+  return newElement
+}
 
 function addElement(type: string, name: string) {
   if (!$selectedPage) {
@@ -18,16 +48,7 @@ function addElement(type: string, name: string) {
     return
   }
   const existingCount = $selectedPage.content?.length ?? 0
-
-  const newElement: ContentType = {
-    id: String(Date.now()),
-    order: existingCount + 1,
-    parent: null,
-    pageId: $selectedPage.id,
-    title: name,
-    type,
-    content: '',
-  }
+  const newElement = buildNewElement(type, name, $selectedPage.id, existingCount + 1)
 
   $selectedPage.content = [...($selectedPage.content ?? []), newElement]
   project.pages = project.pages.map((page) => {

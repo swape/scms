@@ -123,6 +123,7 @@ function updateAsButton(event: Event) {
 
 <style>
 .checkbox-wrapper {
+  padding-block: 10px;
   align-items: center;
   flex-direction: row;
   gap: 10px;

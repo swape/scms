@@ -2,28 +2,18 @@
 import { selectedElement } from '../../../../store.ts'
 import type { ContentType } from '../../../../types/types.ts'
 
-const { updatePageContentWithDebounce } = $props()
+const { updatePageContentWithDebounce, update } = $props()
 
 function updateContent(event: Event) {
   const textarea = event.target as HTMLTextAreaElement
-  selectedElement.update((element) => {
-    if (element) {
-      ;(element as ContentType).content = textarea.value
-    }
-    updatePageContentWithDebounce()
-    return element
-  })
+  update('content', textarea.value.trim())
+  updatePageContentWithDebounce()
 }
 
 function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
-  selectedElement.update((element) => {
-    if (element) {
-      element.title = input.value.slice(0, 100)
-    }
-    updatePageContentWithDebounce()
-    return element
-  })
+  update('title', input.value.slice(0, 100))
+  updatePageContentWithDebounce()
 }
 </script>
 

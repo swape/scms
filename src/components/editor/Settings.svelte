@@ -1,9 +1,22 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { ContentType, PageType } from '../../types/types.ts'
+import HeaderElementEdit from './elements/Header/index.svelte'
 import LinkElementEdit from './elements/Link/index.svelte'
 import PageElementEdit from './elements/Page/index.svelte'
 import TextElementEdit from './elements/Text/index.svelte'
+
+// Updating a single key value for the selected element.
+function update(key: string, value: unknown) {
+  selectedElement.update((element) => {
+    if (element) {
+      // @ts-expect-error update the property dynamically
+      ;(element as ContentType)[key] = value
+    }
+    updatePageContentWithDebounce()
+    return element
+  })
+}
 
 let debounceTimeout: ReturnType<typeof setTimeout>
 
@@ -51,9 +64,11 @@ function updatePageContentWithDebounce() {
     {#if $selectedElement.type === 'page'}
       <PageElementEdit />
     {:else if $selectedElement.type === 'text'}
-      <TextElementEdit {updatePageContentWithDebounce} />
+      <TextElementEdit {updatePageContentWithDebounce} {update} />
     {:else if $selectedElement.type === 'link'}
       <LinkElementEdit {updatePageContentWithDebounce} />
+    {:else if $selectedElement.type === 'header'}
+      <HeaderElementEdit {updatePageContentWithDebounce} {update} />
     {/if}
   {/if}
 </div>

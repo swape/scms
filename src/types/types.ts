@@ -37,8 +37,10 @@ export interface ContentType {
     [key: string]: string | number
   }
   content?: string
+  // link element
   link?: LinkSettings
-  children?: ContentType[]
+  // header element
+  headerLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }
 
 export type LinkMode = 'url' | 'page'

@@ -9,6 +9,9 @@ export interface PageType {
     backgroundColorKey: string
   }
   content: ContentType[]
+  style?: {
+    [key: string]: string | number
+  }
 }
 
 export interface ProjectType {

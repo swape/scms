@@ -14,6 +14,9 @@ export interface PageType {
   }
 }
 
+export interface ColorType {
+  c: string; key: string, name: string
+}
 export interface ProjectType {
   id: string | number
   title: string
@@ -22,7 +25,7 @@ export interface ProjectType {
   pages: PageType[]
 
   colors?: {
-    [key: string]: { c: string; key: string }
+    [key: string]: ColorType
   }
   users?: {
     [key: string]: 'owner' | 'editor' | 'viewer'

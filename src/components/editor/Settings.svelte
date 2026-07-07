@@ -5,6 +5,7 @@ import HeaderElementEdit from './elements/Header/index.svelte'
 import LinkElementEdit from './elements/Link/index.svelte'
 import PageElementEdit from './elements/Page/index.svelte'
 import TextElementEdit from './elements/Text/index.svelte'
+import Styling from './Styling.svelte'
 
 // Updating a single key value for the selected element.
 function update(key: string, value: unknown) {
@@ -70,5 +71,6 @@ function updatePageContentWithDebounce() {
     {:else if $selectedElement.type === 'header'}
       <HeaderElementEdit {updatePageContentWithDebounce} {update} />
     {/if}
+    <Styling {updatePageContentWithDebounce} {update}></Styling>
   {/if}
 </div>

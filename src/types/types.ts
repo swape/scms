@@ -15,7 +15,9 @@ export interface PageType {
 }
 
 export interface ColorType {
-  c: string; key: string, name: string
+  c: string
+  key: string
+  name: string
 }
 export interface ProjectType {
   id: string | number

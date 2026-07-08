@@ -1,4 +1,6 @@
 ---
+import '../styles/preview.css'
+
 const title = 'Preview'
 ---
 
@@ -8,36 +10,6 @@ const title = 'Preview'
     <meta name="theme-color" content="#FF0000" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <style>
-      html {
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        background-color: white;
-        color: black;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 98vh;
-
-        main {
-          flex: 1;
-        }
-      }
-      .info {
-        width: 100%;
-        height: 400px;
-        padding: 5px;
-        box-sizing: border-box;
-        border: 1px solid red;
-        background-color: #f9f9f9;
-      }
-      .debug {
-        flex: 1;
-      }
-    </style>
   </head>
   <body>
     <header>Menu here</header>
@@ -48,25 +20,6 @@ const title = 'Preview'
       <textarea id="selectedElement" readonly class="info"></textarea>
       <textarea id="darkMode" readonly class="info"></textarea>
     </div>
-    <script is:inline type="module">
-      // listen to storage changes and update the page accordingly
-      window.addEventListener('storage', (event) => {
-        if (event.key === 'selectedElement') {
-          const selectedFromStorage = JSON.parse(event.newValue)
-          const selectedElementTextarea = document.getElementById('selectedElement')
-          selectedElementTextarea.value = JSON.stringify(selectedFromStorage?.data, null, 2)
-        }
-        if (event.key === 'selectedPage') {
-          const selectedPageFromStorage = JSON.parse(event.newValue)
-          const selectedPageTextarea = document.getElementById('selectedPage')
-          selectedPageTextarea.value = JSON.stringify(selectedPageFromStorage?.data, null, 2)
-        }
-        if (event.key === 'darkMode') {
-          const darkMode = JSON.parse(event.newValue)
-          const darkModeTextarea = document.getElementById('darkMode')
-          darkModeTextarea.value = JSON.stringify(darkMode, null, 2)
-        }
-      })
-    </script>
+    <script is:inline type="module" src="/src/previewRender/index.ts"></script>
   </body>
 </html>

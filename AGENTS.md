@@ -87,9 +87,16 @@ Current stack:
     ├── styles/
     │   ├── global.css
     │   └── preview.css
-    └── types/
-        └── types.ts
+    ├── types/
+    |    └── types.ts
+    └── previewRender/
 ```
+
+## Preview Render
+
+- Keep preview rendering logic in `src/previewRender`.
+- common.ts: shared helper functions for rendering.
+- All editor elements should have a corresponding render function in `previewRender`.
 
 ## NPM Scripts
 

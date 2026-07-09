@@ -31,6 +31,7 @@ function renderAll(content: ContentType[]) {
     }
   }
   renderTo.innerHTML = output.join('\n')
+  applyProjectStyles(currentProject)
 }
 
 let selectedPage = getStorage('selectedPage')
@@ -48,12 +49,12 @@ window.addEventListener('storage', (event) => {
     selectedPage = getStorage('selectedPage')
     const selectedPageTextarea = document.getElementById('selectedPage')
     selectedPageTextarea.value = JSON.stringify(selectedPage, null, 2)
-
+    applyPageStyles(selectedPage, darkMode)
     renderAll(selectedPage?.content ?? [])
   }
   if (event.key === 'darkMode') {
     darkMode = getStorage('darkMode') ? true : false
-
+    applyPageStyles(selectedPage, darkMode)
     const darkModeTextarea = document.getElementById('darkMode')
     darkModeTextarea.value = JSON.stringify(darkMode, null, 2)
   }
@@ -93,5 +94,72 @@ function markSelectedElement(selectedID: string, selectedType: string) {
   const elementInDOM = document.querySelector(`[data-type="${selectedType}"][data-id="${selectedID}"]`)
   if (elementInDOM) {
     elementInDOM.setAttribute('data-selected', 'true')
+  }
+}
+
+// add css vars from current project to the document root
+function applyProjectStyles(currentProject: ProjectType | null) {
+  if (!currentProject) {
+    return
+  }
+
+  const allColors = currentProject.colors || {}
+  const styleId = 'project-theme-styles'
+  let styleTag = document.getElementById(styleId) as HTMLStyleElement | null
+  if (!styleTag) {
+    styleTag = document.createElement('style')
+    styleTag.id = styleId
+    document.head.appendChild(styleTag)
+  }
+
+  const rootVars: string[] = ['  color-scheme: light dark;']
+  const darkModeVars: string[] = []
+
+  for (const [key, value] of Object.entries(allColors)) {
+    if (key.endsWith('_dark')) {
+      continue
+    }
+
+    const lightValue = value.c
+    const darkValue = allColors[`${key}_dark`]?.c || lightValue
+
+    rootVars.push(`  --${key}: light-dark(${lightValue}, ${darkValue});`)
+    darkModeVars.push(`  --${key}: ${darkValue};`)
+  }
+
+  styleTag.textContent = `:root {\n${rootVars.join('\n')}\n}\n\nbody.dark-mode {\n${darkModeVars.join('\n')}\n}`
+}
+
+function applyPageStyles(selectedPage: PageType | null, darkMode: boolean) {
+  if (!selectedPage) {
+    return
+  }
+
+  const styleId = 'page-theme-styles'
+  let styleTag = document.getElementById(styleId) as HTMLStyleElement | null
+  if (!styleTag) {
+    styleTag = document.createElement('style')
+    styleTag.id = styleId
+    document.head.appendChild(styleTag)
+  }
+
+  const bodyVars: string[] = []
+  for (const [key, value] of Object.entries(selectedPage.style || {})) {
+    if (key === 'backgroundColor') {
+      bodyVars.push(`background-color: var(--${value});`)
+    } else if (key === 'textColor') {
+      bodyVars.push(`color: var(--${value});`)
+    }
+  }
+
+  styleTag.textContent = `body {\n${bodyVars.join('\n')}\n}`
+
+  const body = document.body
+
+  // add dark mode class to body if darkMode is true
+  if (darkMode) {
+    body.classList.add('dark-mode')
+  } else {
+    body.classList.remove('dark-mode')
   }
 }

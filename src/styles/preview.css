@@ -44,3 +44,17 @@ body {
   max-width: 1024px;
   margin: 0 auto;
 }
+
+.link-inline {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.link-button {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  background-color: #111827;
+  color: #ffffff;
+  text-decoration: none;
+}

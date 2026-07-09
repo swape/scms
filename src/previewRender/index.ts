@@ -2,18 +2,31 @@
 import { getStorage, saveStorage } from '../localstorage.ts'
 import type { ContentType } from '../types/types.ts'
 import { renderHeader } from './headerView.ts'
+import { renderLink } from './linkView.ts'
+import { renderText } from './textView.ts'
 
 function renderAll(content: ContentType[]) {
   const renderTo = document.querySelector('main')
+  const currentProject = getStorage('currentProject')
 
   if (!renderTo || !content || content.length === 0) {
     return
   }
   const output: string[] = []
-  console.log({ content, renderTo })
+
   for (const element of content) {
     if (element.type === 'header') {
       output.push(renderHeader(element))
+      continue
+    }
+
+    if (element.type === 'text') {
+      output.push(renderText(element))
+      continue
+    }
+
+    if (element.type === 'link') {
+      output.push(renderLink(element, currentProject))
       continue
     }
   }

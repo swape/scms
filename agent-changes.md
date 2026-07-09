@@ -20,3 +20,16 @@
 
 - File: `src/components/editor/Styling.svelte`
 - Fixed type errors by explicitly typing project color state and iterating over typed color values with safe fallbacks.
+
+## 2026-07-09
+
+- File: `src/previewRender/textView.ts`
+- Added text element preview rendering with newline-to-`<br />` formatting and shared style wrapping.
+- File: `src/previewRender/index.ts`
+- Wired text elements into preview output generation.
+- File: `src/previewRender/linkView.ts`
+- Added link element preview rendering for URL and page destinations, including button-style output.
+- File: `src/previewRender/index.ts`
+- Wired link elements into preview output generation.
+- File: `src/styles/preview.css`
+- Added preview styling for inline and button-style rendered links.

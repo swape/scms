@@ -39,13 +39,20 @@ function getPaddingStyles(style: Record<string, string | number>): string {
   return ''
 }
 
+function getMarginStyles(style: Record<string, string | number>): string {
+  const top = toCssLength(style.marginTop)
+  const bottom = toCssLength(style.marginBottom)
+
+  return `${top ? `margin-top: ${top};` : ''}${bottom ? `margin-bottom: ${bottom};` : ''}`
+}
+
 export function wrapWithStyle(content: ContentType, innerOutput: string): string {
   if (!content?.style) {
     return innerOutput || ''
   }
 
   const style = content.style
-  const styles = `${style?.backgroundColor ? `background-color: var(--${style.backgroundColor});` : ''}${style?.textColor ? `color: var(--${style.textColor});` : ''}${getPaddingStyles(style)}`
+  const styles = `${style?.backgroundColor ? `background-color: var(--${style.backgroundColor});` : ''}${style?.textColor ? `color: var(--${style.textColor});` : ''}${getPaddingStyles(style)}${getMarginStyles(style)}`
   // TODO: add other style later
 
   return `<section class="${style?.wrapper || ''}" style="${styles}">${innerOutput}</section>`

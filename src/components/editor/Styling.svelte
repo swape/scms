@@ -1,5 +1,6 @@
 <script lang="ts">
 import { selectedElement } from '../../store.ts'
+import Margin from './stylingParts/Margin.svelte'
 import Padding from './stylingParts/Padding.svelte'
 import TextAndBackgroundColors from './stylingParts/TextAndBackgroundColors.svelte'
 
@@ -28,4 +29,5 @@ function updateWrapper(event: Event) {
 <TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
 {#if $selectedElement?.type !== 'page'}
   <Padding {updatePageContentWithDebounce} {update} />
+  <Margin {updatePageContentWithDebounce} {update} />
 {/if}

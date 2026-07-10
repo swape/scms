@@ -43,7 +43,8 @@ body {
 
 .container {
   max-width: 1024px;
-  margin: 0 auto;
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 .link-inline {

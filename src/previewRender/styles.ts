@@ -20,13 +20,13 @@ export function applyProjectStyles(currentProject: ProjectType | null): void {
   const darkModeVars: string[] = []
 
   for (const color of allColors) {
-    const { key, c } = color
+    const { key, c, cDark } = color
     if (key.endsWith('_dark')) {
       continue
     }
 
     const lightValue = c
-    const darkValue = allColors.find((col) => col.key === `${key}_dark`)?.c || lightValue
+    const darkValue = cDark
 
     rootVars.push(`  --${key}: light-dark(${lightValue}, ${darkValue});`)
     darkModeVars.push(`  --${key}: ${darkValue};`)

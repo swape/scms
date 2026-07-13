@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+  "entry": [
+    "src/pages/index.astro",
+    "src/pages/preview.astro",
+    "src/previewRender/index.ts",
+    "src/pages/dashboard.astro",
+    "src/pages/project.astro",
+    "src/pages/editor.astro"
+  ],
+  "ignorePatterns": ["**/*.generated.ts", "**/*.d.ts", "svelte.config.js"],
+  "ignoreDependencies": ["autoprefixer", "@types/node"],
+  "ignoreExports": [],
+  "ignoreExportsUsedInFile": true,
+  "publicPackages": ["@myorg/sdk"],
+  "rules": {
+    "unused-files": "error",
+    "unused-exports": "warn",
+    "unused-types": "warn",
+    "private-type-leaks": "warn",
+    "unresolved-imports": "error"
+  },
+  "duplicates": {
+    "mode": "mild",
+    "minTokens": 50,
+    "minLines": 5,
+    "threshold": 10
+  },
+  "health": {
+    "maxCyclomatic": 20,
+    "maxCognitive": 15,
+    "ignore": []
+  }
+}

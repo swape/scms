@@ -15,15 +15,11 @@ currentProject.subscribe((project) => {
 
     projectColors.forEach((value) => {
       if (value.key.startsWith('bg_')) {
-        if (!value.key.endsWith('_dark')) {
-          bgColors.push(value)
-        }
+        bgColors.push(value)
       }
 
       if (value.key.startsWith('text_')) {
-        if (!value.key.endsWith('_dark')) {
-          textColors.push(value)
-        }
+        textColors.push(value)
       }
     })
   }

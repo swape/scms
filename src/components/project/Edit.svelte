@@ -9,9 +9,8 @@ let project: ProjectType = $state({
   description: '',
   id: '',
   url: '',
-  colors: {},
+  colors: [],
   pages: [],
-  content: [],
 })
 
 $effect(() => {

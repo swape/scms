@@ -25,10 +25,7 @@ export interface ProjectType {
   description: string
   url: string
   pages: PageType[]
-
-  colors?: {
-    [key: string]: ColorType
-  }
+  colors?: ColorType[]
   users?: {
     [key: string]: 'owner' | 'editor' | 'viewer'
   }

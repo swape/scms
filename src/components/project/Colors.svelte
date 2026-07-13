@@ -49,17 +49,17 @@ function save() {
 {#if project?.id}
   <h2 class="mb-5 text-2xl">Colors for {project.title}</h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
     {#each colors as color}
-      <div class="flex flex-col gap-2">
-        <label class="font-semibold">
+      <div class="flex flex-col">
+        <label class="color-label">
           <span>{color.name}</span>
 
           <input type="color" bind:value={color.c} oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement)?.value)} />
           <input type="text" bind:value={color.c} oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement)?.value)} />
         </label>
 
-        <label class="font-semibold">
+        <label class="color-label">
           <span>Dark {color.name}</span>
 
           <input type="color" bind:value={color.cDark} oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement)?.value, true)} />
@@ -69,3 +69,29 @@ function save() {
     {/each}
   </div>
 {/if}
+
+<style>
+.color-label {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 5px 12px;
+  margin-top: 2px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 100, 0.1);
+  }
+
+  input {
+    min-width: 9ch;
+    min-height: 4ch;
+  }
+  span {
+    font-weight: 600;
+    min-width: 40%;
+  }
+}
+</style>

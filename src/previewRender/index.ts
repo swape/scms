@@ -46,12 +46,13 @@ window.addEventListener('storage', (event) => {
       return
     }
 
-    const selectedFromStorage = JSON.parse(event.newValue)
+    const selectedFromStorage = getStorage('selectedElement')
     const selectedElementTextarea = document.getElementById('selectedElement') as HTMLTextAreaElement | null
-    if (selectedElementTextarea?.value) {
-      selectedElementTextarea.value = JSON.stringify(selectedFromStorage?.data, null, 2)
+
+    if (selectedElementTextarea) {
+      selectedElementTextarea.value = JSON.stringify(selectedFromStorage, null, 2)
     }
-    markSelectedElement(selectedFromStorage?.data?.id, selectedFromStorage?.data?.type)
+    markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
   }
   if (event.key === 'selectedPage') {
     selectedPage = getStorage('selectedPage')

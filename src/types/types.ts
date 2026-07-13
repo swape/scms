@@ -16,6 +16,7 @@ export interface PageType {
 
 export interface ColorType {
   c: string
+  cDark: string
   key: string
   name: string
 }

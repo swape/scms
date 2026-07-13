@@ -4,18 +4,16 @@ import type { ColorType } from '../../../types/types.ts'
 
 const { updatePageContentWithDebounce, update } = $props()
 
-let colors = $state<Record<string, ColorType>>({})
 let bgColors = $state([] as ColorType[])
 let textColors = $state([] as ColorType[])
 
 currentProject.subscribe((project) => {
   if (project) {
-    const projectColors = project.colors ?? {}
-    colors = projectColors
+    const projectColors = project.colors ?? []
     bgColors = []
     textColors = []
 
-    Object.values(projectColors).forEach((value) => {
+    projectColors.forEach((value) => {
       if (value.key.startsWith('bg_')) {
         if (!value.key.endsWith('_dark')) {
           bgColors.push(value)

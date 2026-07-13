@@ -1,4 +1,4 @@
-import type { PageType, ProjectType } from '../types/types.ts'
+import type { ColorType, PageType, ProjectType } from '../types/types.ts'
 
 // add css vars from current project to the document root
 export function applyProjectStyles(currentProject: ProjectType | null): void {
@@ -6,7 +6,7 @@ export function applyProjectStyles(currentProject: ProjectType | null): void {
     return
   }
 
-  const allColors = currentProject.colors || {}
+  const allColors: ColorType[] = currentProject.colors || []
   const styleId = 'project-theme-styles'
   let styleTag = document.getElementById(styleId) as HTMLStyleElement | null
 
@@ -19,13 +19,14 @@ export function applyProjectStyles(currentProject: ProjectType | null): void {
   const rootVars: string[] = ['  color-scheme: light dark;']
   const darkModeVars: string[] = []
 
-  for (const [key, value] of Object.entries(allColors)) {
+  for (const color of allColors) {
+    const { key, c } = color
     if (key.endsWith('_dark')) {
       continue
     }
 
-    const lightValue = value.c
-    const darkValue = allColors[`${key}_dark`]?.c || lightValue
+    const lightValue = c
+    const darkValue = allColors.find((col) => col.key === `${key}_dark`)?.c || lightValue
 
     rootVars.push(`  --${key}: light-dark(${lightValue}, ${darkValue});`)
     darkModeVars.push(`  --${key}: ${darkValue};`)

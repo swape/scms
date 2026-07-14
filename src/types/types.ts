@@ -30,6 +30,10 @@ export interface ProjectType {
   users?: {
     [key: string]: 'owner' | 'editor' | 'viewer'
   }
+  extra: {
+    head: string
+    style: string
+  }
 }
 
 export interface ContentType {

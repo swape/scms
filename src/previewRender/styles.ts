@@ -1,7 +1,10 @@
+import { getStorage } from '../localstorage.ts'
 import type { ColorType, PageType, ProjectType } from '../types/types.ts'
 
 // add css vars from current project to the document root
-export function applyProjectStyles(currentProject: ProjectType | null): void {
+export function applyProjectStyles(): void {
+  const currentProject = getStorage('currentProject') as ProjectType | null
+
   if (!currentProject) {
     return
   }

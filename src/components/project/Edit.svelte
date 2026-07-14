@@ -1,5 +1,5 @@
 <script lang="ts">
-import { projects } from '../../store.ts'
+import { currentProject, projects } from '../../store.ts'
 import type { ProjectType } from '../../types/types.ts'
 
 let { id } = $props()
@@ -11,6 +11,10 @@ let project: ProjectType = $state({
   url: '',
   colors: [],
   pages: [],
+  extra: {
+    head: '',
+    style: '',
+  },
 })
 
 $effect(() => {
@@ -23,9 +27,16 @@ $effect(() => {
 })
 
 function save() {
-  // TODO: do some validation
-  // TODO: save to database and then refresh projects in $store
-  console.log({ p: project })
+  currentProject.set(project)
+  projects.update((items) => {
+    if (items) {
+      const index = items.findIndex((item) => item.id === project.id)
+      if (index !== -1) {
+        items[index] = project
+      }
+    }
+    return items
+  })
 }
 </script>
 
@@ -33,23 +44,28 @@ function save() {
   {#if id}<span class="text-sm">{id}</span>{/if}
   <label class="label">
     <span>Project title: </span>
-    <input type="text" bind:value={project.title} />
+    <input type="text" bind:value={project.title} onkeyup={save} />
   </label>
 
   <label class="label">
     <span>Url: </span>
-    <input type="url" bind:value={project.url} />
+    <input type="url" bind:value={project.url} onkeyup={save} />
   </label>
 
   <label class="label">
     <span>Description: </span>
-    <textarea bind:value={project.description}></textarea>
+    <textarea bind:value={project.description} onkeyup={save}></textarea>
   </label>
 
-  <div class="flex gap-2 flex-wrap justify-between">
-    <button type="button" class="btn p-3 active w-30" onclick={() => save()}>Save</button>
-    <button type="button" class="btn p-3 w-30">Cancel</button>
-  </div>
+  <label class="label">
+    <span>Extra head tags: </span>
+    <textarea bind:value={project.extra.head} onkeyup={save}></textarea>
+  </label>
+
+  <label class="label">
+    <span>Extra styles:(etc. font styles) </span>
+    <textarea bind:value={project.extra.style} onkeyup={save}></textarea>
+  </label>
 </div>
 
 <style>

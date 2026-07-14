@@ -29,6 +29,18 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
       { c: '#92400e', key: 'text_5', name: 'Text quinary', cDark: '#fcd34d' },
     ],
     users: {},
+    extra: {
+      head: `<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">`,
+      style: `
+.roboto,body {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}`,
+    },
   }
 }
 

@@ -33,11 +33,12 @@ function renderAll(content: ContentType[]) {
     }
   }
   renderTo.innerHTML = output.join('\n')
-  applyProjectStyles(currentProject)
 }
 
 let selectedPage = getStorage('selectedPage')
 let darkMode = getStorage('darkMode') ? true : false
+applyExtraStylesAndHeadTags()
+applyProjectStyles()
 
 // listen to storage changes and update the page accordingly
 window.addEventListener('storage', (event) => {
@@ -108,4 +109,21 @@ function markSelectedElement(selectedID: string, selectedType: string) {
   if (elementInDOM) {
     elementInDOM.setAttribute('data-selected', 'true')
   }
+}
+
+function applyExtraStylesAndHeadTags() {
+  const currentProject = getStorage('currentProject')
+  if (!currentProject) {
+    return
+  }
+
+  // apply extra head tags
+  const head = document.head
+  head.innerHTML += currentProject.extra.head
+
+  // apply extra styles
+  const styleTag = document.createElement('style')
+  styleTag.id = 'extra-styles'
+  styleTag.textContent = currentProject.extra.style
+  head.appendChild(styleTag)
 }

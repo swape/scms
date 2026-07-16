@@ -73,3 +73,20 @@ export function applyPageStyles(selectedPage: PageType | null, darkMode: boolean
     body.classList.remove('dark-mode')
   }
 }
+
+export function applyExtraStylesAndHeadTags() {
+  const currentProject = getStorage('currentProject')
+  if (!currentProject) {
+    return
+  }
+
+  // apply extra head tags
+  const head = document.head
+  head.innerHTML += currentProject.extra.head
+
+  // apply extra styles
+  const styleTag = document.createElement('style')
+  styleTag.id = 'extra-styles'
+  styleTag.textContent = currentProject.extra.style
+  head.appendChild(styleTag)
+}

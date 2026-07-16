@@ -2,7 +2,7 @@ import { getStorage, saveStorage } from '../localstorage.ts'
 import type { ContentType } from '../types/types.ts'
 import { renderHeader } from './headerView.ts'
 import { renderLink } from './linkView.ts'
-import { applyPageStyles, applyProjectStyles } from './styles.ts'
+import { applyExtraStylesAndHeadTags, applyPageStyles, applyProjectStyles } from './styles.ts'
 import { renderText } from './textView.ts'
 
 function renderAll(content: ContentType[]) {
@@ -109,21 +109,4 @@ function markSelectedElement(selectedID: string, selectedType: string) {
   if (elementInDOM) {
     elementInDOM.setAttribute('data-selected', 'true')
   }
-}
-
-function applyExtraStylesAndHeadTags() {
-  const currentProject = getStorage('currentProject')
-  if (!currentProject) {
-    return
-  }
-
-  // apply extra head tags
-  const head = document.head
-  head.innerHTML += currentProject.extra.head
-
-  // apply extra styles
-  const styleTag = document.createElement('style')
-  styleTag.id = 'extra-styles'
-  styleTag.textContent = currentProject.extra.style
-  head.appendChild(styleTag)
 }

@@ -28,7 +28,7 @@ body {
 }
 
 .debug {
-  flex: 1;
+  flex: 0;
 }
 
 *[data-selected='true'] {

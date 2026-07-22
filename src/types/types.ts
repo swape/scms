@@ -33,7 +33,20 @@ export interface ProjectType {
   extra: {
     head: string
     style: string
+  },
+  menu: {
+    type: 'menu1' // this is the first menu style, we can add more menu styles later
+    elements: MenuElement[]
   }
+}
+
+export interface MenuElement {
+  type: 'link' | 'dropdown' | 'auto' // auto lists all sub-pages in selected parent page
+  title: string
+  link?: LinkSettings
+  children?: MenuElement[]
+  autoParentPageId?: string // if type is auto, this is the parent page id to list sub-pages
+  autoMaxItems?: number // if type is auto, this is the max number of items to list
 }
 
 export interface ContentType {

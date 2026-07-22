@@ -1,6 +1,6 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
-import { getProjectById, getProjectFromLocalStorage } from '../projects/helper.ts'
+import { getProjectById, getProjectFromLocalStorage } from '../../utils/projects.ts'
 import ElementsList from './ElementsList.svelte'
 import ListPages from './ListPages.svelte'
 import PageElements from './PageElements.svelte'

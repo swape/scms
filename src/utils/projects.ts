@@ -1,4 +1,4 @@
-import type { ProjectType } from '../../types/types.ts'
+import type { ProjectType } from '../types/types.ts'
 
 export function getEmptyProjectStructure(id: number | string): ProjectType {
   return {

@@ -1,6 +1,6 @@
 <script>
 import { projects } from '../../store'
-import { getEmptyProjectStructure } from './helper.ts'
+import { getEmptyProjectStructure } from '../../utils/projects.ts'
 
 function addProject() {
   $projects = [

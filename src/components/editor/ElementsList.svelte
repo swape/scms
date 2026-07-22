@@ -1,69 +1,7 @@
 <script lang="ts">
-import { currentProject, selectedElement, selectedPage } from '../../store.ts'
-import type { ContentType, LinkSettings } from '../../types/types.ts'
+import { selectedPage } from '../../store.ts'
+import { addElement } from '../../utils/elements.ts'
 import { elementsList } from './elements-list.ts'
-
-function getDefaultLinkSettings(): LinkSettings {
-  const firstPageId = $currentProject?.pages?.[0]?.id || ''
-  return {
-    text: 'Learn more',
-    mode: 'url',
-    url: '',
-    pageId: firstPageId,
-    target: '_self',
-    asButton: false,
-  }
-}
-
-function buildNewElement(type: string, name: string, pageId: string, order: number): ContentType {
-  const newElement: ContentType = {
-    id: String(Date.now()),
-    order,
-    parent: null,
-    pageId,
-    title: name,
-    type,
-    content: String(type === 'text' || type === 'header' ? 'New text content' : ''),
-    style: {
-      wrapper: 'container',
-      marginBottom: '24',
-    },
-  }
-
-  if (type === 'link') {
-    newElement.link = getDefaultLinkSettings()
-  }
-
-  return newElement
-}
-
-function addElement(type: string, name: string) {
-  if (!$selectedPage) {
-    return
-  }
-
-  const project = $currentProject
-  if (!project) {
-    return
-  }
-
-  const existingPageId = $selectedPage.id
-  if (existingPageId !== $selectedPage.id) {
-    return
-  }
-  const existingCount = $selectedPage.content?.length ?? 0
-  const newElement = buildNewElement(type, name, $selectedPage.id, existingCount + 1)
-
-  $selectedPage.content = [...($selectedPage.content ?? []), newElement]
-  project.pages = project.pages.map((page) => {
-    if (page.id === $selectedPage.id) {
-      return { ...$selectedPage }
-    }
-    return page
-  })
-  currentProject.set(project)
-  selectedElement.set(newElement)
-}
 </script>
 
 {#if $selectedPage}

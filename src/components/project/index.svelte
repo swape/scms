@@ -1,7 +1,7 @@
 <script lang="ts">
 import { projects } from '../../store'
 import type { ProjectType } from '../../types/types.ts'
-import { getProjectFromLocalStorage } from '../projects/helper.ts'
+import { getProjectFromLocalStorage } from '../../utils/projects.ts'
 import Colors from './Colors.svelte'
 import Edit from './Edit.svelte'
 

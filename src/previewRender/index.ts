@@ -1,5 +1,6 @@
 import { getStorage, saveStorage } from '../localstorage.ts'
 import type { ContentType } from '../types/types.ts'
+import { renderFooter } from './footer.ts'
 import { renderHeader } from './headerView.ts'
 import { renderLink } from './linkView.ts'
 import { applyExtraStylesAndHeadTags, applyPageStyles, applyProjectStyles } from './styles.ts'
@@ -40,9 +41,12 @@ let selectedPage = getStorage('selectedPage')
 let darkMode = getStorage('darkMode') ? true : false
 applyExtraStylesAndHeadTags()
 applyProjectStyles()
+renderFooter()
 
 // listen to storage changes and update the page accordingly
 window.addEventListener('storage', (event) => {
+  const selectedPageTextarea = document.getElementById('selectedPage') as HTMLTextAreaElement | null
+
   if (event.key === 'selectedElement') {
     if (!event.newValue) {
       return
@@ -53,12 +57,13 @@ window.addEventListener('storage', (event) => {
   }
   if (event.key === 'selectedPage') {
     selectedPage = getStorage('selectedPage')
-    const selectedPageTextarea = document.getElementById('selectedPage') as HTMLTextAreaElement | null
-    if (selectedPageTextarea) {
-      selectedPageTextarea.value = JSON.stringify(selectedPage, null, 2)
-    }
+
     applyPageStyles(selectedPage, darkMode)
     renderAll(selectedPage?.content ?? [])
+    renderFooter()
+  }
+  if (selectedPageTextarea) {
+    selectedPageTextarea.value = JSON.stringify(getStorage('currentProject'), null, 2)
   }
 })
 

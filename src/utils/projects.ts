@@ -29,6 +29,34 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
       { c: '#92400e', key: 'text_5', name: 'Text quinary', cDark: '#fcd34d' },
     ],
     users: {},
+    footer: {
+      type: 'footer1',
+      elements: [
+        {
+          id: String(Date.now()),
+          type: 'text',
+          title: 'Text block',
+          text: 'This is a sample footer text. You can edit it in the project settings.',
+        },
+        {
+          id: String(Date.now() + 1),
+          type: 'link',
+          title: 'Sample link',
+          link: {
+            text: 'Sample link',
+            mode: 'url',
+            url: '',
+            pageId: '',
+            target: '_self',
+            asButton: false,
+          },
+        },
+      ],
+    },
+    menu: {
+      type: 'menu1',
+      elements: [],
+    },
     extra: {
       head: `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

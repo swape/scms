@@ -33,10 +33,17 @@ export interface ProjectType {
   extra: {
     head: string
     style: string
-  },
+  }
   menu: {
     type: 'menu1' // this is the first menu style, we can add more menu styles later
     elements: MenuElement[]
+  }
+  footer: {
+    type: 'footer1' // this is the first footer style, we can add more footer styles later
+    elements: FooterElement[]
+    style?: {
+      [key: string]: string | number
+    }
   }
 }
 
@@ -64,6 +71,19 @@ export interface ContentType {
   link?: LinkSettings
   // header element
   headerLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+}
+
+export type FooterElementType = 'link' | 'social' | 'html' | 'text'
+export type SocialPlatform = 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'github' | 'youtube'
+
+export interface FooterElement {
+  id: string
+  type: FooterElementType
+  title: string
+  link?: LinkSettings
+  socialPlatform?: SocialPlatform
+  html?: string
+  text?: string
 }
 
 export type LinkMode = 'url' | 'page'

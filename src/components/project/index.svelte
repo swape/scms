@@ -75,7 +75,7 @@ const tabs = [
       {/if}
 
       {#if tab === 'footer'}
-        <ProjectFooter />
+        <ProjectFooter id={ID} />
       {/if}
 
       {#if tab === 'menu'}

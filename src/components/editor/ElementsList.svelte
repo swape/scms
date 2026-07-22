@@ -23,7 +23,11 @@ function buildNewElement(type: string, name: string, pageId: string, order: numb
     pageId,
     title: name,
     type,
-    content: '',
+    content: String(type === 'text' || type === 'header' ? 'New text content' : ''),
+    style: {
+      wrapper: 'container',
+      marginBottom: '24',
+    },
   }
 
   if (type === 'link') {

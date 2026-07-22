@@ -13,9 +13,10 @@ function renderAll(content: ContentType[]) {
     return
   }
   const output: string[] = []
+  const sortedContent = [...content].sort((a, b) => (a.order || 0) - (b.order || 0))
 
-  if (content.length > 0) {
-    for (const element of content) {
+  if (sortedContent.length > 0) {
+    for (const element of sortedContent) {
       if (element.type === 'header') {
         output.push(renderHeader(element))
         continue
@@ -48,11 +49,6 @@ window.addEventListener('storage', (event) => {
     }
 
     const selectedFromStorage = getStorage('selectedElement')
-    const selectedElementTextarea = document.getElementById('selectedElement') as HTMLTextAreaElement | null
-
-    if (selectedElementTextarea) {
-      selectedElementTextarea.value = JSON.stringify(selectedFromStorage, null, 2)
-    }
     markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
   }
   if (event.key === 'selectedPage') {
@@ -63,14 +59,6 @@ window.addEventListener('storage', (event) => {
     }
     applyPageStyles(selectedPage, darkMode)
     renderAll(selectedPage?.content ?? [])
-  }
-  if (event.key === 'darkMode') {
-    darkMode = getStorage('darkMode') ? true : false
-    applyPageStyles(selectedPage, darkMode)
-    const darkModeTextarea = document.getElementById('darkMode') as HTMLTextAreaElement | null
-    if (darkModeTextarea) {
-      darkModeTextarea.value = JSON.stringify(darkMode, null, 2)
-    }
   }
 })
 

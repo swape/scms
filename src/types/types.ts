@@ -71,6 +71,12 @@ export interface ContentType {
   link?: LinkSettings
   // header element
   headerLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  // image element
+  alt?: string
+  src?: string
+  imageType?: string
+  caption?: string
+  imageId?: string
 }
 
 export type FooterElementType = 'link' | 'social' | 'html' | 'text'

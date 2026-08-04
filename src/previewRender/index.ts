@@ -2,6 +2,7 @@ import { getStorage, saveStorage } from '../localstorage.ts'
 import type { ContentType } from '../types/types.ts'
 import { renderFooter } from './footer.ts'
 import { renderHeader } from './headerView.ts'
+import { renderImage } from './imageView.ts'
 import { renderLink } from './linkView.ts'
 import { applyExtraStylesAndHeadTags, applyPageStyles, applyProjectStyles } from './styles.ts'
 import { renderText } from './textView.ts'
@@ -30,6 +31,10 @@ function renderAll(content: ContentType[]) {
 
       if (element.type === 'link') {
         output.push(renderLink(element, currentProject))
+        continue
+      }
+      if (element.type === 'image') {
+        output.push(renderImage(element))
         continue
       }
     }

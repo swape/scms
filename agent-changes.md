@@ -33,3 +33,14 @@
 - Wired link elements into preview output generation.
 - File: `src/styles/preview.css`
 - Added preview styling for inline and button-style rendered links.
+
+## 2026-07-22
+
+- File: `src/types/types.ts`
+- Added `FooterElementType`, `SocialPlatform`, and `FooterElement` types; changed `ProjectType.footer.elements` from `MenuElement[]` to `FooterElement[]`.
+- File: `src/utils/footer.ts`
+- Created footer utility with factory functions (`createFooterLink`, `createFooterSocial`, `createFooterText`, `createFooterHtml`) and `saveFooterToProject` store helper.
+- File: `src/components/project/ProjectFooter.svelte`
+- Implemented footer editor: footer style selector, element list (link, social, text, custom HTML) with add/remove/edit, saved to project store.
+- File: `src/components/project/index.svelte`
+- Passed `id` prop to `<ProjectFooter>`.

@@ -2,6 +2,7 @@
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { ContentType, PageType } from '../../types/types.ts'
 import HeaderElementEdit from './elements/Header/index.svelte'
+import ImageElementEdit from './elements/Image/index.svelte'
 import LinkElementEdit from './elements/Link/index.svelte'
 import PageElementEdit from './elements/Page/index.svelte'
 import TextElementEdit from './elements/Text/index.svelte'
@@ -76,6 +77,8 @@ function updatePageContentWithDebounce() {
       <LinkElementEdit {updatePageContentWithDebounce} />
     {:else if $selectedElement.type === 'header'}
       <HeaderElementEdit {updatePageContentWithDebounce} {update} />
+    {:else if $selectedElement.type === 'image'}
+      <ImageElementEdit {updatePageContentWithDebounce} {update} />
     {/if}
     <Styling {updatePageContentWithDebounce} {update}></Styling>
   {/if}

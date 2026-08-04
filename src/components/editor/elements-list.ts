@@ -8,4 +8,5 @@ export const elementsList: ElementDefinition[] = [
   { type: 'text', name: 'Text', icon: 'text_fields' },
   { type: 'link', name: 'Link', icon: 'link' },
   { type: 'header', name: 'Header', icon: 'title' },
+  { type: 'image', name: 'Image', icon: 'image' },
 ]

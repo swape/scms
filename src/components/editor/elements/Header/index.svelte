@@ -15,6 +15,29 @@ function updateLevel(event: Event) {
   update('headerLevel', select.value)
   updatePageContentWithDebounce()
 }
+
+function updateBorderRadius(event: Event) {
+  const input = event.target as HTMLInputElement
+  const style = $selectedElement?.style || {}
+  const nextStyle: Record<string, string | number> = { ...style }
+
+  if (!input.value.trim()) {
+    delete nextStyle['borderRadius']
+  } else {
+    nextStyle['borderRadius'] = Number(input.value)
+  }
+
+  update('style', nextStyle)
+  updatePageContentWithDebounce()
+}
+
+function getBorderRadius(): string {
+  const value = $selectedElement?.style?.borderRadius
+  if (value === undefined || value === null || value === '') {
+    return '8'
+  }
+  return String(value)
+}
 </script>
 
 <div class="input-and-label-wrapper">
@@ -33,3 +56,10 @@ function updateLevel(event: Event) {
   <label for="header-content">Text:</label>
   <input id="header-content" type="text" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
 </div>
+
+{#if $selectedElement?.style?.backgroundColor}
+  <div class="input-and-label-wrapper">
+    <label for="header-border-radius">Border Radius (px):</label>
+    <input id="header-border-radius" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
+  </div>
+{/if}

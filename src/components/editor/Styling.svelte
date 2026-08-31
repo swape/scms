@@ -21,6 +21,9 @@ function updateWrapper(event: Event) {
     <label for="wrapper-options">Wrapper:</label>
     <select id="wrapper-options" value={($selectedElement?.style?.wrapper as string) || ''} onchange={updateWrapper}>
       <option value="container">Container</option>
+      {#if $selectedElement?.type === 'image'}
+        <option value="center">Center</option>
+      {/if}
       <option value="">None</option>
     </select>
   </div>

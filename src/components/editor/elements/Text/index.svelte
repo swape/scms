@@ -15,6 +15,29 @@ function updateTitle(event: Event) {
   update('title', input.value.slice(0, 100))
   updatePageContentWithDebounce()
 }
+
+function updateBorderRadius(event: Event) {
+  const input = event.target as HTMLInputElement
+  const style = $selectedElement?.style || {}
+  const nextStyle: Record<string, string | number> = { ...style }
+
+  if (!input.value.trim()) {
+    delete nextStyle['borderRadius']
+  } else {
+    nextStyle['borderRadius'] = Number(input.value)
+  }
+
+  update('style', nextStyle)
+  updatePageContentWithDebounce()
+}
+
+function getBorderRadius(): string {
+  const value = $selectedElement?.style?.borderRadius
+  if (value === undefined || value === null || value === '') {
+    return '8'
+  }
+  return String(value)
+}
 </script>
 
 <div class="input-and-label-wrapper">
@@ -26,3 +49,10 @@ function updateTitle(event: Event) {
   <label for="text-content">Content:</label>
   <textarea id="text-content" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent}></textarea>
 </div>
+
+{#if $selectedElement?.style?.backgroundColor}
+  <div class="input-and-label-wrapper">
+    <label for="text-border-radius">Border Radius (px):</label>
+    <input id="text-border-radius" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
+  </div>
+{/if}

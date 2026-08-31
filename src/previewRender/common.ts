@@ -52,7 +52,8 @@ export function wrapWithStyle(content: ContentType, innerOutput: string): string
   }
 
   const style = content.style
-  const styles = `${style?.backgroundColor ? `background-color: var(--${style.backgroundColor});` : ''}${style?.textColor ? `color: var(--${style.textColor});` : ''}${getPaddingStyles(style)}${getMarginStyles(style)}`
+  const borderRadius = style?.borderRadius !== undefined && style?.borderRadius !== '' ? toCssLength(style.borderRadius) : style?.backgroundColor ? '8px' : ''
+  const styles = `${style?.backgroundColor ? `background-color: var(--${style.backgroundColor});` : ''}${borderRadius ? `border-radius: ${borderRadius};` : ''}${style?.textColor ? `color: var(--${style.textColor});` : ''}${getPaddingStyles(style)}${getMarginStyles(style)}`
   // TODO: add other style later
 
   return `<section class="${style?.wrapper || ''}" style="${styles}">${innerOutput}</section>`

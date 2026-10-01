@@ -41,8 +41,12 @@ export function renderLink(content: ContentType, project: ProjectType | null): s
   const title = pageTitle ? ` title="${pageTitle}"` : ''
   const className = link.asButton ? 'link-button' : 'link-inline'
   const relAttribute = rel ? ` rel="${rel}"` : ''
-
-  const output = `<div data-type="${content?.type || ''}" data-id="${content?.id || ''}"><a class="${className}" href="${href}" target="${target}"${relAttribute}${title}>${text}</a></div>`
+  const style = link.style || {}
+  let backgroundAndTextColor = ` `
+  if (link.asButton) {
+    backgroundAndTextColor = ` style="background-color: var(--${style.buttonColor || ''}); color: var(--${style.buttonTextColor || ''});"`
+  }
+  const output = `<div data-type="${content?.type || ''}" data-id="${content?.id || ''}"><a class="${className}" href="${href}" target="${target}"${relAttribute}${title}${backgroundAndTextColor}>${text}</a></div>`
 
   return wrapWithStyle(content, output)
 }

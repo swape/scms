@@ -1,6 +1,7 @@
 <script lang="ts">
 import { currentProject, selectedElement } from '../../../../store.ts'
 import type { ContentType, LinkMode, LinkSettings, LinkTarget } from '../../../../types/types.ts'
+import ColorSelect from '../../../editor/stylingParts/ColorSelect.svelte'
 
 const { updatePageContentWithDebounce } = $props()
 
@@ -77,6 +78,26 @@ function updateAsButton(event: Event) {
     link.asButton = input.checked
   })
 }
+
+function updateButtonStyle(event: Event) {
+  const input = event.target as HTMLInputElement
+  updateLinkElement((_element, link) => {
+    if (!link.style) {
+      link.style = {}
+    }
+    link.style.buttonColor = input.value.trim()
+  })
+}
+
+function updateButtonTextColor(event: Event) {
+  const input = event.target as HTMLInputElement
+  updateLinkElement((_element, link) => {
+    if (!link.style) {
+      link.style = {}
+    }
+    link.style.buttonTextColor = input.value.trim()
+  })
+}
 </script>
 
 <div class="input-and-label-wrapper">
@@ -120,6 +141,17 @@ function updateAsButton(event: Event) {
   <label for="link-button">Render as button:</label>
   <input id="link-button" type="checkbox" checked={Boolean(($selectedElement as ContentType)?.link?.asButton)} oninput={updateAsButton} />
 </div>
+
+{#if ($selectedElement as ContentType)?.link?.asButton}
+  <ColorSelect element={$selectedElement as ContentType} title="Button color" id="link-button-style" styleName="buttonColor" update={updateButtonStyle} isBgColors={true} />
+  <ColorSelect
+    element={$selectedElement as ContentType}
+    title="Button text color"
+    id="link-button-text-color"
+    styleName="buttonTextColor"
+    update={updateButtonTextColor}
+    isBgColors={false} />
+{/if}
 
 <style>
 .checkbox-wrapper {

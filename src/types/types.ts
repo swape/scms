@@ -102,6 +102,9 @@ export interface LinkSettings {
   pageId: string
   target: LinkTarget
   asButton: boolean
+  style?: {
+    [key: string]: string | number
+  }
 }
 export interface UserType {
   uid: string

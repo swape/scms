@@ -4,8 +4,8 @@ html {
 }
 
 body {
-  background-color: white;
-  color: black;
+  background-color: var(--bg-1);
+  color: var(--text-1);
   padding: 0;
   margin: 0;
   display: flex;
@@ -72,8 +72,6 @@ figure {
   display: inline-block;
   padding: 0.65rem 1rem;
   border-radius: 0.5rem;
-  background-color: #111827;
-  color: #ffffff;
   text-decoration: none;
 }
 
@@ -116,7 +114,7 @@ figure {
 
 .footer-text {
   font-size: 0.875rem;
-  color: rgba(0, 0, 0, 0.55);
+  color: var(--text-2);
   margin: 0;
   width: 100%;
 }

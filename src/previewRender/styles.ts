@@ -69,8 +69,10 @@ export function applyPageStyles(selectedPage: PageType | null, darkMode: boolean
   // add dark mode class to body if darkMode is true
   if (darkMode) {
     body.classList.add('dark-mode')
+    body.style = 'color-scheme: dark light;'
   } else {
     body.classList.remove('dark-mode')
+    body.style = 'color-scheme: light dark;'
   }
 }
 

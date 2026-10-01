@@ -48,6 +48,18 @@ applyExtraStylesAndHeadTags()
 applyProjectStyles()
 renderFooter()
 
+function updateSelectedElement() { 
+      const selectedFromStorage = getStorage('selectedElement')
+    markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
+}
+
+function updateSelectedPage() {
+  selectedPage = getStorage('selectedPage')
+  applyPageStyles(selectedPage, darkMode)
+  renderAll(selectedPage?.content ?? [])
+  renderFooter()
+}
+
 // listen to storage changes and update the page accordingly
 window.addEventListener('storage', (event) => {
   const selectedPageTextarea = document.getElementById('selectedPage') as HTMLTextAreaElement | null
@@ -56,19 +68,17 @@ window.addEventListener('storage', (event) => {
     if (!event.newValue) {
       return
     }
-
-    const selectedFromStorage = getStorage('selectedElement')
-    markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
+    updateSelectedElement()
   }
   if (event.key === 'selectedPage') {
-    selectedPage = getStorage('selectedPage')
-
-    applyPageStyles(selectedPage, darkMode)
-    renderAll(selectedPage?.content ?? [])
-    renderFooter()
+    updateSelectedPage()
   }
   if (selectedPageTextarea) {
     selectedPageTextarea.value = JSON.stringify(getStorage('currentProject'), null, 2)
+  }
+  if (event.key === 'darkMode') {
+    darkMode = getStorage('darkMode') ? true : false
+    updateSelectedPage()
   }
 })
 

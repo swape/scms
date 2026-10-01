@@ -7,9 +7,9 @@ function formatTextContent(content: string): string {
 
 export function renderImage(content: ContentType): string {
   const image = content?.src ? `<img src="${content?.src || ''}" alt="${content?.alt || ''}" loading="lazy" />` : ''
-  const header = content?.title ? `<h2 class="paragraph-title" >${content?.title}</h2>` : ''
+  const header = content?.title ? `<h2 class="paragraph-title" style="text-align: ${content?.style?.textAlign || 'left'}">${content?.title}</h2>` : ''
   const output = `${header}<figure data-type="${content?.type || ''}" data-id="${content?.id || ''}">${image}
-  ${content?.caption ? `<figcaption>${formatTextContent(content?.caption || '')}</figcaption>` : ''}</figure>`
+  ${content?.caption ? `<figcaption style="text-align: ${content?.style?.imageCaptionTextAlign || 'left'}">${formatTextContent(content?.caption || '')}</figcaption>` : ''}</figure>`
 
   return wrapWithStyle(content, output)
 }

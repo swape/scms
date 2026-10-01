@@ -2,6 +2,7 @@
 import { selectedElement } from '../../../../store.ts'
 import type { ContentType } from '../../../../types/types.ts'
 import FileSelector from '../../../FileSelector/index.svelte'
+import TextAlign from '../../stylingParts/TextAlign.svelte'
 
 const { updatePageContentWithDebounce, update } = $props()
 
@@ -39,6 +40,8 @@ function updateTitle(title = '') {
   <input name="image-header" type="text" placeholder="Image Title" value={selectedImage?.title || ''} onkeyup={({ target }) => updateTitle((target as HTMLInputElement).value)} />
 </div>
 
+<TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
+
 <div class="input-and-label-wrapper">
   <label for="image-caption">Image Caption:</label>
   <input
@@ -48,4 +51,7 @@ function updateTitle(title = '') {
     value={selectedImage?.caption || ''}
     onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
 </div>
+
+<TextAlign element={$selectedElement} {update} title="Image caption Alignment" id="text-alignment" styleName="imageCaptionTextAlign" />
+
 <FileSelector selected={selectedFile} />

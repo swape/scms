@@ -44,3 +44,8 @@
 - Implemented footer editor: footer style selector, element list (link, social, text, custom HTML) with add/remove/edit, saved to project store.
 - File: `src/components/project/index.svelte`
 - Passed `id` prop to `<ProjectFooter>`.
+
+## 2026-10-01
+
+- File: `src/components/editor/elements/Header/index.svelte`
+- Fixed the Header level control type error by narrowing the selected element to `ContentType`.

@@ -72,9 +72,9 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
   }
 }
 
-export async function getProjectById(id: number | string) {
+export function getProjectById(id: number | string) {
   // TODO: get real project from database
-  return await getEmptyProjectStructure(id)
+  return getEmptyProjectStructure(id)
 }
 
 export function getProjectFromLocalStorage() {

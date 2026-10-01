@@ -1,6 +1,7 @@
 <script lang="ts">
 import { selectedElement } from '../../../../store.ts'
 import type { ContentType } from '../../../../types/types.ts'
+import TextAlign from '../../stylingParts/TextAlign.svelte'
 
 const { updatePageContentWithDebounce, update } = $props()
 
@@ -45,10 +46,14 @@ function getBorderRadius(): string {
   <input id="text-title" type="text" value={$selectedElement?.title || ''} oninput={updateTitle} />
 </div>
 
+<TextAlign element={$selectedElement} {update} title="Title Alignment" id="title-alignment" styleName="titleAlign" />
+
 <div class="input-and-label-wrapper">
   <label for="text-content">Content:</label>
   <textarea id="text-content" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent}></textarea>
 </div>
+
+<TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
 
 {#if $selectedElement?.style?.backgroundColor}
   <div class="input-and-label-wrapper">

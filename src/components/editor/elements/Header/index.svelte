@@ -1,6 +1,7 @@
 <script lang="ts">
 import { selectedElement } from '../../../../store.ts'
 import type { ContentType } from '../../../../types/types.ts'
+import TextAlign from '../../stylingParts/TextAlign.svelte'
 
 const { updatePageContentWithDebounce, update } = $props()
 
@@ -42,7 +43,7 @@ function getBorderRadius(): string {
 
 <div class="input-and-label-wrapper">
   <label for="header-level">Level:</label>
-  <select id="header-level" value={($selectedElement?.headerLevel as string) || 'h2'} onchange={updateLevel}>
+  <select id="header-level" value={($selectedElement as ContentType)?.headerLevel || 'h2'} onchange={updateLevel}>
     <option value="h1">H1</option>
     <option value="h2">H2</option>
     <option value="h3">H3</option>
@@ -56,6 +57,8 @@ function getBorderRadius(): string {
   <label for="header-content">Text:</label>
   <input id="header-content" type="text" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
 </div>
+
+<TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
 
 {#if $selectedElement?.style?.backgroundColor}
   <div class="input-and-label-wrapper">

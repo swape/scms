@@ -48,9 +48,9 @@ applyExtraStylesAndHeadTags()
 applyProjectStyles()
 renderFooter()
 
-function updateSelectedElement() { 
-      const selectedFromStorage = getStorage('selectedElement')
-    markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
+function updateSelectedElement() {
+  const selectedFromStorage = getStorage('selectedElement')
+  markSelectedElement(selectedFromStorage?.id, selectedFromStorage?.type)
 }
 
 function updateSelectedPage() {

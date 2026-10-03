@@ -37,6 +37,11 @@ export interface ProjectType {
   menu: {
     type: 'menu1' // this is the first menu style, we can add more menu styles later
     elements: MenuElement[]
+    style?: {
+      layout?: 'horizontal' | 'vertical'
+      backgroundColor?: string
+      textColor?: string
+    }
   }
   footer: {
     type: 'footer1' // this is the first footer style, we can add more footer styles later
@@ -48,6 +53,7 @@ export interface ProjectType {
 }
 
 export interface MenuElement {
+  id?: string
   type: 'link' | 'dropdown' | 'auto' // auto lists all sub-pages in selected parent page
   title: string
   link?: LinkSettings

@@ -4,6 +4,7 @@ import { renderFooter } from './footer.ts'
 import { renderHeader } from './headerView.ts'
 import { renderImage } from './imageView.ts'
 import { renderLink } from './linkView.ts'
+import { renderMenu } from './menuView.ts'
 import { applyExtraStylesAndHeadTags, applyPageStyles, applyProjectStyles } from './styles.ts'
 import { renderText } from './textView.ts'
 
@@ -46,6 +47,7 @@ let selectedPage = getStorage('selectedPage')
 let darkMode = getStorage('darkMode') ? true : false
 applyExtraStylesAndHeadTags()
 applyProjectStyles()
+renderMenu()
 renderFooter()
 
 function updateSelectedElement() {
@@ -58,6 +60,7 @@ function updateSelectedPage() {
   applyPageStyles(selectedPage, darkMode)
   renderAll(selectedPage?.content ?? [])
   renderFooter()
+  renderMenu()
 }
 
 updateSelectedPage()
@@ -75,6 +78,7 @@ window.addEventListener('storage', (event) => {
   if (event.key === 'selectedPage') {
     updateSelectedPage()
   }
+  
   if (selectedPageTextarea) {
     selectedPageTextarea.value = JSON.stringify(getStorage('currentProject'), null, 2)
   }
@@ -85,14 +89,27 @@ window.addEventListener('storage', (event) => {
 })
 
 window.addEventListener('click', (event) => {
-  event.preventDefault()
-  // find the closest element with data-type attribute
   const target = event.target as HTMLElement
+  const menuLink = target.closest('#menu a[data-page-id]') as HTMLAnchorElement | null
+  if (menuLink && menuLink.target !== '_blank') {
+    const project = getStorage('currentProject') as { pages?: { id: string }[] } | null
+    const page = project?.pages?.find((item) => item.id === menuLink.dataset.pageId)
+    if (page) {
+      event.preventDefault()
+      selectedPage = page
+      saveStorage('selectedPage', page)
+      updateSelectedPage()
+    }
+    return
+  }
+
   const closestElement = target.closest('[data-type]') as HTMLElement
 
   if (!closestElement) {
     return
   }
+
+  event.preventDefault()
 
   const type = closestElement.getAttribute('data-type')
   const id = closestElement.getAttribute('data-id')

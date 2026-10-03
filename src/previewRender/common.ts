@@ -1,5 +1,27 @@
 import type { ContentType } from '../types/types.ts'
 
+export function escapeHtml(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
+export function sanitizeHref(url: string): string {
+  if (!url) {
+    return '#'
+  }
+  if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
+    return url
+  }
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.protocol === 'mailto:') {
+      return url
+    }
+    return '#'
+  } catch {
+    return '#'
+  }
+}
+
 function toCssLength(value: string | number | undefined): string {
   if (value === '' || value === undefined) {
     return ''

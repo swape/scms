@@ -1,27 +1,6 @@
 import { getStorage } from '../localstorage.ts'
 import type { ProjectType } from '../types/types.ts'
-
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-}
-
-function sanitizeHref(url: string): string {
-  if (!url) {
-    return '#'
-  }
-  if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
-    return url
-  }
-  try {
-    const parsed = new URL(url)
-    if (parsed.protocol === 'http:' || parsed.protocol === 'https:' || parsed.protocol === 'mailto:') {
-      return url
-    }
-    return '#'
-  } catch {
-    return '#'
-  }
-}
+import { escapeHtml, sanitizeHref } from './common.ts'
 
 export function renderFooter(): void {
   const footerEl = document.getElementById('footer')

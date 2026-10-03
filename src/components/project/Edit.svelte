@@ -75,12 +75,6 @@ function save() {
   flex-direction: column;
   margin-block-end: 8px;
 
-  input[type='text'],
-  input[type='url'],
-  textarea {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 4px 8px;
-  }
   textarea {
     min-height: 200px;
     max-height: 500px;

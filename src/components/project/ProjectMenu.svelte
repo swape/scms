@@ -322,9 +322,6 @@ function pageName(pageId: string, pages: PageType[]): string {
     </div>
   </section>
 {/if}
-<textarea>
-  {JSON.stringify(project, null, 2)}
-</textarea>
 
 <style>
 .menu-section {
@@ -365,15 +362,8 @@ function pageName(pageId: string, pages: PageType[]): string {
 .menu-select {
   width: 100%;
   min-width: 0;
-  border: 1px solid rgba(128, 128, 128, 0.55);
-  border-radius: 3px;
-  padding: 0.45rem 0.55rem;
-  background: transparent;
-  color: inherit;
 }
 
-.menu-input:focus-visible,
-.menu-select:focus-visible,
 .menu-icon-button:focus-visible,
 .menu-add-button:focus-visible,
 .menu-remove:focus-visible {

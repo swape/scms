@@ -49,3 +49,43 @@
 
 - File: `src/components/editor/elements/Header/index.svelte`
 - Fixed the Header level control type error by narrowing the selected element to `ContentType`.
+
+## 2026-10-03
+
+- File: `src/previewRender/common.ts`
+- Moved and exported the shared HTML escaping and href sanitizing helpers.
+- File: `src/previewRender/footer.ts`
+- Updated footer rendering to use the shared helpers.
+- File: `src/components/project/ProjectMenu.svelte`
+- Implemented hierarchical menu editing with page and external links, manual and automatic submenus, appearance controls, and item reordering.
+- File: `src/components/project/index.svelte`
+- Connected the menu editor to the current project.
+- File: `src/types/types.ts`
+- Added menu item identity and appearance settings to the project types.
+- File: `src/utils/menu.ts`
+- Added menu item creation and project persistence helpers.
+- File: `src/previewRender/index.ts`
+- Wired menu rendering and page selection into the preview.
+- File: `src/previewRender/menuView.ts`
+- Added menu preview rendering and page navigation for configured menu items.
+- File: `src/store.ts`
+- Synchronized preview page selection with the editor store.
+- File: `src/styles/preview.css`
+- Added responsive preview menu styles.
+
+- File: `src/styles/global.css`
+- Added a shared styled select control with consistent dropdown, hover, focus, and disabled states.
+- File: `src/components/project/ProjectFooter.svelte`
+- Removed component-specific select styling.
+- File: `src/components/project/ProjectMenu.svelte`
+- Removed duplicate select presentation rules while retaining menu sizing.
+- File: `src/pages/preview.astro`
+- Removed placeholder menu text from the preview header.
+- File: `src/styles/global.css`
+- Added a consistent global appearance for text inputs and textareas alongside selects.
+- File: `src/components/project/Edit.svelte`
+- Removed local input and textarea presentation rules while retaining textarea dimensions.
+- File: `src/components/project/ProjectFooter.svelte`
+- Removed local input and textarea presentation rules while retaining footer field sizing.
+- File: `src/components/project/ProjectMenu.svelte`
+- Removed the local input focus style in favor of the shared global state.

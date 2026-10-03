@@ -146,12 +146,6 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   gap: 0.75rem;
 }
 
-.footer-select {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 4px 8px;
-  background: transparent;
-}
-
 .footer-element {
   display: flex;
   align-items: center;
@@ -164,17 +158,11 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
 }
 
 .footer-input {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 4px 8px;
-  background: transparent;
   flex: 1;
   min-width: 120px;
 }
 
 .footer-textarea {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 4px 8px;
-  background: transparent;
   flex: 1;
   min-height: 80px;
   width: 100%;

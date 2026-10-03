@@ -79,7 +79,7 @@ const tabs = [
       {/if}
 
       {#if tab === 'menu'}
-        <ProjectMenu />
+        <ProjectMenu id={ID} />
       {/if}
     </div>
   {/if}

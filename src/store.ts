@@ -42,4 +42,8 @@ globalThis.addEventListener('storage', (event) => {
     const selectedFromStorage = getStorage('selectedElement')
     selectedElement.set(selectedFromStorage)
   }
+  if (event.key === 'selectedPage') {
+    const selectedFromStorage = getStorage('selectedPage')
+    selectedPage.set(selectedFromStorage)
+  }
 })

@@ -60,6 +60,8 @@ function updateSelectedPage() {
   renderFooter()
 }
 
+updateSelectedPage()
+
 // listen to storage changes and update the page accordingly
 window.addEventListener('storage', (event) => {
   const selectedPageTextarea = document.getElementById('selectedPage') as HTMLTextAreaElement | null

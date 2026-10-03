@@ -89,3 +89,5 @@
 - Removed local input and textarea presentation rules while retaining footer field sizing.
 - File: `src/components/project/ProjectMenu.svelte`
 - Removed the local input focus style in favor of the shared global state.
+- File: `src/styles/global.css`
+- Consolidated shared control states and replaced standard declarations with Tailwind utilities where practical.

@@ -1,5 +1,9 @@
 ## 2026-10-17
 
+- File: `src/components/editor/PageElements.svelte`
+- Highlighted the selected page element and exposed its selected state with `aria-pressed`.
+- Files: `src/components/editor/PreviewWrapper.svelte` and `src/pages/preview/index.astro`
+- Posted preview page data and project settings to the iframe and read them from the request body.
 - Files: `src/pages/preview/elementParts/*.astro` and `src/pages/preview/elementSelector.astro`
 - Applied each item’s configured wrapper class to all preview element roots.
 - Files: `src/pages/preview/elementParts/*.astro` and `src/pages/preview/elementSelector.astro`

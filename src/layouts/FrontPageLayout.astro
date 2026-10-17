@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css'
-import { ClientRouter } from 'astro:transitions'
 import Login from '../components/Login.svelte'
 
 interface Props {
@@ -19,7 +18,6 @@ const { title = 'SCMS' }: Props = Astro.props
     <title>{title}</title>
   </head>
   <body class="bg-slate-900 text-white">
-    <ClientRouter />
     <nav class="flex gap-2 container mx-auto justify-between flex-wrap items-center px-4">
       <div class="flex gap-2">
         <a href="/" class="btn px-4 py-2">

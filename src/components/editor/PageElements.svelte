@@ -129,7 +129,10 @@ function deleteElementWithConfirmation(elementId: string | number) {
         ondragstart={(event) => handleDragStart(event, index)}
         ondragover={handleDragOver}
         ondrop={(event) => handleDrop(event, index)}>
-        <button type="button" onclick={() => selectedElement.set(element)} class="flex-1 bg-slate-800 p-2 rounded cursor-pointer hover:bg-slate-700">
+        <button
+          type="button"
+          onclick={() => selectedElement.set(element)}
+          class={`flex-1 p-2 rounded cursor-pointer ${$selectedElement?.id === element.id ? 'bg-emerald-700 ring-2 ring-emerald-300' : 'bg-slate-800 hover:bg-slate-700'}`}>
           <div class="flex gap-2 items-center" data-id={element.id} data-type={element.type} data-order={element.order}>
             <span class="text-xs text-gray-400">({element.order})</span>
             <span class="material-symbols-outlined">{'brick'}</span>

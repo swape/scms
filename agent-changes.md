@@ -1,3 +1,38 @@
+## 2026-10-17
+
+- Files: `src/pages/preview/elementParts/*.astro` and `src/pages/preview/elementSelector.astro`
+- Applied each item’s configured wrapper class to all preview element roots.
+- Files: `src/pages/preview/elementParts/*.astro` and `src/pages/preview/elementSelector.astro`
+- Added the container class to non-header preview elements.
+- File: `src/components/editor/PreviewWrapper.svelte`
+- Delayed iframe rendering until page data and project settings were available and kept its URL reactive.
+- Files: `src/pages/preview/elementSelector.astro` and `src/pages/preview/cssHelpers.ts`
+- Moved per-item CSS generation into the CSS helper module.
+- File: `src/components/editor/PreviewWrapper.svelte`
+- URL-encoded preview page data and project settings with `URLSearchParams`.
+- Files: `src/pages/preview/index.astro` and `src/pages/preview/cssHelpers.ts`
+- Moved preview palette CSS generation into the `cssHelpers` function.
+- File: `src/pages/preview/index.astro`
+- Handled malformed preview settings JSON without interrupting rendering.
+- Files: `src/pages/preview/index.astro` and `src/styles/preview.css`
+- Added project light/dark color variables to the preview root and used the text variable for preview text.
+- File: `src/pages/preview/elementSelector.astro`
+- Combined generated CSS selectors when items shared identical declarations.
+- File: `src/pages/preview/elementSelector.astro` and `src/pages/preview/elementParts/*.astro`
+- Replaced element-level inline styles with item-scoped CSS generated through `combinedCss`.
+- Files: `src/pages/preview/elementSelector.astro`, `src/pages/preview/elementParts/*.astro`, and `src/previewRender/*View.ts`
+- Prefixed preview content element ID classes with `scms_`.
+- Files: `src/pages/preview/ElementSelector.astro` and `src/pages/preview/elementParts/*.astro`
+- Added each content element ID as a class in the Astro preview.
+- Files: `src/previewRender/headerView.ts`, `textView.ts`, `imageView.ts`, and `linkView.ts`
+- Added each content element ID as a class in the DOM-based preview renderer.
+- File: `src/pages/preview/index.astro`
+- Restored preview scroll position from session storage when reopening the same page and saved the position on page exit.
+- File: `src/pages/preview/ElementSelector.astro`
+- Routed header, text, image, and link elements to dedicated preview components.
+- Files: `src/pages/preview/elementParts/Header.astro`, `Text.astro`, `Image.astro`, and `Link.astro`
+- Added text, image, and link previews and rendered headers using their configured levels.
+
 ## 2026-07-04
 
 - File: `AGENTS.md`

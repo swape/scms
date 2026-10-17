@@ -78,7 +78,7 @@ window.addEventListener('storage', (event) => {
   if (event.key === 'selectedPage') {
     updateSelectedPage()
   }
-  
+
   if (selectedPageTextarea) {
     selectedPageTextarea.value = JSON.stringify(getStorage('currentProject'), null, 2)
   }

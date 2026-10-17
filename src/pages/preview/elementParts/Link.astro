@@ -1,0 +1,18 @@
+---
+import { sanitizeHref } from '../../../previewRender/common.ts'
+
+const { data } = Astro.props
+
+const link = data?.link
+const text = link?.text || data?.title || data?.content || 'Link'
+const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
+const target = link?.target === '_blank' ? '_blank' : '_self'
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined
+const containerClass = data?.style?.wrapper || ''
+---
+
+<div class={`${containerClass} scms_${String(data?.id ?? '')}`.trim()}>
+  <a class={link?.asButton ? 'link-button' : 'link-inline'} href={sanitizeHref(href)} target={target} rel={rel}>
+    {text}
+  </a>
+</div>

@@ -30,56 +30,56 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
       { c: '#92400e', key: 'text_5', name: 'Text quinary', cDark: '#fcd34d' },
     ],
     users: {},
-    "menu": {
-    "type": "menu1",
-    "elements": [
-      {
-        "id": "1791044792069-igg7qsna2r",
-        "type": "link",
-        "title": "New link",
-        "link": {
-          "text": "New link",
-          "mode": "page",
-          "url": "",
-          "pageId": "1783189202408",
-          "target": "_self",
-          "asButton": false
-        }
+    menu: {
+      type: 'menu1',
+      elements: [
+        {
+          id: '1791044792069-igg7qsna2r',
+          type: 'link',
+          title: 'New link',
+          link: {
+            text: 'New link',
+            mode: 'page',
+            url: '',
+            pageId: '1783189202408',
+            target: '_self',
+            asButton: false,
+          },
+        },
+        {
+          id: '1791044813156-45fd2hlk33x',
+          type: 'dropdown',
+          title: 'hello',
+          children: [
+            {
+              id: '1791044829477-49bhpzn706q',
+              type: 'auto',
+              title: 'Pages',
+              autoParentPageId: '1783189202408',
+              autoMaxItems: 0,
+            },
+          ],
+        },
+        {
+          id: '1791044848918-ruoybwgrnok',
+          type: 'link',
+          title: 'New link',
+          link: {
+            text: 'New link',
+            mode: 'url',
+            url: 'https://swape.net',
+            pageId: '',
+            target: '_self',
+            asButton: false,
+          },
+        },
+      ],
+      style: {
+        layout: 'horizontal',
+        backgroundColor: '#932f2f',
+        textColor: '#7088bd',
       },
-      {
-        "id": "1791044813156-45fd2hlk33x",
-        "type": "dropdown",
-        "title": "hello",
-        "children": [
-          {
-            "id": "1791044829477-49bhpzn706q",
-            "type": "auto",
-            "title": "Pages",
-            "autoParentPageId": "1783189202408",
-            "autoMaxItems": 0
-          }
-        ]
-      },
-      {
-        "id": "1791044848918-ruoybwgrnok",
-        "type": "link",
-        "title": "New link",
-        "link": {
-          "text": "New link",
-          "mode": "url",
-          "url": "https://swape.net",
-          "pageId": "",
-          "target": "_self",
-          "asButton": false
-        }
-      }
-    ],
-    "style": {
-      "layout": "horizontal",
-      "backgroundColor": "#932f2f",
-      "textColor": "#7088bd"
-    }
-  },
+    },
     footer: {
       type: 'footer1',
       elements: [

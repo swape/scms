@@ -1,0 +1,34 @@
+---
+import type { ContentType } from '../../types/types.ts'
+import { getCombinedCss } from './cssHelpers.ts'
+import Header from './elementParts/Header.astro'
+import Image from './elementParts/Image.astro'
+import Link from './elementParts/Link.astro'
+import Text from './elementParts/Text.astro'
+
+const { data } = Astro.props
+
+const content = data?.content || []
+const combinedCss = getCombinedCss(content)
+---
+
+{content.map((item: ContentType) => {
+  if (item.type === 'header') {
+    return <Header data={item} />
+  }
+
+  if (item.type === 'text') {
+    return <Text data={item} />
+  }
+
+  if (item.type === 'image') {
+    return <Image data={item} />
+  }
+
+  if (item.type === 'link') {
+    return <Link data={item} />
+  }
+
+  return <div class={`${item.style?.wrapper || ''} scms_${String(item.id)}`.trim()}>{item.type}</div>
+})}
+<style is:global set:html={combinedCss}></style>

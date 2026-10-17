@@ -1,0 +1,62 @@
+---
+import '../../styles/preview.css'
+import type { ColorType } from '../../types/types.ts'
+import { cssHelpers } from './cssHelpers.ts'
+import ElementSelector from './ElementSelector.astro'
+
+const page = Astro.url.searchParams.get('page')
+const project = Astro.url.searchParams.get('project')
+const data = Astro.url.searchParams.get('data')
+const settings = Astro.url.searchParams.get('settings')
+
+const parsedData = data ? JSON.parse(data) : null
+
+let parsedSettings: { colors?: ColorType[] } | null = null
+try {
+  parsedSettings = settings ? JSON.parse(settings) : null
+} catch {
+  parsedSettings = null
+}
+
+const projectColors: ColorType[] = Array.isArray(parsedSettings?.colors) ? parsedSettings.colors : []
+
+const cssVars = cssHelpers(projectColors)
+export const prerender = false
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#FF0000" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Preview</title>
+    <style is:global set:html={cssVars}></style>
+  </head>
+  <body class="preview-body">
+    <header id="menu"></header>
+    <main>
+      <ElementSelector data={parsedData} />
+    </main>
+    <footer id="footer">&nbsp;</footer>
+    <div class="debug">
+      <div>Debug Info:</div>
+      <div>Page: {page}</div>
+      <div>Project: {project}</div>
+      <textarea id="selectedPage" readonly class="info">{data}</textarea>
+      <script is:inline>
+        const currentPage = new URLSearchParams(window.location.search).get('page')
+        const previousPage = sessionStorage.getItem('previewPage')
+        const previousScrollY = sessionStorage.getItem('previewScrollY')
+
+        if (currentPage === previousPage && previousScrollY !== null) {
+          window.scrollTo(0, Number(previousScrollY))
+        }
+
+        window.addEventListener('pagehide', () => {
+          sessionStorage.setItem('previewPage', currentPage ?? '')
+          sessionStorage.setItem('previewScrollY', String(window.scrollY))
+        })
+      </script>
+    </div>
+  </body>
+</html>

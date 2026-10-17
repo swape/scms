@@ -1,0 +1,19 @@
+---
+const { data } = Astro.props
+
+const title = data?.title || ''
+const content = data?.content || ''
+const containerClass = data?.style?.wrapper || ''
+---
+
+<div class={`${containerClass} scms_${String(data?.id ?? '')}`.trim()}>
+  {title && <h2>{title}</h2>}
+  <p>
+    {content.split('\n').map((line: string, index: number) => (
+      <>
+        {index > 0 && <br />}
+        {line}
+      </>
+    ))}
+  </p>
+</div>

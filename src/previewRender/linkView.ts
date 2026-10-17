@@ -46,7 +46,7 @@ export function renderLink(content: ContentType, project: ProjectType | null): s
   if (link.asButton) {
     backgroundAndTextColor = ` style="background-color: var(--${style.buttonColor || ''}); color: var(--${style.buttonTextColor || ''});"`
   }
-  const output = `<div data-type="${content?.type || ''}" data-id="${content?.id || ''}"><a class="${className}" href="${href}" target="${target}"${relAttribute}${title}${backgroundAndTextColor}>${text}</a></div>`
+  const output = `<div class="scms_${String(content?.id ?? '')}" data-type="${content?.type || ''}" data-id="${content?.id || ''}"><a class="${className}" href="${href}" target="${target}"${relAttribute}${title}${backgroundAndTextColor}>${text}</a></div>`
 
   return wrapWithStyle(content, output)
 }

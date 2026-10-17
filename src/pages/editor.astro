@@ -1,6 +1,7 @@
 ---
 import AuthGate from '../components/AuthGate.svelte'
 import EditorTopMenu from '../components/editor/EditorTopMenu.svelte'
+import PreviewWrapper from '../components/editor/PreviewWrapper.svelte'
 import Settings from '../components/editor/Settings.svelte'
 import Sidebar from '../components/editor/Sidebar.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
@@ -14,7 +15,7 @@ import FrontPageLayout from '../layouts/FrontPageLayout.astro'
     <div class="editor">
       <Sidebar client:only="svelte" />
       <div class="border-l border-r border-gray-600 max-h-[calc(99svh-5rem)]">
-        <iframe src="/preview" class="w-full h-full"></iframe>
+        <PreviewWrapper client:only="svelte" />
       </div>
       <Settings client:only="svelte" />
     </div>

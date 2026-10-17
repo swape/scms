@@ -6,7 +6,7 @@ const content = data?.content || ''
 const containerClass = data?.style?.wrapper || ''
 ---
 
-<div class={`${containerClass} scms_${String(data?.id ?? '')}`.trim()}>
+<section data-id={String(data?.id ?? '')} class={`${containerClass} scms_${String(data?.id ?? '')}`.trim()}>
   {title && <h2>{title}</h2>}
   <p>
     {content.split('\n').map((line: string, index: number) => (
@@ -16,4 +16,4 @@ const containerClass = data?.style?.wrapper || ''
       </>
     ))}
   </p>
-</div>
+</section>

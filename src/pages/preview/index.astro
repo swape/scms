@@ -48,6 +48,10 @@ export const prerender = false
         const previousPage = sessionStorage.getItem('previewPage')
         const previousScrollY = sessionStorage.getItem('previewScrollY')
 
+        // fetch currentPage and selectedElement from localStorage
+        const selectedPage = getStorage('selectedPage')
+        const selectedElement = getStorage('selectedElement')
+
         if (currentPage === previousPage && previousScrollY !== null) {
           window.scrollTo(0, Number(previousScrollY))
         }
@@ -55,6 +59,67 @@ export const prerender = false
         window.addEventListener('pagehide', () => {
           sessionStorage.setItem('previewPage', currentPage ?? '')
           sessionStorage.setItem('previewScrollY', String(window.scrollY))
+        })
+
+        window.addEventListener('load', () => {
+          // set active section based on selectedElement
+          if (selectedElement) {
+            const activeSection = document.querySelector(`section[data-id="${selectedElement.id}"]`)
+            if (activeSection) {
+              activeSection.classList.add('active')
+            }
+          }
+
+          const sections = document.querySelectorAll('section')
+          sections.forEach((section) => {
+            section.addEventListener('click', () => {
+              section.classList.toggle('active')
+
+              const activeElement = selectedPage?.content.find((c) => c.id === section.dataset.id)
+              if (activeElement) {
+                saveStorage('selectedElement', activeElement)
+              }
+
+              // remove active class from all other sections
+              sections.forEach((s) => {
+                if (s !== section) {
+                  s.classList.remove('active')
+                }
+              })
+            })
+          })
+        })
+
+        function saveStorage(name, data) {
+          const storeDate = Date.now()
+          const newData = { data, storeDate }
+
+          return localStorage.setItem(name, JSON.stringify(newData))
+        }
+
+        function getStorage(name, validateTime = 60) {
+          const timeNow = Date.now()
+          const storedData = JSON.parse(localStorage.getItem(name) ?? '{}')
+
+          if (!storedData || storedData.storeDate + validateTime * 60000 < timeNow) {
+            return null
+          }
+
+          return storedData.data
+        }
+
+        // listen to changes in localStorage for selectedElement
+        window.addEventListener('storage', (event) => {
+          if (event.key === 'selectedElement') {
+            const newSelectedElement = getStorage('selectedElement')
+            if (newSelectedElement) {
+              const activeSection = document.querySelector(`section[data-id="${newSelectedElement.id}"]`)
+              if (activeSection) {
+                document.querySelectorAll('section').forEach((s) => s.classList.remove('active'))
+                activeSection.classList.add('active')
+              }
+            }
+          }
         })
       </script>
     </div>

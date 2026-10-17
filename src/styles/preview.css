@@ -20,6 +20,21 @@ body {
 .preview-body {
   color: var(--text_1);
 
+  section[data-id] {
+    &:hover {
+      cursor: pointer;
+      outline: 2px dotted rgb(34, 49, 126);
+      outline-offset: 5px;
+      border-radius: 3px;
+    }
+
+    &.active {
+      outline: 2px dotted rgb(34, 126, 55);
+      outline-offset: 5px;
+      border-radius: 3px;
+    }
+  }
+
   .info {
     width: 100%;
     height: 300px;

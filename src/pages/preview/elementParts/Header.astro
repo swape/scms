@@ -6,6 +6,6 @@ const Heading = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(data?.headerLevel)
 const containerClass = data?.style?.wrapper || ''
 ---
 
-<div class={containerClass}>
+<section class={containerClass} data-id={String(data?.id ?? '')}>
   <Heading class={`scms_${String(data?.id ?? '')}`}>{content}</Heading>
-</div>
+</section>

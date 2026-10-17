@@ -6,7 +6,11 @@ import Image from './elementParts/Image.astro'
 import Link from './elementParts/Link.astro'
 import Text from './elementParts/Text.astro'
 
-const { data } = Astro.props
+interface Props {
+  data: ContentType[]
+}
+
+const { data }: Props = Astro.props
 
 const content = data?.content || []
 const combinedCss = getCombinedCss(content)

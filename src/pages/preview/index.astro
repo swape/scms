@@ -52,6 +52,10 @@ export const prerender = false
         const selectedPage = getStorage('selectedPage')
         const selectedElement = getStorage('selectedElement')
 
+        // color-scheme based on dark mode setting
+        const newDarkMode = getStorage('darkMode')
+        updateColorScheme(newDarkMode)
+
         if (currentPage === previousPage && previousScrollY !== null) {
           window.scrollTo(0, Number(previousScrollY))
         }
@@ -120,7 +124,15 @@ export const prerender = false
               }
             }
           }
+          if (event.key === 'darkMode') {
+            const newDarkMode = getStorage('darkMode')
+            updateColorScheme(newDarkMode)
+          }
         })
+
+        function updateColorScheme(newDarkMode) {
+          document.body.style = `color-scheme: ${newDarkMode ? 'dark' : 'light'};`
+        }
       </script>
     </div>
   </body>

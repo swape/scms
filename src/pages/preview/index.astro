@@ -81,8 +81,10 @@ export const prerender = false
 
           const sections = document.querySelectorAll('section')
           sections.forEach((section) => {
-            section.addEventListener('click', () => {
+            section.addEventListener('click', (event) => {
               section.classList.toggle('active')
+              event.stopPropagation()
+              event.preventDefault()
 
               const activeElement = selectedPage?.content.find((c) => c.id === section.dataset.id)
               if (activeElement) {
@@ -127,8 +129,8 @@ export const prerender = false
                 document.querySelectorAll('section').forEach((s) => s.classList.remove('active'))
                 activeSection.classList.add('active')
                 activeSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                // save the scroll position
-                saveStorage('scrollPosition', activeSection.offsetTop)
+
+                sessionStorage.setItem('previewScrollY', String(window.scrollY))
               }
             }
           }

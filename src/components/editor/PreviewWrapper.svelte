@@ -6,6 +6,7 @@ let iframePage = $state<string | null>(null)
 let projectId = $state<string | number | null>(null)
 let pageData = $state<PageType | null>(null)
 let projectSettings = $state<Omit<ProjectType, 'pages'> | null>(null)
+let previewForm: HTMLFormElement | undefined = $state()
 
 selectedPage.subscribe((value: PageType | null) => {
   if (value !== null && value !== undefined) {
@@ -34,16 +35,26 @@ const previewUrl = $derived.by(() => {
   const query = new URLSearchParams({
     page: iframePage ?? '',
     project: String(projectId ?? ''),
-    data: JSON.stringify(pageData) ?? 'null',
-    settings: JSON.stringify(projectSettings) ?? 'null',
   })
 
   return `/preview/?${query.toString()}`
 })
+
+const pagePayload = $derived(JSON.stringify(pageData) ?? 'null')
+const settingsPayload = $derived(JSON.stringify(projectSettings) ?? 'null')
+
+$effect(() => {
+  if (previewForm && previewUrl && pagePayload && settingsPayload) {
+    previewForm.requestSubmit()
+  }
+})
 </script>
 
-{#if previewUrl}
-  <iframe title="Preview" src={previewUrl} class="w-full h-full"></iframe>
-{:else}
-  <p>Loading preview...</p>
+{#if previewUrl && pagePayload && settingsPayload}
+  <form bind:this={previewForm} method="POST" action={previewUrl} target="preview-frame">
+    <input type="hidden" name="data" value={pagePayload} />
+    <input type="hidden" name="settings" value={settingsPayload} />
+  </form>
 {/if}
+
+<iframe name="preview-frame" title="Preview" class="w-full h-full"></iframe>

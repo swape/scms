@@ -1,9 +1,11 @@
 ---
 import '../../styles/preview.css'
 import { ClientRouter } from 'astro:transitions'
-import type { ColorType } from '../../types/types.ts'
+import type { ProjectType } from '../../types/types.ts'
 import { cssHelpers } from './cssHelpers.ts'
 import ElementSelector from './ElementSelector.astro'
+import Footer from './Footer.astro'
+import Menu from './Menu.astro'
 
 const page = Astro.url.searchParams.get('page')
 const project = Astro.url.searchParams.get('project')
@@ -15,14 +17,14 @@ const settings = typeof postedSettings === 'string' ? postedSettings : Astro.url
 
 const parsedData = data ? JSON.parse(data) : null
 
-let parsedSettings: { colors?: ColorType[] } | null = null
+let parsedSettings: ProjectType | null = null
 try {
-  parsedSettings = settings ? JSON.parse(settings) : null
+  parsedSettings = settings ? (JSON.parse(settings) as ProjectType) : null
 } catch {
   parsedSettings = null
 }
 
-const projectColors: ColorType[] = Array.isArray(parsedSettings?.colors) ? parsedSettings.colors : []
+const projectColors = Array.isArray(parsedSettings?.colors) ? parsedSettings.colors : []
 
 const cssVars = cssHelpers(projectColors)
 export const prerender = false
@@ -34,19 +36,25 @@ export const prerender = false
     <meta name="theme-color" content="#FF0000" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Preview</title>
+    {parsedSettings?.extra?.style && <style is:global set:html={parsedSettings?.extra?.style}></style>}
     <style is:global set:html={cssVars}></style>
+    <Fragment set:html={parsedSettings?.extra?.head ?? ''} />
     <ClientRouter />
   </head>
   <body class="preview-body">
-    <header id="menu"></header>
+    <header>
+      <Menu menu={parsedSettings?.menu} pages={parsedSettings?.pages ?? []} />
+    </header>
     <main>
       <ElementSelector data={parsedData} />
     </main>
-    <footer id="footer">&nbsp;</footer>
+    <Footer footer={parsedSettings?.footer} />
+    <!-- debug info and preview functionality -->
     <div class="debug">
-      <div>Debug Info:</div>
-      <div>Page: {page}</div>
-      <div>Project: {project}</div>
+      <div>
+        Debug Info: <span>Page: {page}</span> <span>Project: {project}</span>
+      </div>
+
       <textarea id="selectedPage" readonly class="info">{data}</textarea>
       <script is:inline>
         const currentPage = new URLSearchParams(window.location.search).get('page')

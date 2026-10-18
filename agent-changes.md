@@ -1,3 +1,10 @@
+## 2026-10-18
+
+- Files: `src/components/editor/PreviewWrapper.svelte` and `src/pages/preview/*`
+- Rendered configured project menus and footers in the preview and included project pages for automatic menu items.
+- File: `src/pages/preview/index.astro`
+- Rendered configured extra head content as HTML in the preview document head.
+
 ## 2026-10-17
 
 - File: `src/components/editor/PageElements.svelte`

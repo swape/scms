@@ -5,7 +5,7 @@ import type { PageType, ProjectType } from '../../types/types.ts'
 let iframePage = $state<string | null>(null)
 let projectId = $state<string | number | null>(null)
 let pageData = $state<PageType | null>(null)
-let projectSettings = $state<Omit<ProjectType, 'pages'> | null>(null)
+let projectSettings = $state<ProjectType | null>(null)
 let previewForm: HTMLFormElement | undefined = $state()
 
 selectedPage.subscribe((value: PageType | null) => {
@@ -18,8 +18,8 @@ selectedPage.subscribe((value: PageType | null) => {
 currentProject.subscribe((value) => {
   if (value !== null && value !== undefined) {
     projectId = value.id
-    const { pages, ...settings } = value
-    projectSettings = settings
+    const { pages } = value
+    projectSettings = value
 
     if (iframePage === null) {
       iframePage = pages.length > 0 ? pages[0].id : null

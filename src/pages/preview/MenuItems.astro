@@ -1,0 +1,18 @@
+---
+import type { MenuElement, PageType } from '../../types/types.ts'
+import MenuItem from './MenuItem.astro'
+
+interface Props {
+  items: MenuElement[]
+  pages: PageType[]
+  layout?: 'horizontal' | 'vertical'
+}
+
+const { items, pages, layout } = Astro.props
+---
+
+<ul class:list={['menu-list', layout === 'vertical' && 'menu-vertical']}>
+  {items.map((item) => (
+    <MenuItem item={item} pages={pages} layout={layout} />
+  ))}
+</ul>

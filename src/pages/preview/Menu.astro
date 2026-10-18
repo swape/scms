@@ -1,0 +1,26 @@
+---
+import type { MenuElement, PageType, ProjectType } from '../../types/types.ts'
+import MenuItems from './MenuItems.astro'
+
+interface Props {
+  menu?: ProjectType['menu']
+  pages: PageType[]
+}
+
+const { menu, pages } = Astro.props
+const backgroundColor = menu?.style?.backgroundColor ?? ''
+const textColor = menu?.style?.textColor ?? ''
+const safeColor = (value: string) => (/^#[\da-f]{3,8}$/i.test(value) ? value : '')
+const menuStyle = [safeColor(backgroundColor) ? `background-color: ${safeColor(backgroundColor)}` : '', safeColor(textColor) ? `color: ${safeColor(textColor)}` : '']
+  .filter(Boolean)
+  .join('; ')
+const menuItems: MenuElement[] = menu?.elements ?? []
+---
+
+{menuItems.length > 0 && (
+  <div id="menu" class="menu-inner" style={menuStyle}>
+    <nav aria-label="Project menu">
+      <MenuItems items={menuItems} pages={pages} layout={menu?.style?.layout} />
+    </nav>
+  </div>
+)}

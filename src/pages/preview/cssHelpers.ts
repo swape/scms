@@ -102,6 +102,7 @@ function addItemCssRules(item: ContentType, rules: Map<string, Set<string>>) {
       getColorValue(item.link.style?.buttonTextColor) ? `color: ${getColorValue(item.link.style?.buttonTextColor)};` : '',
     ])
   } else if (item.type === 'splitBlock') {
+    addRule(rules, `${selector} .split-text`, [getCssLength(style.splitTextPadding) ? `padding: ${getCssLength(style.splitTextPadding)};` : ''])
     addRule(rules, `${selector} .link-button`, [
       getColorValue(style.textColor) ? `background-color: ${getColorValue(style.textColor)};` : '',
       getColorValue(style.backgroundColor) ? `color: ${getColorValue(style.backgroundColor)};` : '',

@@ -35,6 +35,29 @@ function getSplitBorderRadius(): string {
   }
   return String(value)
 }
+
+function updateSplitTextPadding(event: Event) {
+  const input = event.target as HTMLInputElement
+  const style = $selectedElement?.style || {}
+  const nextStyle: Record<string, string | number> = { ...style }
+
+  if (!input.value.trim()) {
+    delete nextStyle['splitTextPadding']
+  } else {
+    nextStyle['splitTextPadding'] = Number(input.value)
+  }
+
+  update('style', nextStyle)
+  updatePageContentWithDebounce()
+}
+
+function getSplitTextPadding(): string {
+  const value = $selectedElement?.style?.splitTextPadding
+  if (value === undefined || value === null || value === '') {
+    return ''
+  }
+  return String(value)
+}
 </script>
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
@@ -55,6 +78,11 @@ function getSplitBorderRadius(): string {
     <div class="input-and-label-wrapper">
       <label for="split-border-radius">Border radius (px):</label>
       <input id="split-border-radius" type="number" min="0" value={getSplitBorderRadius()} oninput={updateSplitBorderRadius} />
+    </div>
+
+    <div class="input-and-label-wrapper">
+      <label for="split-text-padding">Text padding (px):</label>
+      <input id="split-text-padding" type="number" min="0" placeholder="24" value={getSplitTextPadding()} oninput={updateSplitTextPadding} />
     </div>
   {/if}
 {/if}

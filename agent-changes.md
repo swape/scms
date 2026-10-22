@@ -36,6 +36,8 @@
 - Removed the split block's dedicated button background/text color selectors; the button now derives its colors from the wrapper's own background/text color settings, swapped (wrapper background becomes button text color, wrapper text color becomes button background).
 - Files: `src/components/editor/Styling.svelte` and `src/pages/preview/cssHelpers.ts`
 - Added a border radius control for the split block in the shared `Styling.svelte` panel, applying rounded corners with clipping to the outer `.split-block` wrapper.
+- Files: `src/components/editor/Styling.svelte` and `src/pages/preview/cssHelpers.ts`
+- Added a text padding control (`style.splitTextPadding`, px) for the split block's text wrapper (`.split-text`), overriding its default 24px padding.
 
 ## 2026-10-21
 

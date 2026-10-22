@@ -158,20 +158,30 @@ figure {
 }
 
 .split-block {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+
+    .split-image {
+      order: -1;
+    }
+  }
 }
 
 .split-block-flipped {
-  flex-direction: row-reverse;
+  gap: 2rem;
+  .split-text {
+    order: 2;
+  }
 }
 
 .split-text,
 .split-image {
-  flex: 1 1 320px;
-  min-width: 280px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .split-text {
@@ -195,17 +205,9 @@ figure {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  aspect-ratio: 4 / 3;
-}
 
-@media (max-width: 640px) {
-  .split-block,
-  .split-block-flipped {
-    flex-direction: column;
-  }
-
-  .split-image {
-    order: -1;
+  @media (max-width: 640px) {
+    aspect-ratio: 4 / 3;
   }
 }
 

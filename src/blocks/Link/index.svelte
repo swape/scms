@@ -1,9 +1,13 @@
 <script lang="ts">
-import { currentProject, selectedElement } from '../../../../store.ts'
-import type { ContentType, LinkMode, LinkSettings, LinkTarget } from '../../../../types/types.ts'
-import ColorSelect from '../../../editor/stylingParts/ColorSelect.svelte'
+import { currentProject, selectedElement } from '../../store.ts'
+import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
+import ColorSelect from '../shared/ColorSelect.svelte'
+import Margin from '../shared/Margin.svelte'
+import Padding from '../shared/Padding.svelte'
+import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
+import Wrapper from '../shared/Wrapper.svelte'
 
-const { updatePageContentWithDebounce } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 function getDefaultLinkSettings(): LinkSettings {
   const firstPageId = $currentProject?.pages?.[0]?.id || ''
@@ -152,6 +156,12 @@ function updateButtonTextColor(event: Event) {
     update={updateButtonTextColor}
     isBgColors={false} />
 {/if}
+
+<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
+<Wrapper {updatePageContentWithDebounce} {update} />
+<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
+<Padding {updatePageContentWithDebounce} {update} />
+<Margin {updatePageContentWithDebounce} {update} />
 
 <style>
 .checkbox-wrapper {

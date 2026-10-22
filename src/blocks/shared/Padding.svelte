@@ -1,7 +1,8 @@
 <script lang="ts">
-import { selectedElement } from '../../../store.ts'
+import { selectedElement } from '../../store.ts'
+import type { BlockEditorProps } from '../../types/types.ts'
 
-const { updatePageContentWithDebounce, update } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 type PaddingMode = 'all' | 'individual'
 

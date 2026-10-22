@@ -1,8 +1,8 @@
 ---
 import '../../styles/preview.css'
 import { ClientRouter } from 'astro:transitions'
-import type { ProjectType } from '../../types/types.ts'
-import { cssHelpers } from './cssHelpers.ts'
+import type { PageType, ProjectType } from '../../types/types.ts'
+import { cssHelpers, getColorValue } from './cssHelpers.ts'
 import ElementSelector from './ElementSelector.astro'
 import Footer from './Footer.astro'
 import Menu from './Menu.astro'
@@ -15,7 +15,7 @@ const postedSettings = formData?.get('settings')
 const data = typeof postedData === 'string' ? postedData : Astro.url.searchParams.get('data')
 const settings = typeof postedSettings === 'string' ? postedSettings : Astro.url.searchParams.get('settings')
 
-const parsedData = data ? JSON.parse(data) : null
+const parsedData: PageType | null = data ? JSON.parse(data) : null
 
 let parsedSettings: ProjectType | null = null
 try {
@@ -25,6 +25,11 @@ try {
 }
 
 const projectColors = Array.isArray(parsedSettings?.colors) ? parsedSettings.colors : []
+
+const pageBackgroundColor = getColorValue(parsedData?.colors?.backgroundColorKey)
+const pageTextColor = getColorValue(parsedData?.colors?.textColorKey)
+const pageColorDeclarations = [pageBackgroundColor ? `background-color: ${pageBackgroundColor};` : '', pageTextColor ? `color: ${pageTextColor};` : ''].filter(Boolean).join(' ')
+const pageColorCss = pageColorDeclarations ? `body.preview-body { ${pageColorDeclarations} }` : ''
 
 const cssVars = cssHelpers(projectColors)
 export const prerender = false
@@ -42,6 +47,7 @@ export const prerender = false
     <ClientRouter />
   </head>
   <body class="preview-body">
+    {pageColorCss && <style is:global set:html={pageColorCss} />}
     <header>
       <Menu menu={parsedSettings?.menu} pages={parsedSettings?.pages ?? []} />
     </header>
@@ -150,7 +156,7 @@ export const prerender = false
         })
 
         function updateColorScheme(newDarkMode) {
-          document.body.style = `color-scheme: ${newDarkMode ? 'dark' : 'light'};`
+          document.body.style.colorScheme = newDarkMode ? 'dark' : 'light'
         }
       </script>
     </div>

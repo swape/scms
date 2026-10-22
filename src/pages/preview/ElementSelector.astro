@@ -1,14 +1,13 @@
 ---
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
+import { getElementDefinition } from '../../components/editor/elements-list.ts'
 import type { ContentType, PageType } from '../../types/types.ts'
 import { getCombinedCss } from './cssHelpers.ts'
-import Header from './elementParts/Header.astro'
-import Image from './elementParts/Image.astro'
-import Link from './elementParts/Link.astro'
-import SplitBlock from './elementParts/SplitBlock.astro'
-import Text from './elementParts/Text.astro'
+
+const previews = import.meta.glob<{ default: AstroComponentFactory }>('/src/blocks/*/Preview.astro', { eager: true })
 
 interface Props {
-  data: PageType
+  data: PageType | null
 }
 
 const { data }: Props = Astro.props
@@ -19,24 +18,13 @@ const combinedCss = getCombinedCss(content || [])
 
 {
   content.map((item: ContentType) => {
-    if (item.type === 'header') {
-      return <Header data={item} />
-    }
-
-    if (item.type === 'text') {
-      return <Text data={item} />
-    }
-
-    if (item.type === 'image') {
-      return <Image data={item} />
-    }
-
-    if (item.type === 'splitBlock') {
-      return <SplitBlock data={item} />
-    }
-
-    if (item.type === 'link') {
-      return <Link data={item} />
+    const definition = getElementDefinition(item.type)
+    if (definition) {
+      const Preview = previews[definition.preview]?.default
+      if (!Preview) {
+        throw new Error(`Missing preview for block type "${item.type}": ${definition.preview}`)
+      }
+      return <Preview data={item} />
     }
 
     return <div class={`${item.style?.wrapper || ''} scms_${String(item.id)}`.trim()}>{item.type}</div>

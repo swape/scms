@@ -1,5 +1,14 @@
 ## 2026-10-22
 
+- Directories: `src/components/editor/elements`, `src/components/editor/stylingParts`, `src/pages/preview/elementParts`
+- Removed empty legacy directories left after the block migration and verified that no empty directories remained under `src`.
+
+- Files: `src/blocks/*`, `src/components/editor/Settings.svelte`, `src/components/editor/elements-list.ts`, `src/utils/elements.ts`, `src/types/types.ts`, `src/pages/preview/ElementSelector.astro`, `src/pages/preview/cssHelpers.ts`, `README.md`
+- Moved all element editors and Astro block previews into `src/blocks`, colocated block-specific CSS, and moved reusable style controls into `src/blocks/shared`.
+- Removed `Styling.svelte` and let each block compose its own style controls, including Split Block radius/text padding and Page palette settings.
+- Replaced editor, creation-default, preview, and block-CSS type switches with typed registry definitions and lazy editor imports while preserving saved content types and existing page-color changes.
+- Documented the block layout and single-registry workflow for adding blocks.
+
 - Files: `src/types/types.ts`, `src/components/editor/elements-list.ts`, `src/utils/elements.ts`
 - Added `flipped` field to `ContentType` and registered the Split Block element with its default title, content, and button link settings.
 - File: `src/components/editor/elements/SplitBlock/index.svelte`
@@ -38,6 +47,16 @@
 - Added a border radius control for the split block in the shared `Styling.svelte` panel, applying rounded corners with clipping to the outer `.split-block` wrapper.
 - Files: `src/components/editor/Styling.svelte` and `src/pages/preview/cssHelpers.ts`
 - Added a text padding control (`style.splitTextPadding`, px) for the split block's text wrapper (`.split-text`), overriding its default 24px padding.
+- File: `src/components/editor/elements/Page/index.svelte`
+- Added page-level background and text color selectors (`PageType.colors.backgroundColorKey`/`textColorKey`), replacing the TODO placeholder.
+- Files: `src/pages/preview/cssHelpers.ts` and `src/pages/preview/index.astro`
+- Exported `getColorValue` and generated a `body.preview-body { ... }` CSS rule from the selected page's background/text color, overriding the project-level default colors set in `preview.css`.
+- File: `src/pages/preview/ElementSelector.astro`
+- Widened the `data` prop type to `PageType | null` to match its existing optional-chaining usage.
+- File: `src/pages/preview/index.astro`
+- Fixed the dark-mode color-scheme script to set only `body.style.colorScheme` instead of replacing the entire inline style attribute.
+- File: `src/pages/preview/index.astro`
+- Moved the page's background/text color override from an inline `style` attribute on `<body>` to a dedicated `<style>` tag rendered as the first child of `<body>`, scoped to `body.preview-body` so it reliably overrides the project-level default without touching `.preview-body`'s base rule in `preview.css`.
 
 ## 2026-10-21
 

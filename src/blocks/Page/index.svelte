@@ -1,6 +1,9 @@
 <script lang="ts">
-import { currentProject, selectedElement, selectedPage } from '../../../../store.ts'
-import type { PageType } from '../../../../types/types.ts'
+import { currentProject, selectedElement, selectedPage } from '../../store.ts'
+import type { BlockEditorProps, PageType } from '../../types/types.ts'
+import ColorSelect from '../shared/ColorSelect.svelte'
+
+const {}: BlockEditorProps = $props()
 
 function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
@@ -45,7 +48,29 @@ function updatePageWithDebounce() {
   }, 300)
 }
 
-// TODO: add color settings for text and background colors
+function updateBackgroundColorKey(event: Event) {
+  const select = event.target as HTMLSelectElement
+  selectedElement.update((element) => {
+    if (element) {
+      const page = element as PageType
+      page.colors = { textColorKey: page.colors?.textColorKey || '', backgroundColorKey: select.value }
+    }
+    updatePageWithDebounce()
+    return element
+  })
+}
+
+function updateTextColorKey(event: Event) {
+  const select = event.target as HTMLSelectElement
+  selectedElement.update((element) => {
+    if (element) {
+      const page = element as PageType
+      page.colors = { textColorKey: select.value, backgroundColorKey: page.colors?.backgroundColorKey || '' }
+    }
+    updatePageWithDebounce()
+    return element
+  })
+}
 </script>
 
 <div class="input-and-label-wrapper">
@@ -57,3 +82,18 @@ function updatePageWithDebounce() {
   <label for="order">Order:</label>
   <input id="order" type="text" value={$selectedElement?.order || ''} on:input={updateOrder} />
 </div>
+
+<ColorSelect
+  element={{ style: { backgroundColorKey: ($selectedElement as PageType)?.colors?.backgroundColorKey || '' } }}
+  title="Page background color"
+  id="page-background-color"
+  styleName="backgroundColorKey"
+  update={updateBackgroundColorKey}
+  isBgColors={true} />
+<ColorSelect
+  element={{ style: { textColorKey: ($selectedElement as PageType)?.colors?.textColorKey || '' } }}
+  title="Page text color"
+  id="page-text-color"
+  styleName="textColorKey"
+  update={updateTextColorKey}
+  isBgColors={false} />

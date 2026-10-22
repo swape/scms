@@ -1,4 +1,8 @@
+import { getColorValue, getCssLength } from '../../blocks/shared/css.ts'
+import { getElementDefinition } from '../../components/editor/elements-list.ts'
 import type { ColorType, ContentType } from '../../types/types.ts'
+
+export { getColorValue } from '../../blocks/shared/css.ts'
 
 function getCssColor(value: string): string {
   const color = value.trim()
@@ -11,28 +15,6 @@ function getCssColor(value: string): string {
   }
 
   return ''
-}
-
-function getCssLength(value: string | number | undefined): string {
-  if (value === undefined || value === '') {
-    return ''
-  }
-
-  if (typeof value === 'number') {
-    return `${value}px`
-  }
-
-  const trimmed = value.trim()
-  if (!/^-?(?:\d+|\d*\.\d+)(?:px|rem|em|%)?$/i.test(trimmed)) {
-    return ''
-  }
-
-  return /^-?(?:\d+|\d*\.\d+)$/.test(trimmed) ? `${trimmed}px` : trimmed
-}
-
-function getColorValue(value: string | number | undefined): string {
-  const colorKey = String(value ?? '')
-  return /^[a-zA-Z0-9_-]+$/.test(colorKey) ? `var(--${colorKey})` : ''
 }
 
 function addRule(rules: Map<string, Set<string>>, selector: string, declarations: string[]) {
@@ -57,9 +39,6 @@ function addItemCssRules(item: ContentType, rules: Map<string, Set<string>>) {
   const borderRadius = getCssLength(style.borderRadius)
   if (borderRadius || style.backgroundColor) {
     declarations.push(`border-radius: ${borderRadius || '8px'};`)
-    if (item.type === 'splitBlock') {
-      declarations.push('overflow: hidden;')
-    }
   }
 
   if (style.paddingMode === 'individual') {
@@ -85,28 +64,8 @@ function addItemCssRules(item: ContentType, rules: Map<string, Set<string>>) {
 
   addRule(rules, selector, declarations)
 
-  const alignments = ['left', 'center', 'right', 'justify']
-  const getTextAlign = (value: string | number | undefined) => (alignments.includes(String(value)) ? `text-align: ${value};` : '')
-
-  if (item.type === 'header') {
-    addRule(rules, selector, [getTextAlign(style.textAlign)])
-  } else if (item.type === 'text') {
-    addRule(rules, `${selector} h2`, [getTextAlign(style.titleAlign)])
-    addRule(rules, `${selector} p`, [getTextAlign(style.textAlign)])
-  } else if (item.type === 'image') {
-    addRule(rules, `${selector} h2`, [getTextAlign(style.textAlign)])
-    addRule(rules, `${selector} figcaption`, [getTextAlign(style.imageCaptionTextAlign)])
-  } else if (item.type === 'link' && item.link?.asButton) {
-    addRule(rules, `${selector} .link-button`, [
-      getColorValue(item.link.style?.buttonColor) ? `background-color: ${getColorValue(item.link.style?.buttonColor)};` : '',
-      getColorValue(item.link.style?.buttonTextColor) ? `color: ${getColorValue(item.link.style?.buttonTextColor)};` : '',
-    ])
-  } else if (item.type === 'splitBlock') {
-    addRule(rules, `${selector} .split-text`, [getCssLength(style.splitTextPadding) ? `padding: ${getCssLength(style.splitTextPadding)};` : ''])
-    addRule(rules, `${selector} .link-button`, [
-      getColorValue(style.textColor) ? `background-color: ${getColorValue(style.textColor)};` : '',
-      getColorValue(style.backgroundColor) ? `color: ${getColorValue(style.backgroundColor)};` : '',
-    ])
+  for (const rule of getElementDefinition(item.type)?.css?.(item, selector) ?? []) {
+    addRule(rules, rule.selector, rule.declarations)
   }
 }
 

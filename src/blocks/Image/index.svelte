@@ -1,10 +1,14 @@
 <script lang="ts">
-import { selectedElement } from '../../../../store.ts'
-import type { ContentType } from '../../../../types/types.ts'
-import FileSelector from '../../../FileSelector/index.svelte'
-import TextAlign from '../../stylingParts/TextAlign.svelte'
+import FileSelector from '../../components/FileSelector/index.svelte'
+import { selectedElement } from '../../store.ts'
+import type { BlockEditorProps, ContentType } from '../../types/types.ts'
+import Margin from '../shared/Margin.svelte'
+import Padding from '../shared/Padding.svelte'
+import TextAlign from '../shared/TextAlign.svelte'
+import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
+import Wrapper from '../shared/Wrapper.svelte'
 
-const { updatePageContentWithDebounce, update } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 const selectedImage = $derived($selectedElement as ContentType)
 
@@ -55,3 +59,9 @@ function updateTitle(title = '') {
 <TextAlign element={$selectedElement} {update} title="Image caption Alignment" id="text-alignment" styleName="imageCaptionTextAlign" />
 
 <FileSelector selected={selectedFile} />
+
+<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
+<Wrapper {updatePageContentWithDebounce} {update} allowCenter />
+<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
+<Padding {updatePageContentWithDebounce} {update} />
+<Margin {updatePageContentWithDebounce} {update} />

@@ -1,43 +1,30 @@
 import { get } from 'svelte/store'
+import { getElementDefinition } from '../components/editor/elements-list.ts'
 import { currentProject, selectedElement, selectedPage } from '../store'
-import type { ContentType, LinkSettings } from '../types/types'
+import type { ContentType } from '../types/types'
 
-export function getDefaultLinkSettings(firstPageId: string): LinkSettings {
-  return {
-    text: 'Learn more',
-    mode: 'url',
-    url: '',
-    pageId: firstPageId,
-    target: '_self',
-    asButton: false,
-  }
-}
+export { getDefaultLinkSettings } from '../blocks/shared/defaults.ts'
 
 export function buildNewElement(type: string, name: string, pageId: string, order: number): ContentType {
+  const definition = getElementDefinition(type)
+  if (!definition) {
+    throw new Error(`Cannot create unregistered block type: ${type}`)
+  }
+  const defaults = definition.defaults?.(get(currentProject)?.pages?.[0]?.id || '')
   const newElement: ContentType = {
+    ...defaults,
     id: String(Date.now()),
     order,
     parent: null,
     pageId,
     title: name,
     type,
-    content: String(type === 'text' || type === 'header' ? 'New text content' : ''),
+    content: defaults?.content ?? '',
     style: {
       wrapper: 'container',
       marginBottom: '24',
+      ...defaults?.style,
     },
-  }
-
-  if (type === 'link') {
-    const firstPageId = get(currentProject)?.pages?.[0]?.id || ''
-    newElement.link = getDefaultLinkSettings(firstPageId)
-  }
-
-  if (type === 'splitBlock') {
-    newElement.content = 'Add a short description for this split block.'
-    const firstPageId = get(currentProject)?.pages?.[0]?.id || ''
-    newElement.link = { ...getDefaultLinkSettings(firstPageId), asButton: true }
-    newElement.flipped = false
   }
 
   return newElement

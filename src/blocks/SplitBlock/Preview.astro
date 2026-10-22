@@ -1,5 +1,8 @@
 ---
-import { sanitizeHref } from '../../../previewRender/common.ts'
+import { sanitizeHref } from '../../previewRender/common.ts'
+import type { BlockPreviewProps } from '../../types/types.ts'
+
+interface Props extends BlockPreviewProps {}
 
 const { data } = Astro.props
 
@@ -13,7 +16,7 @@ const buttonText = link?.text || 'Learn more'
 const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
 const target = link?.target === '_blank' ? '_blank' : '_self'
 const rel = target === '_blank' ? 'noopener noreferrer' : undefined
-const containerClass = data?.style?.wrapper || ''
+const containerClass = String(data?.style?.wrapper || '')
 ---
 
 <section data-id={String(data?.id ?? '')} class={containerClass}>

@@ -1,5 +1,8 @@
 ---
-import { sanitizeHref } from '../../../previewRender/common.ts'
+import { sanitizeHref } from '../../previewRender/common.ts'
+import type { BlockPreviewProps } from '../../types/types.ts'
+
+interface Props extends BlockPreviewProps {}
 
 const { data } = Astro.props
 

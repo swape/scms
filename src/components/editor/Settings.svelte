@@ -1,15 +1,11 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { ContentType, PageType } from '../../types/types.ts'
-import HeaderElementEdit from './elements/Header/index.svelte'
-import ImageElementEdit from './elements/Image/index.svelte'
-import LinkElementEdit from './elements/Link/index.svelte'
-import PageElementEdit from './elements/Page/index.svelte'
-import SplitBlockElementEdit from './elements/SplitBlock/index.svelte'
-import TextElementEdit from './elements/Text/index.svelte'
-import Styling from './Styling.svelte'
+import { getEditorDefinition } from './elements-list.ts'
 
 let toggleFloat = $state(false)
+const definition = $derived($selectedElement ? getEditorDefinition($selectedElement.type) : undefined)
+const editorModule = $derived(definition?.editor())
 
 // Updating a single key value for the selected element.
 function update(key: string, value: unknown) {
@@ -70,20 +66,17 @@ function updatePageContentWithDebounce() {
       <div><span class="text-gray-500 min-w-15 inline-block">Title:</span> {$selectedElement.title}</div>
       <small class="text-gray-500"><span class="min-w-15 inline-block">ID:</span> {$selectedElement.id}</small>
     </div>
-    {#if $selectedElement.type === 'page'}
-      <PageElementEdit />
-    {:else if $selectedElement.type === 'text'}
-      <TextElementEdit {updatePageContentWithDebounce} {update} />
-    {:else if $selectedElement.type === 'link'}
-      <LinkElementEdit {updatePageContentWithDebounce} />
-    {:else if $selectedElement.type === 'header'}
-      <HeaderElementEdit {updatePageContentWithDebounce} {update} />
-    {:else if $selectedElement.type === 'image'}
-      <ImageElementEdit {updatePageContentWithDebounce} {update} />
-    {:else if $selectedElement.type === 'splitBlock'}
-      <SplitBlockElementEdit {updatePageContentWithDebounce} {update} />
+    {#if editorModule}
+      {#await editorModule}
+        <p role="status">Loading block editor...</p>
+      {:then module}
+        <module.default {updatePageContentWithDebounce} {update} />
+      {:catch error}
+        <p role="alert">Could not load block editor: {error instanceof Error ? error.message : String(error)}</p>
+      {/await}
+    {:else}
+      <p role="alert">No editor registered for block type: {$selectedElement.type}</p>
     {/if}
-    <Styling {updatePageContentWithDebounce} {update}></Styling>
   {/if}
 </div>
 

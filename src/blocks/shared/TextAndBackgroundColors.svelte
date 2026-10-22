@@ -1,8 +1,9 @@
 <script lang="ts">
-import { selectedElement } from '../../../store.ts'
+import { selectedElement } from '../../store.ts'
+import type { BlockEditorProps } from '../../types/types.ts'
 import ColorSelect from './ColorSelect.svelte'
 
-const { updatePageContentWithDebounce, update } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 function updateBackgroundColor(event: Event) {
   const input = event.target as HTMLInputElement

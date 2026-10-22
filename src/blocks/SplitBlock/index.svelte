@@ -1,9 +1,13 @@
 <script lang="ts">
-import { currentProject, selectedElement } from '../../../../store.ts'
-import type { ContentType, LinkMode, LinkSettings, LinkTarget } from '../../../../types/types.ts'
-import FileSelector from '../../../FileSelector/index.svelte'
+import FileSelector from '../../components/FileSelector/index.svelte'
+import { currentProject, selectedElement } from '../../store.ts'
+import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
+import Margin from '../shared/Margin.svelte'
+import Padding from '../shared/Padding.svelte'
+import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
+import Wrapper from '../shared/Wrapper.svelte'
 
-const { updatePageContentWithDebounce, update } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 const selectedBlock = $derived($selectedElement as ContentType)
 
@@ -96,6 +100,18 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
   update('imageId', file.id)
   updatePageContentWithDebounce()
 }
+
+function updateStyleNumber(key: string, event: Event) {
+  const input = event.target as HTMLInputElement
+  const style = { ...$selectedElement?.style }
+  if (!input.value.trim()) {
+    delete style[key]
+  } else {
+    style[key] = Number(input.value)
+  }
+  update('style', style)
+  updatePageContentWithDebounce()
+}
 </script>
 
 <div class="input-and-label-wrapper checkbox-wrapper">
@@ -163,3 +179,23 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
 {/if}
 
 <FileSelector selected={selectedFile} />
+
+<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
+<Wrapper {updatePageContentWithDebounce} {update} />
+<div class="input-and-label-wrapper">
+  <label for="split-border-radius">Border radius (px):</label>
+  <input id="split-border-radius" type="number" min="0" value={$selectedElement?.style?.borderRadius ?? 8} oninput={(event) => updateStyleNumber('borderRadius', event)} />
+</div>
+<div class="input-and-label-wrapper">
+  <label for="split-text-padding">Text padding (px):</label>
+  <input
+    id="split-text-padding"
+    type="number"
+    min="0"
+    placeholder="24"
+    value={$selectedElement?.style?.splitTextPadding ?? ''}
+    oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
+</div>
+<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
+<Padding {updatePageContentWithDebounce} {update} />
+<Margin {updatePageContentWithDebounce} {update} />

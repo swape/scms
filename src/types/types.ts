@@ -1,3 +1,36 @@
+import type { Component } from 'svelte'
+
+export interface BlockEditorProps {
+  update: (key: string, value: unknown) => void
+  updatePageContentWithDebounce: () => void
+}
+
+export interface BlockPreviewProps {
+  data: ContentType
+}
+
+export interface BlockCssRule {
+  selector: string
+  declarations: string[]
+}
+
+export interface ElementDefinition {
+  type: string
+  name: string
+  icon: string
+  editor: () => Promise<{ default: Component<BlockEditorProps> }>
+  preview: `/src/blocks/${string}/Preview.astro`
+  defaults?: (firstPageId: string) => Partial<ContentType>
+  css?: (item: ContentType, selector: string) => BlockCssRule[]
+}
+
+export interface PageDefinition {
+  type: 'page'
+  name: string
+  icon: string
+  editor: () => Promise<{ default: Component<BlockEditorProps> }>
+}
+
 export interface PageType {
   id: string
   parentId: string | null

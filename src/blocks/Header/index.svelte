@@ -1,9 +1,13 @@
 <script lang="ts">
-import { selectedElement } from '../../../../store.ts'
-import type { ContentType } from '../../../../types/types.ts'
-import TextAlign from '../../stylingParts/TextAlign.svelte'
+import { selectedElement } from '../../store.ts'
+import type { BlockEditorProps, ContentType } from '../../types/types.ts'
+import Margin from '../shared/Margin.svelte'
+import Padding from '../shared/Padding.svelte'
+import TextAlign from '../shared/TextAlign.svelte'
+import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
+import Wrapper from '../shared/Wrapper.svelte'
 
-const { updatePageContentWithDebounce, update } = $props()
+const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 function updateContent(event: Event) {
   const input = event.target as HTMLInputElement
@@ -66,3 +70,9 @@ function getBorderRadius(): string {
     <input id="header-border-radius" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
   </div>
 {/if}
+
+<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
+<Wrapper {updatePageContentWithDebounce} {update} />
+<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
+<Padding {updatePageContentWithDebounce} {update} />
+<Margin {updatePageContentWithDebounce} {update} />

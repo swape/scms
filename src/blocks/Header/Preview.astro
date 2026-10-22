@@ -1,0 +1,15 @@
+---
+import type { BlockPreviewProps } from '../../types/types.ts'
+
+interface Props extends BlockPreviewProps {}
+
+const { data } = Astro.props
+
+const content = data?.content || ''
+const Heading = data.headerLevel && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(data.headerLevel) ? data.headerLevel : 'h1'
+const containerClass = String(data?.style?.wrapper || '')
+---
+
+<section class={containerClass} data-id={String(data?.id ?? '')}>
+  <Heading class={`scms_${String(data?.id ?? '')}`}>{content}</Heading>
+</section>

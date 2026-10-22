@@ -1,6 +1,6 @@
 <script lang="ts">
-import { currentProject } from '../../../store.ts'
-import type { ColorType } from '../../../types/types.ts'
+import { currentProject } from '../../store.ts'
+import type { ColorType } from '../../types/types.ts'
 
 const { element, title, id, update, styleName, isBgColors = true } = $props()
 

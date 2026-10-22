@@ -57,6 +57,9 @@ function addItemCssRules(item: ContentType, rules: Map<string, Set<string>>) {
   const borderRadius = getCssLength(style.borderRadius)
   if (borderRadius || style.backgroundColor) {
     declarations.push(`border-radius: ${borderRadius || '8px'};`)
+    if (item.type === 'splitBlock') {
+      declarations.push('overflow: hidden;')
+    }
   }
 
   if (style.paddingMode === 'individual') {
@@ -97,6 +100,11 @@ function addItemCssRules(item: ContentType, rules: Map<string, Set<string>>) {
     addRule(rules, `${selector} .link-button`, [
       getColorValue(item.link.style?.buttonColor) ? `background-color: ${getColorValue(item.link.style?.buttonColor)};` : '',
       getColorValue(item.link.style?.buttonTextColor) ? `color: ${getColorValue(item.link.style?.buttonTextColor)};` : '',
+    ])
+  } else if (item.type === 'splitBlock') {
+    addRule(rules, `${selector} .link-button`, [
+      getColorValue(style.textColor) ? `background-color: ${getColorValue(style.textColor)};` : '',
+      getColorValue(style.backgroundColor) ? `color: ${getColorValue(style.backgroundColor)};` : '',
     ])
   }
 }

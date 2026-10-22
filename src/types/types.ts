@@ -83,6 +83,8 @@ export interface ContentType {
   imageType?: string
   caption?: string
   imageId?: string
+  // split block element
+  flipped?: boolean
 }
 
 export type FooterElementType = 'link' | 'social' | 'html' | 'text'

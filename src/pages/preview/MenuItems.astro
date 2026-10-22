@@ -12,7 +12,5 @@ const { items, pages, layout } = Astro.props
 ---
 
 <ul class:list={['menu-list', layout === 'vertical' && 'menu-vertical']}>
-  {items.map((item) => (
-    <MenuItem item={item} pages={pages} layout={layout} />
-  ))}
+  {items.map((item) => <MenuItem item={item} pages={pages} layout={layout} />)}
 </ul>

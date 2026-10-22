@@ -1,0 +1,43 @@
+---
+import { sanitizeHref } from '../../../previewRender/common.ts'
+
+const { data } = Astro.props
+
+const title = data?.title || ''
+const content = data?.content || ''
+const src = data?.src ? sanitizeHref(data.src) : ''
+const alt = data?.alt || ''
+const flipped = Boolean(data?.flipped)
+const link = data?.link
+const buttonText = link?.text || 'Learn more'
+const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
+const target = link?.target === '_blank' ? '_blank' : '_self'
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined
+const containerClass = data?.style?.wrapper || ''
+---
+
+<section data-id={String(data?.id ?? '')}>
+  <div class={`${containerClass} split-block scms_${String(data?.id ?? '')} ${flipped ? 'split-block-flipped' : ''}`.trim()}>
+    <div class="split-text">
+      <div class="content-wrapper">
+        {title && <h2>{title}</h2>}
+        {
+          content && (
+            <p>
+              {content.split('\n').map((line: string, index: number) => (
+                <>
+                  {index > 0 && <br />}
+                  {line}
+                </>
+              ))}
+            </p>
+          )
+        }
+      </div>
+      <a class="link-button" href={sanitizeHref(href)} target={target} rel={rel}>
+        {buttonText}
+      </a>
+    </div>
+    <div class="split-image" style={src ? `background-image: url(${JSON.stringify(src)});` : undefined} role={src ? 'img' : undefined} aria-label={src ? alt : undefined}></div>
+  </div>
+</section>

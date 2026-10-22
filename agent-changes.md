@@ -1,3 +1,47 @@
+## 2026-10-22
+
+- Files: `src/types/types.ts`, `src/components/editor/elements-list.ts`, `src/utils/elements.ts`
+- Added `flipped` field to `ContentType` and registered the Split Block element with its default title, content, and button link settings.
+- File: `src/components/editor/elements/SplitBlock/index.svelte`
+- Implemented Split Block editor settings: flip-sides toggle, text block title/content, text block background/text color, container border radius, button text/destination/target/colors, and image selection.
+- File: `src/components/editor/Settings.svelte`
+- Wired Split Block settings into the settings panel element-type switch.
+- File: `src/pages/preview/elementParts/SplitBlock.astro`
+- Added Split Block preview rendering with a text-and-button side and an image side.
+- File: `src/pages/preview/ElementSelector.astro`
+- Routed split block elements to the new preview component.
+- File: `src/pages/preview/cssHelpers.ts`
+- Added generated CSS for the split block's text background/text colors, button colors, and container overflow clipping for rounded corners.
+- File: `src/styles/preview.css`
+- Added responsive two-column layout styles for the split block, including the flipped-sides variant.
+- File: `src/styles/preview.css`
+- Forced the split block's image to render above the text on mobile (`order: -1`) regardless of the flip-sides setting.
+- Files: `src/components/editor/elements/SplitBlock/index.svelte` and `src/pages/preview/cssHelpers.ts`
+- Added a split block gap control (`style.splitGap`, px) between the text and image sides, with generated CSS applied to the container.
+- Files: `src/pages/preview/elementParts/SplitBlock.astro` and `src/styles/preview.css`
+- Rendered the split block's image as a CSS `background-image` on the image wrapper div instead of an `<img>` element, preserving accessibility via `role="img"`/`aria-label`.
+- File: `src/pages/preview/cssHelpers.ts`
+- Rescoped the split block's border radius and overflow clipping from the outer section to the text and image wrapper elements individually, so each side is rounded independently.
+- File: `src/pages/preview/cssHelpers.ts`
+- Removed border radius/overflow clipping from the split block's image wrapper; the container border radius now applies only to the text wrapper.
+- File: `src/components/editor/elements/SplitBlock/index.svelte`
+- Grouped the split block's title, content, text colors, and border radius under a "Wrapper:" settings section and relabeled the field "Wrapper border radius (px)".
+- Files: `src/components/editor/elements/SplitBlock/index.svelte` and `src/components/editor/Styling.svelte`
+- Moved the split block's border radius and image/text gap controls from the element-specific settings into the shared `Styling.svelte` panel, shown only when the selected element is a Split Block.
+- Files: `src/components/editor/Styling.svelte`, `src/components/editor/elements/SplitBlock/index.svelte`, and `src/pages/preview/cssHelpers.ts`
+- Removed border radius, background color, and text color options for the split block's text wrapper (`.split-text`); only the gap control and button/image options remain configurable.
+- Files: `src/components/editor/Styling.svelte` and `src/pages/preview/cssHelpers.ts`
+- Removed the split block's configurable gap control; `.split-block` now always uses the fixed default gap from `preview.css`.
+- Files: `src/components/editor/elements/SplitBlock/index.svelte` and `src/pages/preview/cssHelpers.ts`
+- Removed the split block's dedicated button background/text color selectors; the button now derives its colors from the wrapper's own background/text color settings, swapped (wrapper background becomes button text color, wrapper text color becomes button background).
+- Files: `src/components/editor/Styling.svelte` and `src/pages/preview/cssHelpers.ts`
+- Added a border radius control for the split block in the shared `Styling.svelte` panel, applying rounded corners with clipping to the outer `.split-block` wrapper.
+
+## 2026-10-21
+
+- File: `plan.md`
+- Added a to-do for a separate Astro build-server repository with a project-number script that copies preview files and CSS, removes editor-only code, and generates static output.
+
 ## 2026-10-18
 
 - Files: `src/components/editor/PreviewWrapper.svelte` and `src/pages/preview/*`

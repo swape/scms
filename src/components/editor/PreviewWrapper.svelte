@@ -57,4 +57,11 @@ $effect(() => {
   </form>
 {/if}
 
-<iframe name="preview-frame" title="Preview" class="w-full h-full"></iframe>
+<iframe name="preview-frame" title="Preview" class="w-full h-full preview-iframe"></iframe>
+
+<style>
+.preview-iframe {
+  max-height: 100svh;
+  overflow-y: auto;
+}
+</style>

@@ -16,6 +16,7 @@ Labels: `[Feature]` `[Bug]` `[Improvement]`
 
 ## To Do
 
+- [ ] [Feature] Create an Astro build server in its own repository, with a script that accepts a project number, copies the preview files and CSS, strips editor-only code, and generates the project's static files.
 - [x] [Feature] Add a Text element component with editable content via its own settings panel — `src/components/editor/elements/Text/`
 - [ ] [Feature] Add color settings for text and background colors — `src/components/editor/elements/Page/index.svelte`
 - [ ] [Feature] Add drag and drop to reorder pages — `src/components/editor/ListPagesContent.svelte`

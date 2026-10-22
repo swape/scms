@@ -157,6 +157,58 @@ figure {
   text-decoration: none;
 }
 
+.split-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.split-block-flipped {
+  flex-direction: row-reverse;
+}
+
+.split-text,
+.split-image {
+  flex: 1 1 320px;
+  min-width: 280px;
+}
+
+.split-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.split-text .link-button {
+  align-self: flex-start;
+}
+
+.split-image {
+  display: flex;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 640px) {
+  .split-block,
+  .split-block-flipped {
+    flex-direction: column;
+  }
+
+  .split-image {
+    order: -1;
+  }
+}
+
 /* #footer {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   padding-block: 1.5rem;

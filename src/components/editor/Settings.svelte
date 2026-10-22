@@ -5,6 +5,7 @@ import HeaderElementEdit from './elements/Header/index.svelte'
 import ImageElementEdit from './elements/Image/index.svelte'
 import LinkElementEdit from './elements/Link/index.svelte'
 import PageElementEdit from './elements/Page/index.svelte'
+import SplitBlockElementEdit from './elements/SplitBlock/index.svelte'
 import TextElementEdit from './elements/Text/index.svelte'
 import Styling from './Styling.svelte'
 
@@ -79,12 +80,19 @@ function updatePageContentWithDebounce() {
       <HeaderElementEdit {updatePageContentWithDebounce} {update} />
     {:else if $selectedElement.type === 'image'}
       <ImageElementEdit {updatePageContentWithDebounce} {update} />
+    {:else if $selectedElement.type === 'splitBlock'}
+      <SplitBlockElementEdit {updatePageContentWithDebounce} {update} />
     {/if}
     <Styling {updatePageContentWithDebounce} {update}></Styling>
   {/if}
 </div>
 
 <style>
+.settings {
+  max-height: 100svh;
+  overflow-y: auto;
+}
+
 .float {
   position: fixed;
   right: 0;

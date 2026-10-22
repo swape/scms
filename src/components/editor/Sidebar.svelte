@@ -49,7 +49,7 @@ function addPage(parentId: string | null = null, order: number = 0) {
 }
 </script>
 
-<aside class="overflow-auto max-h-[96svh]">
+<aside class="project-items">
   {#if $currentProject}
     <div class="p-5">
       <button onclick={() => addPage()} class="flex items-center gap-1"><span class="material-symbols-outlined"> note_add </span> Add Page</button>
@@ -60,3 +60,10 @@ function addPage(parentId: string | null = null, order: number = 0) {
     <PageElements />
   {/if}
 </aside>
+
+<style>
+.project-items {
+  max-height: 100svh;
+  overflow-y: auto;
+}
+</style>

@@ -36,7 +36,7 @@ export const prerender = false
     <meta name="theme-color" content="#FF0000" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Preview</title>
-    {parsedSettings?.extra?.style && <style is:global set:html={parsedSettings?.extra?.style}></style>}
+    {parsedSettings?.extra?.style && <style is:global set:html={parsedSettings?.extra?.style} />}
     <style is:global set:html={cssVars}></style>
     <Fragment set:html={parsedSettings?.extra?.head ?? ''} />
     <ClientRouter />
@@ -52,7 +52,8 @@ export const prerender = false
     <!-- debug info and preview functionality -->
     <div class="debug">
       <div>
-        Debug Info: <span>Page: {page}</span> <span>Project: {project}</span>
+        Debug Info: <span>Page: {page}</span>
+        <span>Project: {project}</span>
       </div>
 
       <textarea id="selectedPage" readonly class="info">{data}</textarea>

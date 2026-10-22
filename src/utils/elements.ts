@@ -33,6 +33,13 @@ export function buildNewElement(type: string, name: string, pageId: string, orde
     newElement.link = getDefaultLinkSettings(firstPageId)
   }
 
+  if (type === 'splitBlock') {
+    newElement.content = 'Add a short description for this split block.'
+    const firstPageId = get(currentProject)?.pages?.[0]?.id || ''
+    newElement.link = { ...getDefaultLinkSettings(firstPageId), asButton: true }
+    newElement.flipped = false
+  }
+
   return newElement
 }
 

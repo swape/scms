@@ -2,6 +2,8 @@
 import { projects } from '../../store.ts'
 import type { LinkSettings, MenuElement, PageType, ProjectType } from '../../types/types.ts'
 import { createMenuElement, saveMenuToProject } from '../../utils/menu.ts'
+import Input from '../Input.svelte'
+import Select from '../Select.svelte'
 
 let { id } = $props<{ id: string | null }>()
 
@@ -153,21 +155,27 @@ function pageName(pageId: string, pages: PageType[]): string {
   <section class="menu-section" aria-labelledby="menu-style-title">
     <h3 id="menu-style-title" class="menu-section-title">Appearance</h3>
     <div class="menu-style-fields">
-      <label class="menu-field">
-        <span>Layout</span>
-        <select class="menu-select" value={menuStyle.layout ?? 'horizontal'} onchange={(event) => updateStyle('layout', event.currentTarget.value)}>
-          <option value="horizontal">Horizontal</option>
-          <option value="vertical">Vertical</option>
-        </select>
-      </label>
-      <label class="menu-field">
-        <span>Background</span>
-        <input type="color" value={menuStyle.backgroundColor ?? '#ffffff'} onchange={(event) => updateStyle('backgroundColor', event.currentTarget.value)} />
-      </label>
-      <label class="menu-field">
-        <span>Text</span>
-        <input type="color" value={menuStyle.textColor ?? '#111827'} onchange={(event) => updateStyle('textColor', event.currentTarget.value)} />
-      </label>
+      <Select
+        label="Layout"
+        wrapperClass="menu-field"
+        class="menu-select"
+        value={menuStyle.layout ?? 'horizontal'}
+        onchange={(event) => updateStyle('layout', event.currentTarget.value)}>
+        <option value="horizontal">Horizontal</option>
+        <option value="vertical">Vertical</option>
+      </Select>
+      <Input
+        label="Background"
+        wrapperClass="menu-field"
+        type="color"
+        value={menuStyle.backgroundColor ?? '#ffffff'}
+        onchange={(event) => updateStyle('backgroundColor', event.currentTarget.value)} />
+      <Input
+        label="Text"
+        wrapperClass="menu-field"
+        type="color"
+        value={menuStyle.textColor ?? '#111827'}
+        onchange={(event) => updateStyle('textColor', event.currentTarget.value)} />
     </div>
   </section>
 
@@ -213,93 +221,89 @@ function pageName(pageId: string, pages: PageType[]): string {
           </div>
 
           <div class="menu-item-fields">
-            <label class="menu-field">
-              <span>Item type</span>
-              <select class="menu-select" value={row.element.type} onchange={(event) => setItemType(row.path, event.currentTarget.value as MenuElement['type'])}>
-                <option value="link">Link</option>
-                <option value="dropdown">Manual submenu</option>
-                <option value="auto">Automatic pages</option>
-              </select>
-            </label>
-            <label class="menu-field menu-title-field">
-              <span>Label</span>
-              <input
-                class="menu-input"
-                type="text"
-                value={row.element.title}
-                oninput={(event) => updateItem(row.path, (element) => ({ ...element, title: event.currentTarget.value }))} />
-            </label>
+            <Select
+              label="Item type"
+              wrapperClass="menu-field"
+              class="menu-select"
+              value={row.element.type}
+              onchange={(event) => setItemType(row.path, event.currentTarget.value as MenuElement['type'])}>
+              <option value="link">Link</option>
+              <option value="dropdown">Manual submenu</option>
+              <option value="auto">Automatic pages</option>
+            </Select>
+            <Input
+              label="Label"
+              wrapperClass="menu-field menu-title-field"
+              class="menu-input"
+              type="text"
+              value={row.element.title}
+              oninput={(event) => updateItem(row.path, (element) => ({ ...element, title: event.currentTarget.value }))} />
 
             {#if row.element.type === 'link'}
-              <label class="menu-field">
-                <span>Destination</span>
-                <select
-                  class="menu-select"
-                  value={row.element.link?.mode ?? 'page'}
-                  onchange={(event) => updateLink(row.path, { mode: event.currentTarget.value as LinkSettings['mode'] })}>
-                  <option value="page">Project page</option>
-                  <option value="url">External URL</option>
-                </select>
-              </label>
+              <Select
+                label="Destination"
+                wrapperClass="menu-field"
+                class="menu-select"
+                value={row.element.link?.mode ?? 'page'}
+                onchange={(event) => updateLink(row.path, { mode: event.currentTarget.value as LinkSettings['mode'] })}>
+                <option value="page">Project page</option>
+                <option value="url">External URL</option>
+              </Select>
               {#if row.element.link?.mode === 'url'}
-                <label class="menu-field menu-destination-field">
-                  <span>URL</span>
-                  <input
-                    class="menu-input"
-                    type="url"
-                    placeholder="https://example.com"
-                    value={row.element.link.url}
-                    oninput={(event) => updateLink(row.path, { url: event.currentTarget.value })} />
-                </label>
+                <Input
+                  label="URL"
+                  wrapperClass="menu-field menu-destination-field"
+                  class="menu-input"
+                  type="url"
+                  placeholder="https://example.com"
+                  value={row.element.link.url}
+                  oninput={(event) => updateLink(row.path, { url: event.currentTarget.value })} />
               {:else}
-                <label class="menu-field menu-destination-field">
-                  <span>Page</span>
-                  <select class="menu-select" value={row.element.link?.pageId ?? ''} onchange={(event) => updateLink(row.path, { pageId: event.currentTarget.value })}>
-                    <option value="">Choose a page</option>
-                    {#each project.pages as page (page.id)}
-                      <option value={page.id}>{page.title}</option>
-                    {/each}
-                  </select>
-                </label>
-              {/if}
-              <label class="menu-field">
-                <span>Open in</span>
-                <select
+                <Select
+                  label="Page"
+                  wrapperClass="menu-field menu-destination-field"
                   class="menu-select"
-                  value={row.element.link?.target ?? '_self'}
-                  onchange={(event) => updateLink(row.path, { target: event.currentTarget.value as LinkSettings['target'] })}>
-                  <option value="_self">Same tab</option>
-                  <option value="_blank">New tab</option>
-                </select>
-              </label>
-            {/if}
-
-            {#if row.element.type === 'auto'}
-              <label class="menu-field menu-destination-field">
-                <span>List child pages of</span>
-                <select
-                  class="menu-select"
-                  value={row.element.autoParentPageId ?? ''}
-                  onchange={(event) => updateItem(row.path, (element) => ({ ...element, autoParentPageId: event.currentTarget.value }))}>
-                  <option value="">Choose a parent page</option>
+                  value={row.element.link?.pageId ?? ''}
+                  onchange={(event) => updateLink(row.path, { pageId: event.currentTarget.value })}>
+                  <option value="">Choose a page</option>
                   {#each project.pages as page (page.id)}
                     <option value={page.id}>{page.title}</option>
                   {/each}
-                </select>
-                {#if row.element.autoParentPageId}
-                  <small>Current pages: {pageName(row.element.autoParentPageId, project.pages)}</small>
-                {/if}
-              </label>
-              <label class="menu-field">
-                <span>Maximum items</span>
-                <input
-                  class="menu-input menu-number"
-                  type="number"
-                  min="0"
-                  value={row.element.autoMaxItems ?? 0}
-                  oninput={(event) => updateItem(row.path, (element) => ({ ...element, autoMaxItems: Number(event.currentTarget.value) }))} />
-                <small>0 lists every child page.</small>
-              </label>
+                </Select>
+              {/if}
+              <Select
+                label="Open in"
+                wrapperClass="menu-field"
+                class="menu-select"
+                value={row.element.link?.target ?? '_self'}
+                onchange={(event) => updateLink(row.path, { target: event.currentTarget.value as LinkSettings['target'] })}>
+                <option value="_self">Same tab</option>
+                <option value="_blank">New tab</option>
+              </Select>
+            {/if}
+
+            {#if row.element.type === 'auto'}
+              <Select
+                label="List child pages of"
+                wrapperClass="menu-field menu-destination-field"
+                hint={row.element.autoParentPageId ? `Current pages: ${pageName(row.element.autoParentPageId, project.pages)}` : undefined}
+                class="menu-select"
+                value={row.element.autoParentPageId ?? ''}
+                onchange={(event) => updateItem(row.path, (element) => ({ ...element, autoParentPageId: event.currentTarget.value }))}>
+                <option value="">Choose a parent page</option>
+                {#each project.pages as page (page.id)}
+                  <option value={page.id}>{page.title}</option>
+                {/each}
+              </Select>
+              <Input
+                label="Maximum items"
+                wrapperClass="menu-field"
+                hint="0 lists every child page."
+                class="menu-input menu-number"
+                type="number"
+                min="0"
+                value={row.element.autoMaxItems ?? 0}
+                oninput={(event) => updateItem(row.path, (element) => ({ ...element, autoMaxItems: Number(event.currentTarget.value) }))} />
             {/if}
           </div>
 
@@ -344,7 +348,7 @@ function pageName(pageId: string, pages: PageType[]): string {
   gap: 0.65rem;
 }
 
-.menu-field {
+.menu-section :global(.menu-field) {
   display: grid;
   gap: 0.3rem;
   min-width: 10rem;
@@ -352,14 +356,14 @@ function pageName(pageId: string, pages: PageType[]): string {
   font-size: 0.8rem;
 }
 
-.menu-field input[type='color'] {
+.menu-section :global(.menu-field input[type='color']) {
   width: 3rem;
   height: 2.1rem;
   padding: 0.15rem;
 }
 
-.menu-input,
-.menu-select {
+.menu-section :global(.menu-input),
+.menu-section :global(.menu-select) {
   width: 100%;
   min-width: 0;
 }
@@ -433,16 +437,16 @@ function pageName(pageId: string, pages: PageType[]): string {
   color: #dc2626;
 }
 
-.menu-title-field,
-.menu-destination-field {
+.menu-section :global(.menu-title-field),
+.menu-section :global(.menu-destination-field) {
   flex: 2;
 }
 
-.menu-number {
+.menu-section :global(.menu-number) {
   max-width: 8rem;
 }
 
-.menu-field small {
+.menu-section :global(.menu-field small) {
   opacity: 0.7;
 }
 
@@ -464,7 +468,7 @@ function pageName(pageId: string, pages: PageType[]): string {
 }
 
 @media (max-width: 640px) {
-  .menu-field {
+  .menu-section :global(.menu-field) {
     min-width: min(100%, 12rem);
   }
 

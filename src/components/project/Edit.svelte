@@ -1,6 +1,7 @@
 <script lang="ts">
 import { currentProject, projects } from '../../store.ts'
 import type { ProjectType } from '../../types/types.ts'
+import Input from '../Input.svelte'
 
 let { id } = $props()
 
@@ -42,15 +43,8 @@ function save() {
 
 <div>
   {#if id}<span class="text-sm">{id}</span>{/if}
-  <label class="label">
-    <span>Project title: </span>
-    <input type="text" bind:value={project.title} onkeyup={save} />
-  </label>
-
-  <label class="label">
-    <span>Url: </span>
-    <input type="url" bind:value={project.url} onkeyup={save} />
-  </label>
+  <Input label="Project title:" wrapperClass="flex flex-col gap-1 mb-2" bind:value={project.title} onkeyup={save} />
+  <Input label="Url:" wrapperClass="flex flex-col gap-1 mb-2" type="url" bind:value={project.url} onkeyup={save} />
 
   <label class="label">
     <span>Description: </span>

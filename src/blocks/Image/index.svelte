@@ -1,5 +1,6 @@
 <script lang="ts">
 import FileSelector from '../../components/FileSelector/index.svelte'
+import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import Margin from '../shared/Margin.svelte'
@@ -39,24 +40,26 @@ function updateTitle(title = '') {
   </div>
 {/if}
 
-<div class="input-and-label-wrapper">
-  <label for="image-header">Image Header:</label>
-  <input name="image-header" type="text" placeholder="Image Title" value={selectedImage?.title || ''} onkeyup={({ target }) => updateTitle((target as HTMLInputElement).value)} />
-</div>
+<Input
+  id="image-header"
+  label="Image Header:"
+  name="image-header"
+  placeholder="Image Title"
+  value={selectedImage?.title || ''}
+  onkeyup={({ target }) => updateTitle((target as HTMLInputElement).value)} />
 
 <TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
 
-<div class="input-and-label-wrapper">
-  <label for="image-caption">Image Caption:</label>
-  <input
-    name="image-caption"
-    type="text"
-    placeholder="Image Caption"
-    value={selectedImage?.caption || ''}
-    onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
-</div>
+<Input
+  id="image-caption"
+  label="Image Caption:"
+  name="image-caption"
+  type="text"
+  placeholder="Image Caption"
+  value={selectedImage?.caption || ''}
+  onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
 
-<TextAlign element={$selectedElement} {update} title="Image caption Alignment" id="text-alignment" styleName="imageCaptionTextAlign" />
+<TextAlign element={$selectedElement} {update} title="Image caption Alignment" id="image-caption-alignment" styleName="imageCaptionTextAlign" />
 
 <FileSelector selected={selectedFile} />
 

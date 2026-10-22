@@ -1,4 +1,7 @@
 <script lang="ts">
+import Checkbox from '../../components/Checkbox.svelte'
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
@@ -104,47 +107,29 @@ function updateButtonTextColor(event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="link-text">Text:</label>
-  <input id="link-text" type="text" value={($selectedElement as ContentType)?.link?.text || ''} oninput={updateText} />
-</div>
+<Input id="link-text" label="Text:" value={($selectedElement as ContentType)?.link?.text || ''} oninput={updateText} />
 
-<div class="input-and-label-wrapper">
-  <label for="link-mode">Destination Type:</label>
-  <select id="link-mode" value={($selectedElement as ContentType)?.link?.mode || 'url'} oninput={updateMode}>
-    <option value="url">URL</option>
-    <option value="page">Page</option>
-  </select>
-</div>
+<Select id="link-mode" label="Destination Type:" value={($selectedElement as ContentType)?.link?.mode || 'url'} oninput={updateMode}>
+  <option value="url">URL</option>
+  <option value="page">Page</option>
+</Select>
 
 {#if (($selectedElement as ContentType)?.link?.mode || 'url') === 'url'}
-  <div class="input-and-label-wrapper">
-    <label for="link-url">URL:</label>
-    <input id="link-url" type="url" value={($selectedElement as ContentType)?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
-  </div>
+  <Input id="link-url" label="URL:" type="url" value={($selectedElement as ContentType)?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
 {:else}
-  <div class="input-and-label-wrapper">
-    <label for="link-page">Page:</label>
-    <select id="link-page" value={($selectedElement as ContentType)?.link?.pageId || ''} oninput={updatePageId}>
-      {#each $currentProject?.pages ?? [] as page}
-        <option value={page.id}>{page.title}</option>
-      {/each}
-    </select>
-  </div>
+  <Select id="link-page" label="Page:" value={($selectedElement as ContentType)?.link?.pageId || ''} oninput={updatePageId}>
+    {#each $currentProject?.pages ?? [] as page}
+      <option value={page.id}>{page.title}</option>
+    {/each}
+  </Select>
 {/if}
 
-<div class="input-and-label-wrapper">
-  <label for="link-target">Target:</label>
-  <select id="link-target" value={($selectedElement as ContentType)?.link?.target || '_self'} oninput={updateTarget}>
-    <option value="_self">Same tab</option>
-    <option value="_blank">New tab</option>
-  </select>
-</div>
+<Select id="link-target" label="Target:" value={($selectedElement as ContentType)?.link?.target || '_self'} oninput={updateTarget}>
+  <option value="_self">Same tab</option>
+  <option value="_blank">New tab</option>
+</Select>
 
-<div class="input-and-label-wrapper checkbox-wrapper">
-  <label for="link-button">Render as button:</label>
-  <input id="link-button" type="checkbox" checked={Boolean(($selectedElement as ContentType)?.link?.asButton)} oninput={updateAsButton} />
-</div>
+<Checkbox id="link-button" label="Render as button" checked={Boolean(($selectedElement as ContentType)?.link?.asButton)} oninput={updateAsButton} />
 
 {#if ($selectedElement as ContentType)?.link?.asButton}
   <ColorSelect element={$selectedElement as ContentType} title="Button color" id="link-button-style" styleName="buttonColor" update={updateButtonStyle} isBgColors={true} />
@@ -162,12 +147,3 @@ function updateButtonTextColor(event: Event) {
 <TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
 <Padding {updatePageContentWithDebounce} {update} />
 <Margin {updatePageContentWithDebounce} {update} />
-
-<style>
-.checkbox-wrapper {
-  padding-block: 10px;
-  align-items: center;
-  flex-direction: row;
-  gap: 10px;
-}
-</style>

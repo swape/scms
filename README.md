@@ -50,6 +50,9 @@ src/
 │       ├── css.ts        # CSS value validation and formatting
 │       └── defaults.ts   # Shared link defaults
 ├── components/
+│   ├── Checkbox.svelte     # Shared accessible toggle switch
+│   ├── Input.svelte        # Shared labeled text, URL, number, and color field
+│   ├── Select.svelte       # Shared native single-select control
 │   ├── FileSelector/
 │   │   └── index.svelte
 │   ├── editor/            # Visual editor UI
@@ -179,6 +182,35 @@ Create `src/blocks/Quote/index.svelte`:
 ```
 
 Each block owns the style controls it exposes; there is no central `Styling.svelte` panel. Reuse controls from [blocks/shared](./src/blocks/shared) rather than duplicating them.
+
+For boolean settings, use [Checkbox.svelte](./src/components/Checkbox.svelte) with `id`, `label`, `checked`, and `oninput` props. It displays a toggle switch with an animated thumb, a clickable label, keyboard focus feedback, and optional `disabled` support. A native checkbox with `role="switch"` preserves keyboard interaction and exposes its state to assistive technology; animations respect reduced-motion preferences.
+
+For dropdowns, use [Select.svelte](./src/components/Select.svelte). It owns the `input-and-label-wrapper` div and associated label, wraps a native single-select, accepts native attributes and `oninput`/`onchange` handlers, and supports typed `bind:value`. Provide a `label`; `id` is optional and defaults to a unique generated ID. Pass options as child content so dynamic lists and conditional options remain local to the caller. Styling continues to use the shared native-select rules. Project panels can set `wrapperClass` for their field layout and `hint` for helper text beneath the select.
+
+For input fields, use [Input.svelte](./src/components/Input.svelte). It owns the same wrapper and associated label, generates an ID when omitted, and forwards native attributes and events. It defaults to `type="text"` and also supports URL, number, color, email, password, search, and telephone fields. Use `bind:value` when needed; number inputs retain native Svelte numeric binding (including `undefined` when cleared). Use `wrapperClass` to preserve grouped or project-specific layouts and `hint` for helper text. Keep hidden transport fields native, use `Checkbox.svelte` for boolean switches, and leave multiline content in textareas.
+
+```svelte
+<Input
+  id="link-url"
+  label="URL:"
+  type="url"
+  value={url}
+  placeholder="https://example.com"
+  oninput={updateUrl} />
+```
+
+```svelte
+<Select
+  id="destination"
+  label="Destination:"
+  value={destination}
+  onchange={updateDestination}>
+  <option value="url">URL</option>
+  <option value="page">Page</option>
+</Select>
+```
+
+Import it from `../../components/Select.svelte` in block editors. In project components, use `../Select.svelte`; existing bound settings can use `<Select label="Setting" bind:value={setting}>...</Select>`. Do not add another field wrapper or label around the component.
 
 `update(key, value)` updates the selected element and schedules persistence to the current page/project. If a control modifies a store directly instead, call `updatePageContentWithDebounce()` afterward. Keep new local state in Svelte 5 runes and define any new saved object fields in [types.ts](./src/types/types.ts).
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
 
@@ -11,13 +12,10 @@ function updateWrapper(event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="wrapper-options">Wrapper:</label>
-  <select id="wrapper-options" value={$selectedElement?.style?.wrapper || ''} onchange={updateWrapper}>
-    <option value="container">Container</option>
-    {#if allowCenter}
-      <option value="center">Center</option>
-    {/if}
-    <option value="">None</option>
-  </select>
-</div>
+<Select id="wrapper-options" label="Wrapper:" value={$selectedElement?.style?.wrapper || ''} onchange={updateWrapper}>
+  <option value="container">Container</option>
+  {#if allowCenter}
+    <option value="center">Center</option>
+  {/if}
+  <option value="">None</option>
+</Select>

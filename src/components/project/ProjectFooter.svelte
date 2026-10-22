@@ -2,6 +2,8 @@
 import { projects } from '../../store.ts'
 import type { FooterElement, ProjectType, SocialPlatform } from '../../types/types.ts'
 import { createFooterHtml, createFooterLink, createFooterSocial, createFooterText, saveFooterToProject } from '../../utils/footer.ts'
+import Input from '../Input.svelte'
+import Select from '../Select.svelte'
 
 let { id } = $props()
 
@@ -63,12 +65,9 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   <h2 class="mb-5 text-2xl">Footer for {project.title}</h2>
 
   <div class="footer-section">
-    <label class="footer-field">
-      <span>Footer style</span>
-      <select class="footer-select" bind:value={footerType} onchange={save}>
-        <option value="footer1">Style 1</option>
-      </select>
-    </label>
+    <Select label="Footer style" wrapperClass="footer-field" class="footer-select" bind:value={footerType} onchange={save}>
+      <option value="footer1">Style 1</option>
+    </Select>
   </div>
 
   <div class="footer-section">
@@ -79,25 +78,31 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
         <span class="element-badge">{el.type}</span>
 
         {#if el.type === 'link'}
-          <input class="footer-input" type="text" placeholder="Label" bind:value={el.title} oninput={save} />
+          <Input label="Label" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" placeholder="Label" bind:value={el.title} oninput={save} />
           {#if el.link}
-            <input class="footer-input" type="url" placeholder="URL" bind:value={el.link.url} oninput={save} />
-            <select class="footer-select" bind:value={el.link.target} onchange={save}>
+            <Input label="URL" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" type="url" placeholder="URL" bind:value={el.link.url} oninput={save} />
+            <Select label="Open in" wrapperClass="footer-target-field" class="footer-select" bind:value={el.link.target} onchange={save}>
               <option value="_self">Same tab</option>
               <option value="_blank">New tab</option>
-            </select>
+            </Select>
           {/if}
         {/if}
 
         {#if el.type === 'social'}
           <span class="platform-name">{el.socialPlatform}</span>
           {#if el.link}
-            <input class="footer-input" type="url" placeholder="Profile URL" bind:value={el.link.url} oninput={save} />
+            <Input label="Profile URL" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" type="url" placeholder="Profile URL" bind:value={el.link.url} oninput={save} />
           {/if}
         {/if}
 
         {#if el.type === 'text'}
-          <input class="footer-input" type="text" placeholder="Text content (e.g. © 2024 My Company)" bind:value={el.text} oninput={save} />
+          <Input
+            label="Text content"
+            wrapperClass="grid min-w-[120px] flex-1 gap-1"
+            class="w-full"
+            placeholder="Text content (e.g. © 2024 My Company)"
+            bind:value={el.text}
+            oninput={save} />
         {/if}
 
         {#if el.type === 'html'}
@@ -140,10 +145,15 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   margin-bottom: 0.5rem;
 }
 
-.footer-field {
+.footer-section :global(.footer-field) {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.footer-element :global(.footer-target-field) {
+  display: grid;
+  gap: 0.3rem;
 }
 
 .footer-element {
@@ -155,11 +165,6 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   margin-bottom: 0.25rem;
   background-color: rgba(255, 255, 255, 0.04);
   border-radius: 0.375rem;
-}
-
-.footer-input {
-  flex: 1;
-  min-width: 120px;
 }
 
 .footer-textarea {

@@ -1,5 +1,29 @@
 ## 2026-10-22
 
+- Files: `src/components/Input.svelte`, `src/types/types.ts`, input callers in `src/blocks` and `src/components/project`, `README.md`
+- Added a reusable labeled input component with generated IDs, native attributes/events, value binding, and numeric empty-value handling.
+- Migrated text, URL, number, and color fields, including grouped spacing controls and project settings, while preserving hidden transport inputs and the switch's native checkbox.
+- Updated scoped project styles for component-owned fields and provided distinct accessible labels for paired palette inputs.
+
+- Files: `src/components/Select.svelte`, `src/types/types.ts`, select callers in `src/blocks` and `src/components/project`, `README.md`
+- Moved select field wrappers and associated labels into the shared component, added generated IDs and optional layout/helper-text props, and removed caller-owned select labels and wrappers.
+- Made Split Block link updates immutable so its derived editor state refreshed when changing destinations.
+- File: `src/blocks/Image/index.svelte`
+- Gave the caption-alignment select its own ID so both alignment labels targeted the correct controls.
+
+- Files: `src/components/Select.svelte`, `src/types/types.ts`, `src/blocks/{Header,Link,SplitBlock}/index.svelte`, `src/blocks/shared/{ColorSelect,Padding,TextAlign,Wrapper}.svelte`, `src/components/project/{ProjectFooter,ProjectMenu}.svelte`, `README.md`
+- Added a typed reusable native select component and migrated all dropdowns while retaining options, event handlers, two-way bindings, labels, and existing styling.
+- Adjusted the menu's scoped select styling to reach the shared component's native control and documented the component API.
+
+- Files: `AGENTS.md`, `agent-changes.md`
+- Replaced duplicated stack, architecture, and command information with README section links, removed outdated preview-rendering guidance, and retained repository-specific coding and workflow rules.
+
+- Files: `src/components/Checkbox.svelte`, `README.md`
+- Restyled the shared checkbox as an accessible toggle switch with an animated thumb, keyboard focus feedback, and reduced-motion support.
+
+- Files: `src/components/Checkbox.svelte`, `src/types/types.ts`, `src/blocks/Link/index.svelte`, `src/blocks/SplitBlock/index.svelte`, `README.md`
+- Replaced both checkbox wrappers with a shared typed native checkbox component featuring a clickable label, checked-state styling, keyboard focus feedback, and disabled support.
+
 - Files: `README.md`, `agent-changes.md`
 - Updated the source structure tree and expanded the new-block guide with editor, Astro preview, registry, optional CSS, and verification examples.
 

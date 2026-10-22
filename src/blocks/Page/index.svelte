@@ -1,4 +1,5 @@
 <script lang="ts">
+import Input from '../../components/Input.svelte'
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { BlockEditorProps, PageType } from '../../types/types.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
@@ -73,15 +74,8 @@ function updateTextColorKey(event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="title">Title:</label>
-  <input id="title" type="text" value={$selectedElement?.title || ''} on:input={updateTitle} />
-</div>
-
-<div class="input-and-label-wrapper">
-  <label for="order">Order:</label>
-  <input id="order" type="text" value={$selectedElement?.order || ''} on:input={updateOrder} />
-</div>
+<Input id="title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
+<Input id="order" label="Order:" value={$selectedElement?.order || ''} oninput={updateOrder} />
 
 <ColorSelect
   element={{ style: { backgroundColorKey: ($selectedElement as PageType)?.colors?.backgroundColorKey || '' } }}

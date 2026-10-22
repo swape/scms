@@ -1,4 +1,6 @@
 <script lang="ts">
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import Margin from '../shared/Margin.svelte'
@@ -45,30 +47,21 @@ function getBorderRadius(): string {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="header-level">Level:</label>
-  <select id="header-level" value={($selectedElement as ContentType)?.headerLevel || 'h2'} onchange={updateLevel}>
-    <option value="h1">H1</option>
-    <option value="h2">H2</option>
-    <option value="h3">H3</option>
-    <option value="h4">H4</option>
-    <option value="h5">H5</option>
-    <option value="h6">H6</option>
-  </select>
-</div>
+<Select id="header-level" label="Level:" value={($selectedElement as ContentType)?.headerLevel || 'h2'} onchange={updateLevel}>
+  <option value="h1">H1</option>
+  <option value="h2">H2</option>
+  <option value="h3">H3</option>
+  <option value="h4">H4</option>
+  <option value="h5">H5</option>
+  <option value="h6">H6</option>
+</Select>
 
-<div class="input-and-label-wrapper">
-  <label for="header-content">Text:</label>
-  <input id="header-content" type="text" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
-</div>
+<Input id="header-content" label="Text:" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
 
 <TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
 
 {#if $selectedElement?.style?.backgroundColor}
-  <div class="input-and-label-wrapper">
-    <label for="header-border-radius">Border Radius (px):</label>
-    <input id="header-border-radius" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
-  </div>
+  <Input id="header-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
 {/if}
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>

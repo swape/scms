@@ -1,4 +1,6 @@
 <script lang="ts">
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
 
@@ -49,39 +51,53 @@ function updatePaddingValue(key: string, event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="padding-mode">Padding Mode:</label>
-  <select id="padding-mode" value={getPaddingMode()} onchange={updatePaddingMode}>
-    <option value="all">All Sides</option>
-    <option value="individual">Individual</option>
-  </select>
-</div>
+<Select id="padding-mode" label="Padding Mode:" value={getPaddingMode()} onchange={updatePaddingMode}>
+  <option value="all">All Sides</option>
+  <option value="individual">Individual</option>
+</Select>
 
 {#if getPaddingMode() === 'all'}
-  <div class="input-and-label-wrapper">
-    <label for="padding-all">Padding (px):</label>
-    <input id="padding-all" type="number" min="0" value={getStyleNumberValue('paddingAll')} oninput={(event) => updatePaddingValue('paddingAll', event)} />
-  </div>
+  <Input id="padding-all" label="Padding (px):" type="number" min="0" value={getStyleNumberValue('paddingAll')} oninput={(event) => updatePaddingValue('paddingAll', event)} />
 {:else}
   <div class="input-and-label-wrapper">
     <label>Padding Individual (px):</label>
     <div class="padding-grid">
-      <input id="padding-top" type="number" min="0" placeholder="Top" value={getStyleNumberValue('paddingTop')} oninput={(event) => updatePaddingValue('paddingTop', event)} />
-      <input
+      <Input
+        id="padding-top"
+        label="Top"
+        wrapperClass="grid min-w-0 gap-1"
+        type="number"
+        min="0"
+        placeholder="Top"
+        value={getStyleNumberValue('paddingTop')}
+        oninput={(event) => updatePaddingValue('paddingTop', event)} />
+      <Input
+        label="Right"
+        wrapperClass="grid min-w-0 gap-1"
         id="padding-right"
         type="number"
         min="0"
         placeholder="Right"
         value={getStyleNumberValue('paddingRight')}
         oninput={(event) => updatePaddingValue('paddingRight', event)} />
-      <input
+      <Input
+        label="Bottom"
+        wrapperClass="grid min-w-0 gap-1"
         id="padding-bottom"
         type="number"
         min="0"
         placeholder="Bottom"
         value={getStyleNumberValue('paddingBottom')}
         oninput={(event) => updatePaddingValue('paddingBottom', event)} />
-      <input id="padding-left" type="number" min="0" placeholder="Left" value={getStyleNumberValue('paddingLeft')} oninput={(event) => updatePaddingValue('paddingLeft', event)} />
+      <Input
+        id="padding-left"
+        label="Left"
+        wrapperClass="grid min-w-0 gap-1"
+        type="number"
+        min="0"
+        placeholder="Left"
+        value={getStyleNumberValue('paddingLeft')}
+        oninput={(event) => updatePaddingValue('paddingLeft', event)} />
     </div>
   </div>
 {/if}

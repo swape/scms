@@ -1,4 +1,5 @@
 <script lang="ts">
+import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
 
@@ -33,8 +34,22 @@ function updateMarginValue(key: string, event: Event) {
 <div class="input-and-label-wrapper">
   <label>Margin Block (px):</label>
   <div class="margin-block-grid">
-    <input id="margin-top" type="number" placeholder="Top" value={getStyleNumberValue('marginTop')} oninput={(event) => updateMarginValue('marginTop', event)} />
-    <input id="margin-bottom" type="number" placeholder="Bottom" value={getStyleNumberValue('marginBottom')} oninput={(event) => updateMarginValue('marginBottom', event)} />
+    <Input
+      id="margin-top"
+      label="Top"
+      wrapperClass="grid min-w-0 gap-1"
+      type="number"
+      placeholder="Top"
+      value={getStyleNumberValue('marginTop')}
+      oninput={(event) => updateMarginValue('marginTop', event)} />
+    <Input
+      id="margin-bottom"
+      label="Bottom"
+      wrapperClass="grid min-w-0 gap-1"
+      type="number"
+      placeholder="Bottom"
+      value={getStyleNumberValue('marginBottom')}
+      oninput={(event) => updateMarginValue('marginBottom', event)} />
   </div>
 </div>
 

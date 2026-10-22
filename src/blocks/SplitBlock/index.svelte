@@ -1,5 +1,8 @@
 <script lang="ts">
+import Checkbox from '../../components/Checkbox.svelte'
 import FileSelector from '../../components/FileSelector/index.svelte'
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
 import Margin from '../shared/Margin.svelte'
@@ -36,7 +39,7 @@ function updateLinkElement(updateFn: (link: LinkSettings) => void) {
 
     updateFn(splitBlock.link)
     updatePageContentWithDebounce()
-    return element
+    return { ...splitBlock, link: { ...splitBlock.link } }
   })
 }
 
@@ -114,17 +117,11 @@ function updateStyleNumber(key: string, event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper checkbox-wrapper">
-  <label for="split-flipped">Flip sides (image on left):</label>
-  <input id="split-flipped" type="checkbox" checked={Boolean(selectedBlock?.flipped)} oninput={updateFlipped} />
-</div>
+<Checkbox id="split-flipped" label="Flip sides (image on left)" checked={Boolean(selectedBlock?.flipped)} oninput={updateFlipped} />
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-3 text-gray-500 text-sm">Wrapper:</div>
 
-<div class="input-and-label-wrapper">
-  <label for="split-title">Text block title:</label>
-  <input id="split-title" type="text" value={selectedBlock?.title || ''} oninput={updateTitle} />
-</div>
+<Input id="split-title" label="Text block title:" value={selectedBlock?.title || ''} oninput={updateTitle} />
 
 <div class="input-and-label-wrapper">
   <label for="split-content">Text block content:</label>
@@ -133,42 +130,27 @@ function updateStyleNumber(key: string, event: Event) {
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-3 text-gray-500 text-sm">Button:</div>
 
-<div class="input-and-label-wrapper">
-  <label for="split-button-text">Button text:</label>
-  <input id="split-button-text" type="text" value={selectedBlock?.link?.text || ''} oninput={updateButtonText} />
-</div>
+<Input id="split-button-text" label="Button text:" value={selectedBlock?.link?.text || ''} oninput={updateButtonText} />
 
-<div class="input-and-label-wrapper">
-  <label for="split-button-mode">Destination type:</label>
-  <select id="split-button-mode" value={selectedBlock?.link?.mode || 'url'} oninput={updateMode}>
-    <option value="url">URL</option>
-    <option value="page">Page</option>
-  </select>
-</div>
+<Select id="split-button-mode" label="Destination type:" value={selectedBlock?.link?.mode || 'url'} oninput={updateMode}>
+  <option value="url">URL</option>
+  <option value="page">Page</option>
+</Select>
 
 {#if (selectedBlock?.link?.mode || 'url') === 'url'}
-  <div class="input-and-label-wrapper">
-    <label for="split-button-url">URL:</label>
-    <input id="split-button-url" type="url" value={selectedBlock?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
-  </div>
+  <Input id="split-button-url" label="URL:" type="url" value={selectedBlock?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
 {:else}
-  <div class="input-and-label-wrapper">
-    <label for="split-button-page">Page:</label>
-    <select id="split-button-page" value={selectedBlock?.link?.pageId || ''} oninput={updatePageId}>
-      {#each $currentProject?.pages || [] as page}
-        <option value={page.id}>{page.title}</option>
-      {/each}
-    </select>
-  </div>
+  <Select id="split-button-page" label="Page:" value={selectedBlock?.link?.pageId || ''} oninput={updatePageId}>
+    {#each $currentProject?.pages || [] as page}
+      <option value={page.id}>{page.title}</option>
+    {/each}
+  </Select>
 {/if}
 
-<div class="input-and-label-wrapper">
-  <label for="split-button-target">Target:</label>
-  <select id="split-button-target" value={selectedBlock?.link?.target || '_self'} oninput={updateTarget}>
-    <option value="_self">Same tab</option>
-    <option value="_blank">New tab</option>
-  </select>
-</div>
+<Select id="split-button-target" label="Target:" value={selectedBlock?.link?.target || '_self'} oninput={updateTarget}>
+  <option value="_self">Same tab</option>
+  <option value="_blank">New tab</option>
+</Select>
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-3 text-gray-500 text-sm">Image:</div>
 
@@ -182,20 +164,21 @@ function updateStyleNumber(key: string, event: Event) {
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
 <Wrapper {updatePageContentWithDebounce} {update} />
-<div class="input-and-label-wrapper">
-  <label for="split-border-radius">Border radius (px):</label>
-  <input id="split-border-radius" type="number" min="0" value={$selectedElement?.style?.borderRadius ?? 8} oninput={(event) => updateStyleNumber('borderRadius', event)} />
-</div>
-<div class="input-and-label-wrapper">
-  <label for="split-text-padding">Text padding (px):</label>
-  <input
-    id="split-text-padding"
-    type="number"
-    min="0"
-    placeholder="24"
-    value={$selectedElement?.style?.splitTextPadding ?? ''}
-    oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
-</div>
+<Input
+  id="split-border-radius"
+  label="Border radius (px):"
+  type="number"
+  min="0"
+  value={$selectedElement?.style?.borderRadius ?? 8}
+  oninput={(event) => updateStyleNumber('borderRadius', event)} />
+<Input
+  label="Text padding (px):"
+  id="split-text-padding"
+  type="number"
+  min="0"
+  placeholder="24"
+  value={$selectedElement?.style?.splitTextPadding ?? ''}
+  oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
 <TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
 <Padding {updatePageContentWithDebounce} {update} />
 <Margin {updatePageContentWithDebounce} {update} />

@@ -1,4 +1,5 @@
 <script lang="ts">
+import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import Margin from '../shared/Margin.svelte'
@@ -45,10 +46,7 @@ function getBorderRadius(): string {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="text-title">Title:</label>
-  <input id="text-title" type="text" value={$selectedElement?.title || ''} oninput={updateTitle} />
-</div>
+<Input id="text-title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
 
 <TextAlign element={$selectedElement} {update} title="Title Alignment" id="title-alignment" styleName="titleAlign" />
 
@@ -60,10 +58,7 @@ function getBorderRadius(): string {
 <TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
 
 {#if $selectedElement?.style?.backgroundColor}
-  <div class="input-and-label-wrapper">
-    <label for="text-border-radius">Border Radius (px):</label>
-    <input id="text-border-radius" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
-  </div>
+  <Input id="text-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
 {/if}
 
 <div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>

@@ -1,5 +1,8 @@
 ## 2026-10-22
 
+- Files: `README.md`, `agent-changes.md`
+- Updated the source structure tree and expanded the new-block guide with editor, Astro preview, registry, optional CSS, and verification examples.
+
 - Directories: `src/components/editor/elements`, `src/components/editor/stylingParts`, `src/pages/preview/elementParts`
 - Removed empty legacy directories left after the block migration and verified that no empty directories remained under `src`.
 

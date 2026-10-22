@@ -1,4 +1,29 @@
-import type { Component } from 'svelte'
+import type { Component, Snippet } from 'svelte'
+import type { HTMLInputAttributes, HTMLSelectAttributes } from 'svelte/elements'
+
+export interface InputProps extends Omit<HTMLInputAttributes, 'value' | 'type' | 'checked' | 'files'> {
+  label: string
+  type?: 'text' | 'url' | 'number' | 'color' | 'email' | 'password' | 'search' | 'tel'
+  value?: string | number
+  wrapperClass?: string
+  hint?: string
+}
+
+export interface SelectProps<T extends string | number> extends Omit<HTMLSelectAttributes, 'value' | 'multiple' | 'children'> {
+  label: string
+  wrapperClass?: string
+  hint?: string
+  value?: T
+  children: Snippet
+}
+
+export interface CheckboxProps {
+  id: string
+  label: string
+  checked?: boolean
+  disabled?: boolean
+  oninput?: HTMLInputAttributes['oninput']
+}
 
 export interface BlockEditorProps {
   update: (key: string, value: unknown) => void

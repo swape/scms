@@ -1,4 +1,5 @@
 <script lang="ts">
+import Select from '../../components/Select.svelte'
 import { currentProject } from '../../store.ts'
 import type { ColorType } from '../../types/types.ts'
 
@@ -26,18 +27,15 @@ currentProject.subscribe((project) => {
 })
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for={id}>{title}:</label>
-  <select {id} value={(element?.style?.[styleName] as string) || ''} onchange={update}>
-    {#if isBgColors}
-      {#each bgColors as color}
-        <option value={color.key}>{color.name}</option>
-      {/each}
-    {:else}
-      {#each textColors as color}
-        <option value={color.key}>{color.name}</option>
-      {/each}
-    {/if}
-    <option value="">None</option>
-  </select>
-</div>
+<Select {id} label={`${title}:`} value={(element?.style?.[styleName] as string) || ''} onchange={update}>
+  {#if isBgColors}
+    {#each bgColors as color}
+      <option value={color.key}>{color.name}</option>
+    {/each}
+  {:else}
+    {#each textColors as color}
+      <option value={color.key}>{color.name}</option>
+    {/each}
+  {/if}
+  <option value="">None</option>
+</Select>

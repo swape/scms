@@ -30,6 +30,14 @@ export interface BlockEditorProps {
   updatePageContentWithDebounce: () => void
 }
 
+export type BlockStyleSection = 'wrapper' | 'colors' | 'padding' | 'margin' | 'custom'
+
+export interface BlockStylesProps extends BlockEditorProps {
+  sections?: readonly BlockStyleSection[]
+  allowCenter?: boolean
+  children?: Snippet
+}
+
 export interface BlockPreviewProps {
   data: ContentType
 }

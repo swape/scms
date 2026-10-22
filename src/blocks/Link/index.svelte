@@ -5,10 +5,8 @@ import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
-import Margin from '../shared/Margin.svelte'
-import Padding from '../shared/Padding.svelte'
-import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
-import Wrapper from '../shared/Wrapper.svelte'
+import { updateSelectedLink } from '../shared/helper.ts'
+import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
@@ -25,20 +23,7 @@ function getDefaultLinkSettings(): LinkSettings {
 }
 
 function updateLinkElement(updateFn: (element: ContentType, link: LinkSettings) => void) {
-  selectedElement.update((element) => {
-    if (!element || element.type !== 'link') {
-      return element
-    }
-
-    const linkElement = element as ContentType
-    if (!linkElement.link) {
-      linkElement.link = getDefaultLinkSettings()
-    }
-
-    updateFn(linkElement, linkElement.link)
-    updatePageContentWithDebounce()
-    return element
-  })
+  updateSelectedLink('link', getDefaultLinkSettings, updateFn, updatePageContentWithDebounce)
 }
 
 function updateText(event: Event) {
@@ -142,8 +127,4 @@ function updateButtonTextColor(event: Event) {
     isBgColors={false} />
 {/if}
 
-<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
-<Wrapper {updatePageContentWithDebounce} {update} />
-<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
-<Padding {updatePageContentWithDebounce} {update} />
-<Margin {updatePageContentWithDebounce} {update} />
+<Styles {updatePageContentWithDebounce} {update} />

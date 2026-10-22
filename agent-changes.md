@@ -1,5 +1,15 @@
 ## 2026-10-22
 
+- Files: `src/blocks/shared/Styles.svelte`, `src/types/types.ts`, `src/blocks/{Header,Image,Link,SplitBlock,Text}/index.svelte`, `README.md`
+- Replaced duplicated style panels with configurable ordered sections, preserved image centering and Split Block custom fields, and documented the shared component.
+
+- Files: `src/blocks/shared/helper.ts`, `src/blocks/{Header,Image,Link,SplitBlock,Text}/index.svelte`
+- Extracted shared block-field, numeric-style, and selected-link update behavior into block helpers and reused it across the editors.
+- File: `src/blocks/shared/TextAndBackgroundColors.svelte`
+- Reused a shared style-color helper for background and text color updates.
+- Files: `src/blocks/shared/helper.ts`, `src/blocks/shared/TextAndBackgroundColors.svelte`
+- Resolved editor type diagnostics by annotating color callback events and using exported interface types in helper signatures.
+
 - Files: `src/components/Input.svelte`, `src/types/types.ts`, input callers in `src/blocks` and `src/components/project`, `README.md`
 - Added a reusable labeled input component with generated IDs, native attributes/events, value binding, and numeric empty-value handling.
 - Migrated text, URL, number, and color fields, including grouped spacing controls and project settings, while preserving hidden transport inputs and the switch's native checkbox.

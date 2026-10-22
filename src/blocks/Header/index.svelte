@@ -3,39 +3,24 @@ import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
-import Margin from '../shared/Margin.svelte'
-import Padding from '../shared/Padding.svelte'
+import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helper.ts'
+import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
-import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
-import Wrapper from '../shared/Wrapper.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 function updateContent(event: Event) {
   const input = event.target as HTMLInputElement
-  update('content', input.value)
-  updatePageContentWithDebounce()
+  updateBlockField('content', input.value, update, updatePageContentWithDebounce)
 }
 
 function updateLevel(event: Event) {
   const select = event.target as HTMLSelectElement
-  update('headerLevel', select.value)
-  updatePageContentWithDebounce()
+  updateBlockField('headerLevel', select.value, update, updatePageContentWithDebounce)
 }
 
 function updateBorderRadius(event: Event) {
-  const input = event.target as HTMLInputElement
-  const style = $selectedElement?.style || {}
-  const nextStyle: Record<string, string | number> = { ...style }
-
-  if (!input.value.trim()) {
-    delete nextStyle['borderRadius']
-  } else {
-    nextStyle['borderRadius'] = Number(input.value)
-  }
-
-  update('style', nextStyle)
-  updatePageContentWithDebounce()
+  updateStyleNumberShared('borderRadius', event, $selectedElement?.style, update, updatePageContentWithDebounce)
 }
 
 function getBorderRadius(): string {
@@ -64,8 +49,4 @@ function getBorderRadius(): string {
   <Input id="header-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
 {/if}
 
-<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
-<Wrapper {updatePageContentWithDebounce} {update} />
-<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
-<Padding {updatePageContentWithDebounce} {update} />
-<Margin {updatePageContentWithDebounce} {update} />
+<Styles {updatePageContentWithDebounce} {update} />

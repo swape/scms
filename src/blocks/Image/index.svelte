@@ -3,11 +3,9 @@ import FileSelector from '../../components/FileSelector/index.svelte'
 import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
-import Margin from '../shared/Margin.svelte'
-import Padding from '../shared/Padding.svelte'
+import { updateBlockField } from '../shared/helper.ts'
+import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
-import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
-import Wrapper from '../shared/Wrapper.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
@@ -24,13 +22,11 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
 }
 
 function updateCaption(caption = '') {
-  update('caption', caption)
-  updatePageContentWithDebounce()
+  updateBlockField('caption', caption, update, updatePageContentWithDebounce)
 }
 
 function updateTitle(title = '') {
-  update('title', title)
-  updatePageContentWithDebounce()
+  updateBlockField('title', title, update, updatePageContentWithDebounce)
 }
 </script>
 
@@ -63,8 +59,4 @@ function updateTitle(title = '') {
 
 <FileSelector selected={selectedFile} />
 
-<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
-<Wrapper {updatePageContentWithDebounce} {update} allowCenter />
-<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
-<Padding {updatePageContentWithDebounce} {update} />
-<Margin {updatePageContentWithDebounce} {update} />
+<Styles {updatePageContentWithDebounce} {update} allowCenter />

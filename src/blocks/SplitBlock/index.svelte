@@ -5,10 +5,8 @@ import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
-import Margin from '../shared/Margin.svelte'
-import Padding from '../shared/Padding.svelte'
-import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte'
-import Wrapper from '../shared/Wrapper.svelte'
+import { updateBlockField, updateSelectedLink, updateStyleNumber as updateStyleNumberShared } from '../shared/helper.ts'
+import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
@@ -27,38 +25,22 @@ function getDefaultLinkSettings(): LinkSettings {
 }
 
 function updateLinkElement(updateFn: (link: LinkSettings) => void) {
-  selectedElement.update((element) => {
-    if (!element || element.type !== 'splitBlock') {
-      return element
-    }
-
-    const splitBlock = element as ContentType
-    if (!splitBlock.link) {
-      splitBlock.link = getDefaultLinkSettings()
-    }
-
-    updateFn(splitBlock.link)
-    updatePageContentWithDebounce()
-    return { ...splitBlock, link: { ...splitBlock.link } }
-  })
+  updateSelectedLink('splitBlock', getDefaultLinkSettings, (_element, link) => updateFn(link), updatePageContentWithDebounce)
 }
 
 function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
-  update('title', input.value)
-  updatePageContentWithDebounce()
+  updateBlockField('title', input.value, update, updatePageContentWithDebounce)
 }
 
 function updateContent(event: Event) {
   const textarea = event.target as HTMLTextAreaElement
-  update('content', textarea.value)
-  updatePageContentWithDebounce()
+  updateBlockField('content', textarea.value, update, updatePageContentWithDebounce)
 }
 
 function updateFlipped(event: Event) {
   const input = event.target as HTMLInputElement
-  update('flipped', input.checked)
-  updatePageContentWithDebounce()
+  updateBlockField('flipped', input.checked, update, updatePageContentWithDebounce)
 }
 
 function updateButtonText(event: Event) {
@@ -105,15 +87,7 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
 }
 
 function updateStyleNumber(key: string, event: Event) {
-  const input = event.target as HTMLInputElement
-  const style = { ...$selectedElement?.style }
-  if (!input.value.trim()) {
-    delete style[key]
-  } else {
-    style[key] = Number(input.value)
-  }
-  update('style', style)
-  updatePageContentWithDebounce()
+  updateStyleNumberShared(key, event, $selectedElement?.style, update, updatePageContentWithDebounce)
 }
 </script>
 
@@ -162,23 +136,20 @@ function updateStyleNumber(key: string, event: Event) {
 
 <FileSelector selected={selectedFile} />
 
-<div class="mt-5 pt-5 border-t border-slate-700 mb-5 text-gray-500 text-sm">Styles:</div>
-<Wrapper {updatePageContentWithDebounce} {update} />
-<Input
-  id="split-border-radius"
-  label="Border radius (px):"
-  type="number"
-  min="0"
-  value={$selectedElement?.style?.borderRadius ?? 8}
-  oninput={(event) => updateStyleNumber('borderRadius', event)} />
-<Input
-  label="Text padding (px):"
-  id="split-text-padding"
-  type="number"
-  min="0"
-  placeholder="24"
-  value={$selectedElement?.style?.splitTextPadding ?? ''}
-  oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
-<TextAndBackgroundColors {updatePageContentWithDebounce} {update} />
-<Padding {updatePageContentWithDebounce} {update} />
-<Margin {updatePageContentWithDebounce} {update} />
+<Styles {updatePageContentWithDebounce} {update} sections={['wrapper', 'custom', 'colors', 'padding', 'margin']}>
+  <Input
+    id="split-border-radius"
+    label="Border radius (px):"
+    type="number"
+    min="0"
+    value={$selectedElement?.style?.borderRadius ?? 8}
+    oninput={(event) => updateStyleNumber('borderRadius', event)} />
+  <Input
+    label="Text padding (px):"
+    id="split-text-padding"
+    type="number"
+    min="0"
+    placeholder="24"
+    value={$selectedElement?.style?.splitTextPadding ?? ''}
+    oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
+</Styles>

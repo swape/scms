@@ -44,6 +44,7 @@ src/
 │       ├── ColorSelect.svelte
 │       ├── Margin.svelte
 │       ├── Padding.svelte
+│       ├── Styles.svelte  # Configurable block style sections
 │       ├── TextAlign.svelte
 │       ├── TextAndBackgroundColors.svelte
 │       ├── Wrapper.svelte
@@ -152,10 +153,7 @@ Create `src/blocks/Quote/index.svelte`:
 <script lang="ts">
   import { selectedElement } from '../../store.ts';
   import type { BlockEditorProps } from '../../types/types.ts';
-  import Margin from '../shared/Margin.svelte';
-  import Padding from '../shared/Padding.svelte';
-  import TextAndBackgroundColors from '../shared/TextAndBackgroundColors.svelte';
-  import Wrapper from '../shared/Wrapper.svelte';
+  import Styles from '../shared/Styles.svelte';
 
   const { update, updatePageContentWithDebounce }: BlockEditorProps = $props();
   const quote = $derived(
@@ -175,13 +173,10 @@ Create `src/blocks/Quote/index.svelte`:
   <textarea id="quote-content" value={quote} oninput={updateContent}></textarea>
 </div>
 
-<Wrapper {update} {updatePageContentWithDebounce} />
-<TextAndBackgroundColors {update} {updatePageContentWithDebounce} />
-<Padding {update} {updatePageContentWithDebounce} />
-<Margin {update} {updatePageContentWithDebounce} />
+<Styles {update} {updatePageContentWithDebounce} />
 ```
 
-Each block owns the style controls it exposes; there is no central `Styling.svelte` panel. Reuse controls from [blocks/shared](./src/blocks/shared) rather than duplicating them.
+Each block chooses the style controls it exposes using [Styles.svelte](./src/blocks/shared/Styles.svelte). It includes the Styles heading and defaults to `sections={['wrapper', 'colors', 'padding', 'margin']}`. Pass a subset in the desired order, such as `sections={['colors', 'padding']}`, to select which controls appear; an empty list hides the entire section. Set `allowCenter` to enable the wrapper's Center option. To insert block-specific fields, include `'custom'` at the desired position and pass those fields as child content, as in the Split Block editor. Individual controls remain available in [blocks/shared](./src/blocks/shared).
 
 For boolean settings, use [Checkbox.svelte](./src/components/Checkbox.svelte) with `id`, `label`, `checked`, and `oninput` props. It displays a toggle switch with an animated thumb, a clickable label, keyboard focus feedback, and optional `disabled` support. A native checkbox with `role="switch"` preserves keyboard interaction and exposes its state to assistive technology; animations respect reduced-motion preferences.
 

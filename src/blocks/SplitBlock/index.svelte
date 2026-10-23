@@ -152,4 +152,11 @@ function updateStyleNumber(key: string, event: Event) {
     placeholder="24"
     value={$selectedElement?.style?.splitTextPadding ?? ''}
     oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
+  <Input
+    label="Image minimum height (px):"
+    id="split-image-min-height"
+    type="number"
+    min="0"
+    value={$selectedElement?.style?.splitImageMinHeight ?? 300}
+    oninput={(event) => updateStyleNumber('splitImageMinHeight', event)} />
 </Styles>

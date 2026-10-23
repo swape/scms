@@ -6,6 +6,7 @@ export function getCss(item: ContentType, selector: string): BlockCssRule[] {
   return [
     { selector, declarations: [getCssLength(style.borderRadius) || style.backgroundColor ? 'overflow: hidden;' : ''] },
     { selector: `${selector} .split-text`, declarations: [getCssLength(style.splitTextPadding) ? `padding: ${getCssLength(style.splitTextPadding)};` : ''] },
+    { selector: `${selector} .split-image`, declarations: [getCssLength(style.splitImageMinHeight) ? `min-height: ${getCssLength(style.splitImageMinHeight)};` : ''] },
     {
       selector: `${selector} .link-button`,
       declarations: [

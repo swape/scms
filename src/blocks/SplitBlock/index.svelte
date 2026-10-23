@@ -87,7 +87,7 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
 }
 
 function updateStyleNumber(key: string, event: Event) {
-  updateStyleNumberShared(key, event, $selectedElement?.style, update, updatePageContentWithDebounce)
+  updateStyleNumberShared(key, event, selectedBlock?.style, update, updatePageContentWithDebounce)
 }
 </script>
 
@@ -142,7 +142,7 @@ function updateStyleNumber(key: string, event: Event) {
     label="Border radius (px):"
     type="number"
     min="0"
-    value={$selectedElement?.style?.borderRadius ?? 8}
+    value={selectedBlock?.style?.borderRadius ?? 8}
     oninput={(event) => updateStyleNumber('borderRadius', event)} />
   <Input
     label="Text padding (px):"
@@ -150,13 +150,13 @@ function updateStyleNumber(key: string, event: Event) {
     type="number"
     min="0"
     placeholder="24"
-    value={$selectedElement?.style?.splitTextPadding ?? ''}
+    value={selectedBlock?.style?.splitTextPadding ?? ''}
     oninput={(event) => updateStyleNumber('splitTextPadding', event)} />
   <Input
     label="Image minimum height (px):"
     id="split-image-min-height"
     type="number"
     min="0"
-    value={$selectedElement?.style?.splitImageMinHeight ?? 300}
+    value={selectedBlock?.style?.splitImageMinHeight ?? 300}
     oninput={(event) => updateStyleNumber('splitImageMinHeight', event)} />
 </Styles>

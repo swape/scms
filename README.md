@@ -14,16 +14,15 @@ A visual, component-based page builder CMS for building responsive websites — 
 
 ## Features
 
-- **Visual Editor** — Drag-and-drop-style page builder with a sidebar of content elements.
+- **Visual Editor** — Add, edit, delete, and drag to reorder content blocks, with a live iframe preview.
 - **Content Blocks** — Text, Header, Image, Link, and Split Block, plus separate page-level settings.
-- **Live Preview** — Real-time iframe-based preview synced with editor settings.
-- **Project Management** — Create, edit, and configure multi-page projects.
-- **Customizable Menus** — Project-global hierarchical navigation menus with link, dropdown, and auto-generated (sub-page) items, editable from the preview.
-- **Customizable Footers** — Project-global link, social, text, and custom HTML footer elements, editable from the preview.
+- **Project Management** — Create and edit projects with nested pages, project settings, and project color palettes.
+- **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview.
+- **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview.
 - **Color Theming** — Light/dark palette support per project, with per-page color overrides.
-- **Page Builder** — Full control over page order, background, and text colors.
-- **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius.
-- **Responsive Preview** — Mobile-first CSS with layout adjustments.
+- **Page Settings** — Edit page titles, numeric order, and palette-based background and text colors.
+- **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius; Split Block also supports a configurable image minimum height.
+- **Responsive Preview** — Preview generated pages with responsive layouts and project-wide menu and footer.
 
 ## Project Structure
 
@@ -107,9 +106,14 @@ src/
 ├── constants.ts
 ├── store.ts               # Central Svelte store (app state)
 ├── localstorage.ts        # LocalStorage persistence layer
-├── types/types.ts         # TypeScript interfaces
-├── utils/                 # Helpers (elements, menu, footer, projects)
-└── styles/                # Global & preview CSS
+├── types/
+│   └── types.ts           # Shared TypeScript interfaces
+├── styles/                # Global & preview CSS
+└── utils/
+    ├── elements.ts        # Content-block creation and updates
+    ├── footer.ts          # Footer settings helpers
+    ├── menu.ts            # Menu settings helpers
+    └── projects.ts        # Project defaults and local retrieval
 ```
 
 ## Getting Started
@@ -137,6 +141,13 @@ npm run preview
 - **Persistence:** Data is written to `localStorage` via `src/localstorage.ts`. A backend integration is planned.
 - **Preview:** The editor sends page data and project settings to an Astro-powered preview page inside an iframe. The preview generates scoped CSS via `cssHelpers.ts`.
 - **Editor/Preview Separation:** Block editors are imported lazily. Server-side preview code uses block markup and CSS helpers without executing browser-only editor stores.
+
+## Current Limitations
+
+- Project and editor state are browser-local; there is no database or cross-device synchronization.
+- Sign-in is a local demo flow, not production authentication.
+- The editor's **Save** and **Save and Publish** buttons are placeholders; publishing is not implemented.
+- Content blocks can be drag-reordered, but pages cannot yet be reordered by drag and drop.
 
 ## Adding a New Block
 
@@ -313,7 +324,7 @@ See [plan.md](./plan.md) for the active backlog. Key planned items:
 
 - [ ] Astro build server for static site generation (separate repo)
 - [ ] Database integration (save/load projects)
-- [ ] Drag-and-drop page reordering
+- [ ] Drag-and-drop page reordering (content blocks can already be reordered)
 - [ ] Project edit form validation
 
 ## License

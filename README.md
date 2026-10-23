@@ -18,8 +18,8 @@ A visual, component-based page builder CMS for building responsive websites — 
 - **Content Blocks** — Text, Header, Image, Link, and Split Block, plus separate page-level settings.
 - **Live Preview** — Real-time iframe-based preview synced with editor settings.
 - **Project Management** — Create, edit, and configure multi-page projects.
-- **Customizable Menus** — Hierarchical navigation menus with link, dropdown, and auto-generated (sub-page) items.
-- **Customizable Footers** — Link, social, text, and custom HTML footer elements.
+- **Customizable Menus** — Project-global hierarchical navigation menus with link, dropdown, and auto-generated (sub-page) items, editable from the preview.
+- **Customizable Footers** — Project-global link, social, text, and custom HTML footer elements, editable from the preview.
 - **Color Theming** — Light/dark palette support per project, with per-page color overrides.
 - **Page Builder** — Full control over page order, background, and text colors.
 - **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius.
@@ -35,10 +35,26 @@ src/
 │   │   ├── Preview.astro # Server-rendered block markup
 │   │   └── css.ts        # Block-specific scoped CSS rules
 │   ├── Image/
+│   │   ├── Preview.astro
+│   │   └── figureStyles.css
 │   ├── Link/
-│   ├── Page/
-│   │   └── index.svelte  # Page settings (not an insertable content block)
+│   │   ├── Preview.astro
+│   │   └── linkStyles.css
+│   ├── Page/              # Page settings (not an insertable content block)
+│   │   └── index.svelte
+│   ├── Footer/            # Project footer preview
+│   │   ├── index.svelte   # Project-global footer settings editor
+│   │   ├── Footer.astro
+│   │   └── footerStyles.css
+│   ├── Menu/              # Project menu preview
+│   │   ├── index.svelte   # Project-global menu settings editor
+│   │   ├── Menu.astro
+│   │   ├── MenuItem.astro
+│   │   ├── MenuItems.astro
+│   │   └── menuStyles.css
 │   ├── SplitBlock/
+│   │   ├── Preview.astro
+│   │   └── splitBlockStyles.css
 │   ├── Text/
 │   └── shared/
 │       ├── ColorSelect.svelte
@@ -49,7 +65,9 @@ src/
 │       ├── TextAndBackgroundColors.svelte
 │       ├── Wrapper.svelte
 │       ├── css.ts        # CSS value validation and formatting
-│       └── defaults.ts   # Shared link defaults
+│       ├── defaults.ts   # Shared link defaults
+│       ├── helper.ts     # Shared editor helpers
+│       └── helpers.ts    # Shared preview helpers
 ├── components/
 │   ├── Checkbox.svelte     # Shared accessible toggle switch
 │   ├── Input.svelte        # Shared labeled text, URL, number, and color field
@@ -69,8 +87,6 @@ src/
 │   ├── project/           # Project settings
 │   │   ├── Colors.svelte
 │   │   ├── Edit.svelte
-│   │   ├── ProjectFooter.svelte
-│   │   ├── ProjectMenu.svelte
 │   │   └── index.svelte
 │   ├── projects/          # Project listing
 │   │   └── index.svelte
@@ -87,13 +103,7 @@ src/
 │   └── preview/           # Preview route and composition helpers
 │       ├── index.astro
 │       ├── ElementSelector.astro
-│       ├── Footer.astro
-│       ├── Menu.astro
-│       ├── MenuItem.astro
-│       ├── MenuItems.astro
 │       └── cssHelpers.ts
-├── previewRender/
-│   └── common.ts          # Shared preview utilities (e.g. URL sanitization)
 ├── constants.ts
 ├── store.ts               # Central Svelte store (app state)
 ├── localstorage.ts        # LocalStorage persistence layer
@@ -230,7 +240,7 @@ const wrapper = String(data.style?.wrapper || '');
 </section>
 ```
 
-The section's `data-id` enables selection from the preview. The `scms_<id>` class connects the block to generated scoped CSS, and the wrapper class honors its editor setting. Render content using escaped expressions; use the existing `sanitizeHref` helper from [common.ts](./src/previewRender/common.ts) for block links or image URLs. Keep browser-only editor state out of Astro preview imports.
+The section's `data-id` enables selection from the preview. The `scms_<id>` class connects the block to generated scoped CSS, and the wrapper class honors its editor setting. Render content using escaped expressions; use the existing `sanitizeHref` helper from [helpers.ts](./src/blocks/shared/helpers.ts) for block links or image URLs. Keep browser-only editor state out of Astro preview imports.
 
 ### 4. Register the block
 

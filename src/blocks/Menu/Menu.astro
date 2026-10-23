@@ -1,4 +1,5 @@
 ---
+import './menuStyles.css'
 import type { MenuElement, PageType, ProjectType } from '../../types/types.ts'
 import MenuItems from './MenuItems.astro'
 
@@ -17,12 +18,8 @@ const menuStyle = [safeColor(backgroundColor) ? `background-color: ${safeColor(b
 const menuItems: MenuElement[] = menu?.elements ?? []
 ---
 
-{
-  menuItems.length > 0 && (
-    <div id="menu" class="menu-inner" style={menuStyle}>
-      <nav aria-label="Project menu">
-        <MenuItems items={menuItems} pages={pages} layout={menu?.style?.layout} />
-      </nav>
-    </div>
-  )
-}
+<div id="menu" data-items="menu" class="menu-inner" style={menuStyle}>
+  <nav aria-label="Project menu">
+    <MenuItems items={menuItems} pages={pages} layout={menu?.style?.layout} />
+  </nav>
+</div>

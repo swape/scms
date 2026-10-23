@@ -1,3 +1,48 @@
+## 2026-10-23
+
+- File: `src/blocks/Footer/index.svelte`
+- Added Up and Down controls to reorder footer elements and save their new order.
+
+- File: `src/blocks/Header/index.svelte`
+- Narrowed the selected element to content blocks before reading Header fields and styles, resolving union type errors.
+
+- File: `src/blocks/Footer/index.svelte`
+- Debounced footer text, URL, and HTML input saves by 500 ms while keeping discrete actions immediate.
+- Cloned footer editor data on load and save so typing does not mutate project settings before the debounce expires.
+- Replaced `structuredClone` with explicit Footer element cloning to support Svelte's proxied state values.
+- Updated Footer fields immutably before scheduling saves, following the Header editor's update-then-debounce flow.
+
+- Files: `src/blocks/Footer/{Footer.astro,index.svelte}`, `src/blocks/Menu/{Menu.astro,index.svelte}`, `src/components/editor/{elements-list.ts,Settings.svelte}`, `src/components/project/index.svelte`, `src/pages/preview/index.astro`, `src/styles/preview.css`, `src/types/types.ts`, `src/store.ts`, `src/utils/footer.ts`, `README.md`
+- Added preview-selectable project-global Footer and Menu editors, moved their controls out of project settings tabs, and kept edits independent of the selected page.
+- Corrected the relocated Footer and Menu editors' shared input imports so their settings load successfully.
+
+- Files: `src/blocks/Footer/{Footer.astro,footerStyles.css}`, `src/blocks/Menu/{Menu,MenuItem,MenuItems}.astro`, `src/blocks/Menu/menuStyles.css`, `src/pages/preview/index.astro`, `README.md`
+- Capitalized the Footer and Menu block directory names and updated their imports and documentation.
+
+- Files: `src/blocks/Footer/{Footer.astro,footerStyles.css}`, `src/blocks/Menu/{Menu,MenuItem,MenuItems}.astro`, `src/blocks/Menu/menuStyles.css`, `src/pages/preview/index.astro`, `README.md`
+- Moved the footer and menu preview components into their own block directories and updated the preview imports and project structure documentation.
+
+- Files: `src/blocks/Image/Preview.astro`, `src/blocks/Image/figureStyles.css`, `src/styles/preview.css`, `README.md`
+- Moved figure and image sizing styles into a stylesheet imported by the Image preview.
+
+- Files: `src/blocks/Link/{Preview.astro,linkStyles.css}`, `src/blocks/SplitBlock/Preview.astro`, `src/styles/preview.css`, `README.md`
+- Moved shared link classes into the Link block stylesheet and imported it where both Link and Split Block previews use them.
+
+- Files: `src/blocks/SplitBlock/Preview.astro`, `src/blocks/SplitBlock/splitBlockStyles.css`, `src/styles/preview.css`, `README.md`
+- Moved Split Block-specific styles into a colocated stylesheet imported by its preview component.
+
+- Files: `src/blocks/Page/Menu.astro`, `src/blocks/Page/menuStyles.css`, `src/styles/preview.css`, `README.md`
+- Moved menu-specific styles, including mobile overrides, into a colocated stylesheet imported by the menu component.
+
+- Files: `src/blocks/Page/Footer.astro`, `src/blocks/Page/footerStyles.css`, `src/styles/preview.css`, `README.md`
+- Moved footer-specific styles into a colocated stylesheet imported by the footer component.
+
+- Files: `src/blocks/shared/helpers.ts`, preview component imports, `src/previewRender/common.ts`, `README.md`
+- Moved URL sanitization into the shared preview helpers and updated consumers and documentation.
+
+- Files: `src/blocks/Page/{Footer,Menu,MenuItem,MenuItems}.astro`, `src/pages/preview/index.astro`, `README.md`
+- Moved the preview menu and footer components into the Page block directory, updated their imports, and documented the new structure.
+
 ## 2026-10-22
 
 - Files: `src/blocks/shared/Styles.svelte`, `src/types/types.ts`, `src/blocks/{Header,Image,Link,SplitBlock,Text}/index.svelte`, `README.md`

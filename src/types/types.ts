@@ -30,6 +30,13 @@ export interface BlockEditorProps {
   updatePageContentWithDebounce: () => void
 }
 
+export interface EditorDefinition {
+  type: string
+  name: string
+  icon: string
+  editor: () => Promise<{ default: Component<BlockEditorProps> }>
+}
+
 export type BlockStyleSection = 'wrapper' | 'colors' | 'padding' | 'margin' | 'custom'
 
 export interface BlockStylesProps extends BlockEditorProps {
@@ -57,11 +64,14 @@ export interface ElementDefinition {
   css?: (item: ContentType, selector: string) => BlockCssRule[]
 }
 
-export interface PageDefinition {
+export interface PageDefinition extends EditorDefinition {
   type: 'page'
-  name: string
-  icon: string
-  editor: () => Promise<{ default: Component<BlockEditorProps> }>
+}
+
+export interface GlobalSettingsElement {
+  id: 'footer' | 'menu'
+  type: 'footer' | 'menu'
+  title: 'Footer' | 'Menu'
 }
 
 export interface PageType {

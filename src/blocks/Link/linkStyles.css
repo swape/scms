@@ -1,0 +1,11 @@
+.link-inline {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.link-button {
+  display: inline-block;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+}

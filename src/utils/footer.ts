@@ -1,4 +1,4 @@
-import { projects } from '../store'
+import { currentProject, projects } from '../store'
 import type { FooterElement, ProjectType, SocialPlatform } from '../types/types'
 
 export function createFooterLink(title: string = 'New link'): FooterElement {
@@ -64,4 +64,5 @@ export function saveFooterToProject(projectId: string | number, footer: ProjectT
       return p
     })
   })
+  currentProject.update((project) => (project?.id === projectId ? { ...project, footer } : project))
 }

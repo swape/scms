@@ -9,6 +9,9 @@ const editorModule = $derived(definition?.editor())
 
 // Updating a single key value for the selected element.
 function update(key: string, value: unknown) {
+  if ($selectedElement?.type === 'footer' || $selectedElement?.type === 'menu') {
+    return
+  }
   selectedElement.update((element) => {
     if (element) {
       // @ts-expect-error update the property dynamically
@@ -28,7 +31,7 @@ function updatePageContentWithDebounce() {
     const page = $selectedPage
     const element = $selectedElement
 
-    if (project && page && element) {
+    if (project && page && element && element.type !== 'footer' && element.type !== 'menu') {
       const currentPageId = page.id
       const currentElementId = element.id
       if (currentPageId && currentElementId) {

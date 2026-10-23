@@ -4,8 +4,6 @@ import type { ProjectType } from '../../types/types.ts'
 import { getProjectFromLocalStorage } from '../../utils/projects.ts'
 import Colors from './Colors.svelte'
 import Edit from './Edit.svelte'
-import ProjectFooter from './ProjectFooter.svelte'
-import ProjectMenu from './ProjectMenu.svelte'
 
 // get p parameter from URL
 const ID = URLSearchParams ? new URLSearchParams(window.location.search).get('p') : null
@@ -37,8 +35,6 @@ const tabs = [
   { name: 'Settings', id: 'settings' },
   { name: 'Colors', id: 'colors' },
   { name: 'Users', id: 'users' },
-  { name: 'Footer', id: 'footer' },
-  { name: 'Menu', id: 'menu' },
 ]
 </script>
 
@@ -72,14 +68,6 @@ const tabs = [
       {#if tab === 'users'}
         Users {ID}
         {currentProject.title}
-      {/if}
-
-      {#if tab === 'footer'}
-        <ProjectFooter id={ID} />
-      {/if}
-
-      {#if tab === 'menu'}
-        <ProjectMenu id={ID} />
       {/if}
     </div>
   {/if}

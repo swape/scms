@@ -1,11 +1,11 @@
 ---
 import '../../styles/preview.css'
 import { ClientRouter } from 'astro:transitions'
+import Footer from '../../blocks/Footer/Footer.astro'
+import Menu from '../../blocks/Menu/Menu.astro'
 import type { PageType, ProjectType } from '../../types/types.ts'
 import { cssHelpers, getColorValue } from './cssHelpers.ts'
 import ElementSelector from './ElementSelector.astro'
-import Footer from './Footer.astro'
-import Menu from './Menu.astro'
 
 const page = Astro.url.searchParams.get('page')
 const project = Astro.url.searchParams.get('project')
@@ -86,35 +86,42 @@ export const prerender = false
         })
 
         window.addEventListener('load', () => {
-          // set active section based on selectedElement
           if (selectedElement) {
-            const activeSection = document.querySelector(`section[data-id="${selectedElement.id}"]`)
-            if (activeSection) {
-              activeSection.classList.add('active')
-            }
+            findSelectableElement(selectedElement)?.classList.add('active')
           }
 
-          const sections = document.querySelectorAll('section')
-          sections.forEach((section) => {
-            section.addEventListener('click', (event) => {
-              section.classList.toggle('active')
+          document.querySelectorAll('section[data-id], [data-items]').forEach((selectable) => {
+            selectable.addEventListener('click', (event) => {
+              const target = event.currentTarget
               event.stopPropagation()
               event.preventDefault()
 
-              const activeElement = selectedPage?.content.find((c) => c.id === section.dataset.id)
-              if (activeElement) {
-                saveStorage('selectedElement', activeElement)
-              }
+              document.querySelectorAll('section[data-id].active, [data-items].active').forEach((active) => active.classList.remove('active'))
+              target.classList.add('active')
 
-              // remove active class from all other sections
-              sections.forEach((s) => {
-                if (s !== section) {
-                  s.classList.remove('active')
+              const itemsType = target.dataset.items
+              if (itemsType === 'footer' || itemsType === 'menu') {
+                saveStorage('selectedElement', {
+                  id: itemsType,
+                  type: itemsType,
+                  title: itemsType === 'footer' ? 'Footer' : 'Menu',
+                })
+              } else {
+                const activeElement = selectedPage?.content.find((item) => item.id === target.dataset.id)
+                if (activeElement) {
+                  saveStorage('selectedElement', activeElement)
                 }
-              })
+              }
             })
           })
         })
+
+        function findSelectableElement(element) {
+          if (element.type === 'footer' || element.type === 'menu') {
+            return Array.from(document.querySelectorAll('[data-items]')).find((item) => item.dataset.items === element.type)
+          }
+          return Array.from(document.querySelectorAll('section[data-id]')).find((item) => item.dataset.id === String(element.id))
+        }
 
         function saveStorage(name, data) {
           const storeDate = Date.now()
@@ -139,11 +146,11 @@ export const prerender = false
           if (event.key === 'selectedElement') {
             const newSelectedElement = getStorage('selectedElement')
             if (newSelectedElement) {
-              const activeSection = document.querySelector(`section[data-id="${newSelectedElement.id}"]`)
-              if (activeSection) {
-                document.querySelectorAll('section').forEach((s) => s.classList.remove('active'))
-                activeSection.classList.add('active')
-                activeSection.scrollIntoView({ behavior: 'smooth', block: 'center' })
+              const activeElement = findSelectableElement(newSelectedElement)
+              if (activeElement) {
+                document.querySelectorAll('section[data-id].active, [data-items].active').forEach((item) => item.classList.remove('active'))
+                activeElement.classList.add('active')
+                activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
                 sessionStorage.setItem('previewScrollY', String(window.scrollY))
               }

@@ -1,0 +1,8 @@
+figure {
+  max-height: 90svh;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}

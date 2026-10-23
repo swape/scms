@@ -1,7 +1,7 @@
 import type { Writable } from 'svelte/store'
 import { writable } from 'svelte/store'
 import { getStorage, saveStorage } from './localstorage'
-import type { ContentType, PageType, ProjectType, UserType } from './types/types'
+import type { ContentType, GlobalSettingsElement, PageType, ProjectType, UserType } from './types/types'
 import { getEmptyProjectStructure } from './utils/projects'
 
 export const userObj = writable<UserType | null>(null)
@@ -9,7 +9,7 @@ export const currentProject: Writable<ProjectType | null> = writable(null)
 export const projects: Writable<ProjectType[] | null> = writable([
   { ...getEmptyProjectStructure(1) }, // remove this when done testing
 ])
-export const selectedElement = writable<PageType | ContentType | null>(null)
+export const selectedElement = writable<PageType | ContentType | GlobalSettingsElement | null>(null)
 export const selectedPage = writable<PageType | null>(null)
 export const isDarkMode = writable<boolean>(typeof localStorage === 'undefined' ? false : (getStorage('darkMode', Infinity) ?? false))
 

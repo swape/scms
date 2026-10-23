@@ -1,36 +1,68 @@
 <script lang="ts">
-import { projects } from '../../store.ts'
-import type { FooterElement, ProjectType, SocialPlatform } from '../../types/types.ts'
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
+import { currentProject } from '../../store.ts'
+import type { BlockEditorProps, FooterElement, ProjectType, SocialPlatform } from '../../types/types.ts'
 import { createFooterHtml, createFooterLink, createFooterSocial, createFooterText, saveFooterToProject } from '../../utils/footer.ts'
-import Input from '../Input.svelte'
-import Select from '../Select.svelte'
 
-let { id } = $props()
+const {}: BlockEditorProps = $props()
 
 let project = $state<ProjectType | null>(null)
 let elements = $state<FooterElement[]>([])
 let footerType = $state<'footer1'>('footer1')
 let loadedId = $state<string | number | null>(null)
+let saveTimeout: ReturnType<typeof setTimeout>
+
+function cloneFooterElements(source: FooterElement[]): FooterElement[] {
+  return source.map((element) => ({
+    ...element,
+    ...(element.link && {
+      link: {
+        ...element.link,
+        ...(element.link.style && { style: { ...element.link.style } }),
+      },
+    }),
+  }))
+}
 
 $effect(() => {
-  if ($projects) {
-    const found = $projects.find((p) => p.id === id)
-    if (found) {
-      project = found
-      if (found.id !== loadedId) {
-        loadedId = found.id
-        elements = found.footer?.elements ?? []
-        footerType = found.footer?.type ?? 'footer1'
-      }
+  const found = $currentProject
+  if (found) {
+    project = found
+    if (found.id !== loadedId) {
+      loadedId = found.id
+      elements = cloneFooterElements(found.footer?.elements ?? [])
+      footerType = found.footer?.type ?? 'footer1'
     }
   }
 })
 
 function save() {
+  clearTimeout(saveTimeout)
   if (!project) {
     return
   }
-  saveFooterToProject(project.id, { type: footerType, elements })
+  saveFooterToProject(project.id, { type: footerType, elements: cloneFooterElements(elements) })
+}
+
+function saveDebounced() {
+  clearTimeout(saveTimeout)
+  saveTimeout = setTimeout(save, 500)
+}
+
+function updateElementField(elementId: string, field: 'title' | 'text' | 'html' | 'linkUrl', value: string) {
+  elements = elements.map((element) => {
+    if (element.id !== elementId) {
+      return element
+    }
+
+    if (field === 'linkUrl') {
+      return element.link ? { ...element, link: { ...element.link, url: value } } : element
+    }
+
+    return { ...element, [field]: value }
+  })
+  saveDebounced()
 }
 
 function addLink() {
@@ -58,6 +90,18 @@ function removeElement(elementId: string) {
   save()
 }
 
+function moveElement(index: number, direction: -1 | 1) {
+  const destination = index + direction
+  if (destination < 0 || destination >= elements.length) {
+    return
+  }
+
+  const reordered = [...elements]
+  ;[reordered[index], reordered[destination]] = [reordered[destination], reordered[index]]
+  elements = reordered
+  save()
+}
+
 const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', 'linkedin', 'github', 'youtube']
 </script>
 
@@ -73,14 +117,31 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   <div class="footer-section">
     <h3 class="footer-section-title">Elements</h3>
 
-    {#each elements as el (el.id)}
+    {#each elements as el, index (el.id)}
       <div class="footer-element">
         <span class="element-badge">{el.type}</span>
+        <div class="footer-element-order">
+          <button type="button" class="btn p-2" aria-label={`Move ${el.title} up`} disabled={index === 0} onclick={() => moveElement(index, -1)}>Up</button>
+          <button type="button" class="btn p-2" aria-label={`Move ${el.title} down`} disabled={index === elements.length - 1} onclick={() => moveElement(index, 1)}>Down</button>
+        </div>
 
         {#if el.type === 'link'}
-          <Input label="Label" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" placeholder="Label" bind:value={el.title} oninput={save} />
+          <Input
+            label="Label"
+            wrapperClass="grid min-w-[120px] flex-1 gap-1"
+            class="w-full"
+            placeholder="Label"
+            value={el.title}
+            oninput={(event) => updateElementField(el.id, 'title', event.currentTarget.value)} />
           {#if el.link}
-            <Input label="URL" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" type="url" placeholder="URL" bind:value={el.link.url} oninput={save} />
+            <Input
+              label="URL"
+              wrapperClass="grid min-w-[120px] flex-1 gap-1"
+              class="w-full"
+              type="url"
+              placeholder="URL"
+              value={el.link.url}
+              oninput={(event) => updateElementField(el.id, 'linkUrl', event.currentTarget.value)} />
             <Select label="Open in" wrapperClass="footer-target-field" class="footer-select" bind:value={el.link.target} onchange={save}>
               <option value="_self">Same tab</option>
               <option value="_blank">New tab</option>
@@ -91,7 +152,14 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
         {#if el.type === 'social'}
           <span class="platform-name">{el.socialPlatform}</span>
           {#if el.link}
-            <Input label="Profile URL" wrapperClass="grid min-w-[120px] flex-1 gap-1" class="w-full" type="url" placeholder="Profile URL" bind:value={el.link.url} oninput={save} />
+            <Input
+              label="Profile URL"
+              wrapperClass="grid min-w-[120px] flex-1 gap-1"
+              class="w-full"
+              type="url"
+              placeholder="Profile URL"
+              value={el.link.url}
+              oninput={(event) => updateElementField(el.id, 'linkUrl', event.currentTarget.value)} />
           {/if}
         {/if}
 
@@ -101,12 +169,12 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
             wrapperClass="grid min-w-[120px] flex-1 gap-1"
             class="w-full"
             placeholder="Text content (e.g. © 2024 My Company)"
-            bind:value={el.text}
-            oninput={save} />
+            value={el.text}
+            oninput={(event) => updateElementField(el.id, 'text', event.currentTarget.value)} />
         {/if}
 
         {#if el.type === 'html'}
-          <textarea class="footer-textarea" placeholder="Custom HTML" bind:value={el.html} oninput={save}></textarea>
+          <textarea class="footer-textarea" placeholder="Custom HTML" value={el.html} oninput={(event) => updateElementField(el.id, 'html', event.currentTarget.value)}></textarea>
         {/if}
 
         <button type="button" class="btn delete p-2" onclick={() => removeElement(el.id)}>Remove</button>
@@ -165,6 +233,11 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   margin-bottom: 0.25rem;
   background-color: rgba(255, 255, 255, 0.04);
   border-radius: 0.375rem;
+}
+
+.footer-element-order {
+  display: flex;
+  gap: 0.25rem;
 }
 
 .footer-textarea {

@@ -4,7 +4,7 @@ import { getCss as linkCss } from '../../blocks/Link/css.ts'
 import { getDefaultLinkSettings } from '../../blocks/shared/defaults.ts'
 import { getCss as splitBlockCss } from '../../blocks/SplitBlock/css.ts'
 import { getCss as textCss } from '../../blocks/Text/css.ts'
-import type { ElementDefinition, PageDefinition } from '../../types/types.ts'
+import type { EditorDefinition, ElementDefinition, PageDefinition } from '../../types/types.ts'
 
 export type { ElementDefinition } from '../../types/types.ts'
 
@@ -61,10 +61,15 @@ export const elementsList: ElementDefinition[] = [
 
 export const pageDefinition: PageDefinition = { type: 'page', name: 'Page', icon: 'draft', editor: () => import('../../blocks/Page/index.svelte') }
 
+export const globalSettingsDefinitions: EditorDefinition[] = [
+  { type: 'footer', name: 'Footer', icon: 'view_agenda', editor: () => import('../../blocks/Footer/index.svelte') },
+  { type: 'menu', name: 'Menu', icon: 'menu', editor: () => import('../../blocks/Menu/index.svelte') },
+]
+
 export function getElementDefinition(type: string): ElementDefinition | undefined {
   return elementsList.find((element) => element.type === type)
 }
 
-export function getEditorDefinition(type: string): ElementDefinition | PageDefinition | undefined {
-  return type === pageDefinition.type ? pageDefinition : getElementDefinition(type)
+export function getEditorDefinition(type: string): EditorDefinition | undefined {
+  return type === pageDefinition.type ? pageDefinition : (getElementDefinition(type) ?? globalSettingsDefinitions.find((definition) => definition.type === type))
 }

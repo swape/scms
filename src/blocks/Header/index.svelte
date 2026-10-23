@@ -2,12 +2,13 @@
 import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
-import type { BlockEditorProps, ContentType } from '../../types/types.ts'
+import type { BlockEditorProps } from '../../types/types.ts'
 import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helper.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
+const selectedBlock = $derived($selectedElement && 'pageId' in $selectedElement ? $selectedElement : null)
 
 function updateContent(event: Event) {
   const input = event.target as HTMLInputElement
@@ -20,11 +21,11 @@ function updateLevel(event: Event) {
 }
 
 function updateBorderRadius(event: Event) {
-  updateStyleNumberShared('borderRadius', event, $selectedElement?.style, update, updatePageContentWithDebounce)
+  updateStyleNumberShared('borderRadius', event, selectedBlock?.style, update, updatePageContentWithDebounce)
 }
 
 function getBorderRadius(): string {
-  const value = $selectedElement?.style?.borderRadius
+  const value = selectedBlock?.style?.borderRadius
   if (value === undefined || value === null || value === '') {
     return '8'
   }
@@ -32,7 +33,7 @@ function getBorderRadius(): string {
 }
 </script>
 
-<Select id="header-level" label="Level:" value={($selectedElement as ContentType)?.headerLevel || 'h2'} onchange={updateLevel}>
+<Select id="header-level" label="Level:" value={selectedBlock?.headerLevel || 'h2'} onchange={updateLevel}>
   <option value="h1">H1</option>
   <option value="h2">H2</option>
   <option value="h3">H3</option>
@@ -41,11 +42,11 @@ function getBorderRadius(): string {
   <option value="h6">H6</option>
 </Select>
 
-<Input id="header-content" label="Text:" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
+<Input id="header-content" label="Text:" value={selectedBlock?.content || ''} oninput={updateContent} />
 
-<TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
+<TextAlign element={selectedBlock} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
 
-{#if $selectedElement?.style?.backgroundColor}
+{#if selectedBlock?.style?.backgroundColor}
   <Input id="header-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
 {/if}
 

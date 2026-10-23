@@ -1,11 +1,11 @@
 <script lang="ts">
-import { projects } from '../../store.ts'
-import type { LinkSettings, MenuElement, PageType, ProjectType } from '../../types/types.ts'
+import Input from '../../components/Input.svelte'
+import Select from '../../components/Select.svelte'
+import { currentProject } from '../../store.ts'
+import type { BlockEditorProps, LinkSettings, MenuElement, PageType, ProjectType } from '../../types/types.ts'
 import { createMenuElement, saveMenuToProject } from '../../utils/menu.ts'
-import Input from '../Input.svelte'
-import Select from '../Select.svelte'
 
-let { id } = $props<{ id: string | null }>()
+const {}: BlockEditorProps = $props()
 
 interface MenuRow {
   element: MenuElement
@@ -20,12 +20,14 @@ let loadedId = $state<string | number | null>(null)
 let draggedPath = $state<number[] | null>(null)
 
 $effect(() => {
-  const found = $projects?.find((item) => String(item.id) === String(id))
-  if (found && found.id !== loadedId) {
+  const found = $currentProject
+  if (found) {
     project = found
-    loadedId = found.id
-    elements = found.menu?.elements ?? []
-    menuStyle = { layout: 'horizontal', ...found.menu?.style }
+    if (found.id !== loadedId) {
+      loadedId = found.id
+      elements = found.menu?.elements ?? []
+      menuStyle = { layout: 'horizontal', ...found.menu?.style }
+    }
   }
 })
 

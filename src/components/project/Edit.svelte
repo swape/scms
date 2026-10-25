@@ -12,6 +12,14 @@ let project: ProjectType = $state({
   url: '',
   colors: [],
   pages: [],
+  menu: {
+    type: 'menu1',
+    elements: [],
+  },
+  footer: {
+    type: 'footer1',
+    elements: [],
+  },
   extra: {
     head: '',
     style: '',

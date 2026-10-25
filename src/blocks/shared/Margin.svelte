@@ -5,8 +5,14 @@ import type { BlockEditorProps } from '../../types/types.ts'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
+function getSelectedStyle(): Record<string, string | number> | undefined {
+  const element = $selectedElement
+
+  return element && 'style' in element ? element.style : undefined
+}
+
 function getStyleNumberValue(key: string): string {
-  const value = $selectedElement?.style?.[key]
+  const value = getSelectedStyle()?.[key]
 
   if (value === '' || value === undefined || value === null) {
     return ''
@@ -17,7 +23,7 @@ function getStyleNumberValue(key: string): string {
 
 function updateMarginValue(key: string, event: Event) {
   const input = event.target as HTMLInputElement
-  const style = $selectedElement?.style || {}
+  const style = getSelectedStyle() || {}
   const nextStyle: Record<string, string | number> = { ...style }
 
   if (!input.value.trim()) {
@@ -32,7 +38,7 @@ function updateMarginValue(key: string, event: Event) {
 </script>
 
 <div class="input-and-label-wrapper">
-  <label>Margin Block (px):</label>
+  <span>Margin Block (px):</span>
   <div class="margin-block-grid">
     <Input
       id="margin-top"

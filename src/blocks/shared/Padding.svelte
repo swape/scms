@@ -8,8 +8,14 @@ const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 type PaddingMode = 'all' | 'individual'
 
+function getSelectedStyle(): Record<string, string | number> | undefined {
+  const element = $selectedElement
+
+  return element && 'style' in element ? element.style : undefined
+}
+
 function getPaddingMode(): PaddingMode {
-  const mode = $selectedElement?.style?.paddingMode
+  const mode = getSelectedStyle()?.paddingMode
 
   if (mode === 'individual') {
     return 'individual'
@@ -19,7 +25,7 @@ function getPaddingMode(): PaddingMode {
 }
 
 function getStyleNumberValue(key: string): string {
-  const value = $selectedElement?.style?.[key]
+  const value = getSelectedStyle()?.[key]
 
   if (value === '' || value === undefined || value === null) {
     return ''
@@ -30,14 +36,14 @@ function getStyleNumberValue(key: string): string {
 
 function updatePaddingMode(event: Event) {
   const select = event.target as HTMLSelectElement
-  const style = $selectedElement?.style || {}
+  const style = getSelectedStyle() || {}
   update('style', { ...style, paddingMode: select.value as PaddingMode })
   updatePageContentWithDebounce()
 }
 
 function updatePaddingValue(key: string, event: Event) {
   const input = event.target as HTMLInputElement
-  const style = $selectedElement?.style || {}
+  const style = getSelectedStyle() || {}
   const nextStyle: Record<string, string | number> = { ...style }
 
   if (!input.value.trim()) {
@@ -60,7 +66,7 @@ function updatePaddingValue(key: string, event: Event) {
   <Input id="padding-all" label="Padding (px):" type="number" min="0" value={getStyleNumberValue('paddingAll')} oninput={(event) => updatePaddingValue('paddingAll', event)} />
 {:else}
   <div class="input-and-label-wrapper">
-    <label>Padding Individual (px):</label>
+    <span>Padding Individual (px):</span>
     <div class="padding-grid">
       <Input
         id="padding-top"

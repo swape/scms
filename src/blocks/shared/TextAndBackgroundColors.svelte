@@ -7,7 +7,8 @@ import { updateStyleColor } from './helpers.ts'
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 function updateColor(key: 'backgroundColor' | 'textColor', event: Event) {
-  updateStyleColor(key, event, $selectedElement?.style, update, updatePageContentWithDebounce)
+  const style = $selectedElement && 'style' in $selectedElement ? $selectedElement.style : undefined
+  updateStyleColor(key, event, style, update, updatePageContentWithDebounce)
 }
 </script>
 

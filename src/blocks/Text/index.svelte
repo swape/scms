@@ -8,6 +8,12 @@ import TextAlign from '../shared/TextAlign.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
+function getSelectedStyle(): Record<string, string | number> | undefined {
+  const element = $selectedElement
+
+  return element && 'style' in element ? element.style : undefined
+}
+
 function updateContent(event: Event) {
   const textarea = event.target as HTMLTextAreaElement
   updateBlockField('content', textarea.value.trim(), update, updatePageContentWithDebounce)
@@ -19,11 +25,11 @@ function updateTitle(event: Event) {
 }
 
 function updateBorderRadius(event: Event) {
-  updateStyleNumberShared('borderRadius', event, $selectedElement?.style, update, updatePageContentWithDebounce)
+  updateStyleNumberShared('borderRadius', event, getSelectedStyle(), update, updatePageContentWithDebounce)
 }
 
 function getBorderRadius(): string {
-  const value = $selectedElement?.style?.borderRadius
+  const value = getSelectedStyle()?.borderRadius
   if (value === undefined || value === null || value === '') {
     return '8'
   }
@@ -42,7 +48,7 @@ function getBorderRadius(): string {
 
 <TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
 
-{#if $selectedElement?.style?.backgroundColor}
+{#if getSelectedStyle()?.backgroundColor}
   <Input id="text-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
 {/if}
 

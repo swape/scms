@@ -6,6 +6,16 @@ import ColorSelect from '../shared/ColorSelect.svelte'
 
 const {}: BlockEditorProps = $props()
 
+function isPage(element: NonNullable<typeof $selectedElement>): element is PageType {
+  return 'parentId' in element
+}
+
+function getPageOrder(): number | '' {
+  const element = $selectedElement
+
+  return element && isPage(element) ? element.order : ''
+}
+
 function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
   selectedElement.update((element) => {
@@ -22,7 +32,7 @@ function updateTitle(event: Event) {
 function updateOrder(event: Event) {
   const input = event.target as HTMLInputElement
   selectedElement.update((element) => {
-    if (element) {
+    if (element && isPage(element)) {
       element.order = Number.parseInt(input.value, 10) || 0
     }
     updatePageWithDebounce()
@@ -39,9 +49,9 @@ function updatePageWithDebounce() {
     currentProject.update((project) => {
       if (project?.pages && $selectedElement) {
         const pageIndex = project.pages.findIndex((page: PageType) => page.id === $selectedElement.id)
-        if (pageIndex !== -1 && $selectedElement.type === 'page') {
-          project.pages[pageIndex] = { ...$selectedElement } as PageType
-          selectedPage.set($selectedElement as PageType)
+        if (pageIndex !== -1 && $selectedElement.type === 'page' && isPage($selectedElement)) {
+          project.pages[pageIndex] = { ...$selectedElement }
+          selectedPage.set($selectedElement)
         }
       }
       return project
@@ -75,7 +85,7 @@ function updateTextColorKey(event: Event) {
 </script>
 
 <Input id="title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
-<Input id="order" label="Order:" value={$selectedElement?.order || ''} oninput={updateOrder} />
+<Input id="order" label="Order:" value={getPageOrder()} oninput={updateOrder} />
 
 <ColorSelect
   element={{ style: { backgroundColorKey: ($selectedElement as PageType)?.colors?.backgroundColorKey || '' } }}

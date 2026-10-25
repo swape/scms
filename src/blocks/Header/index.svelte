@@ -3,7 +3,7 @@ import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
-import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helper.ts'
+import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 

@@ -2,7 +2,7 @@
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
 import ColorSelect from './ColorSelect.svelte'
-import { updateStyleColor } from './helper.ts'
+import { updateStyleColor } from './helpers.ts'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 

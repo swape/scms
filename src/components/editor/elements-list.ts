@@ -1,7 +1,7 @@
 import { getCss as headerCss } from '../../blocks/Header/css.ts'
 import { getCss as imageCss } from '../../blocks/Image/css.ts'
 import { getCss as linkCss } from '../../blocks/Link/css.ts'
-import { getDefaultLinkSettings } from '../../blocks/shared/defaults.ts'
+import { getDefaultLinkSettings } from '../../blocks/shared/helpers.ts'
 import { getCss as splitBlockCss } from '../../blocks/SplitBlock/css.ts'
 import { getCss as textCss } from '../../blocks/Text/css.ts'
 import type { EditorDefinition, ElementDefinition, PageDefinition } from '../../types/types.ts'

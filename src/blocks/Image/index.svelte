@@ -3,7 +3,7 @@ import FileSelector from '../../components/FileSelector/index.svelte'
 import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
-import { updateBlockField } from '../shared/helper.ts'
+import { updateBlockField } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 

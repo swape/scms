@@ -5,25 +5,13 @@ import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
-import { updateSelectedLink } from '../shared/helper.ts'
+import { getDefaultLinkEditorSettings, updateSelectedLink } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
-function getDefaultLinkSettings(): LinkSettings {
-  const firstPageId = $currentProject?.pages?.[0]?.id || ''
-  return {
-    text: '',
-    mode: 'url',
-    url: '',
-    pageId: firstPageId,
-    target: '_self',
-    asButton: false,
-  }
-}
-
 function updateLinkElement(updateFn: (element: ContentType, link: LinkSettings) => void) {
-  updateSelectedLink('link', getDefaultLinkSettings, updateFn, updatePageContentWithDebounce)
+  updateSelectedLink(selectedElement, 'link', () => getDefaultLinkEditorSettings($currentProject?.pages?.[0]?.id || ''), updateFn, updatePageContentWithDebounce)
 }
 
 function updateText(event: Event) {

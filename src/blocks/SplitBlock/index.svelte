@@ -5,27 +5,21 @@ import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
-import { updateBlockField, updateSelectedLink, updateStyleNumber as updateStyleNumberShared } from '../shared/helper.ts'
+import { getDefaultSplitBlockLinkSettings, updateBlockField, updateSelectedLink, updateStyleNumber as updateStyleNumberShared } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
 
 const selectedBlock = $derived($selectedElement as ContentType)
 
-function getDefaultLinkSettings(): LinkSettings {
-  const firstPageId = $currentProject?.pages?.[0]?.id || ''
-  return {
-    text: 'Learn more',
-    mode: 'url',
-    url: '',
-    pageId: firstPageId,
-    target: '_self',
-    asButton: true,
-  }
-}
-
 function updateLinkElement(updateFn: (link: LinkSettings) => void) {
-  updateSelectedLink('splitBlock', getDefaultLinkSettings, (_element, link) => updateFn(link), updatePageContentWithDebounce)
+  updateSelectedLink(
+    selectedElement,
+    'splitBlock',
+    () => getDefaultSplitBlockLinkSettings($currentProject?.pages?.[0]?.id || ''),
+    (_element, link) => updateFn(link),
+    updatePageContentWithDebounce
+  )
 }
 
 function updateTitle(event: Event) {

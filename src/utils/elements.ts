@@ -3,8 +3,6 @@ import { getElementDefinition } from '../components/editor/elements-list.ts'
 import { currentProject, selectedElement, selectedPage } from '../store'
 import type { ContentType } from '../types/types'
 
-export { getDefaultLinkSettings } from '../blocks/shared/defaults.ts'
-
 export function buildNewElement(type: string, name: string, pageId: string, order: number): ContentType {
   const definition = getElementDefinition(type)
   if (!definition) {

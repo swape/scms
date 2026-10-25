@@ -26,6 +26,8 @@ A visual, component-based page builder CMS for building responsive websites — 
 
 ## Project Structure
 
+Application source:
+
 ```
 src/
 ├── blocks/                # Colocated block editors, previews, and scoped CSS
@@ -34,27 +36,36 @@ src/
 │   │   ├── Preview.astro # Server-rendered block markup
 │   │   └── css.ts        # Block-specific scoped CSS rules
 │   ├── Image/
+│   │   ├── index.svelte
 │   │   ├── Preview.astro
+│   │   ├── css.ts
 │   │   └── figureStyles.css
 │   ├── Link/
+│   │   ├── index.svelte
 │   │   ├── Preview.astro
+│   │   ├── css.ts
 │   │   └── linkStyles.css
 │   ├── Page/              # Page settings (not an insertable content block)
 │   │   └── index.svelte
-│   ├── Footer/            # Project footer preview
+│   ├── Footer/            # Project-global footer editor and preview
 │   │   ├── index.svelte   # Project-global footer settings editor
 │   │   ├── Footer.astro
 │   │   └── footerStyles.css
-│   ├── Menu/              # Project menu preview
+│   ├── Menu/              # Project-global menu editor and preview
 │   │   ├── index.svelte   # Project-global menu settings editor
 │   │   ├── Menu.astro
 │   │   ├── MenuItem.astro
 │   │   ├── MenuItems.astro
 │   │   └── menuStyles.css
 │   ├── SplitBlock/
+│   │   ├── index.svelte
 │   │   ├── Preview.astro
+│   │   ├── css.ts
 │   │   └── splitBlockStyles.css
 │   ├── Text/
+│   │   ├── index.svelte
+│   │   ├── Preview.astro
+│   │   └── css.ts
 │   └── shared/
 │       ├── ColorSelect.svelte
 │       ├── Margin.svelte
@@ -91,27 +102,46 @@ src/
 │   └── Login.svelte
 ├── layouts/
 │   └── FrontPageLayout.astro
-├── pages/
-│   ├── 404.astro
-│   ├── index.astro        # Home route
-│   ├── editor.astro       # Page editor route
-│   ├── dashboard.astro    # Project dashboard
-│   ├── project.astro      # Project settings route
+├── pages/                 # Astro routes and preview composition helpers
+│   ├── 404.astro          # /404 and unmatched routes
+│   ├── index.astro        # / — Home
+│   ├── editor.astro       # /editor?p=<id>[&local=true] — Visual page editor
+│   ├── dashboard.astro    # /dashboard — Project listing
+│   ├── project.astro      # /project?p=<id> — Project settings
 │   └── preview/           # Preview route and composition helpers
-│       ├── index.astro
-│       ├── ElementSelector.astro
-│       └── cssHelpers.ts
+│       ├── index.astro    # /preview/ — GET/POST page and project rendering
+│       ├── ElementSelector.astro # Registry-driven content block rendering
+│       └── cssHelpers.ts  # Generated block styles and palette variables
 ├── constants.ts
 ├── store.ts               # Central Svelte store (app state)
 ├── localstorage.ts        # LocalStorage persistence layer
 ├── types/
 │   └── types.ts           # Shared TypeScript interfaces
-├── styles/                # Global & preview CSS
+├── styles/
+│   ├── global.css         # Application styles
+│   └── preview.css        # Preview layout and selection styles
 └── utils/
     ├── elements.ts        # Content-block creation and updates
     ├── footer.ts          # Footer settings helpers
     ├── menu.ts            # Menu settings helpers
     └── projects.ts        # Project defaults and local retrieval
+```
+
+Browser tests and automation:
+
+```text
+.github/
+└── workflows/
+    └── playwright.yml     # CI type checks, browser tests, and HTML report upload
+tests/
+└── e2e/
+    ├── fixtures.ts        # Isolated browser state, project data, and preview helpers
+    ├── pages.spec.ts      # Routes, authentication, project settings, and previews
+    ├── blocks.spec.ts     # Content block insertion, editing, styling, and deletion
+    ├── editor.spec.ts     # Page management, reordering, persistence, and dark mode
+    └── global-blocks.spec.ts # Project-global Menu and Footer editors
+playwright.config.ts       # Chromium project and dedicated Astro test server
+.prettierignore            # Excluded generated test reports and results
 ```
 
 ## Getting Started
@@ -132,6 +162,55 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+## Browser Tests
+
+Playwright runs Chromium end-to-end tests against a dedicated Astro development
+server at `http://127.0.0.1:4322`. The test runner starts and stops this server
+automatically; it can run alongside the normal development server on port 4321.
+
+```bash
+# Install the test browser after npm install (or npm ci)
+npx playwright install chromium
+
+# Run the full browser suite
+npm test
+
+# Run one suite or a matching test
+npm test -- tests/e2e/blocks.spec.ts
+npm test -- --grep "Split Block"
+
+# Open the interactive test runner
+npm run test:ui
+
+# View the latest HTML report
+npm run test:report
+```
+
+The suites in [tests/e2e](./tests/e2e) cover:
+
+- Home, dashboard, project settings, editor, preview, and 404 routes, including
+  demo sign-in/sign-out, protected content, and missing-data states.
+- Text, Header, Image, Link, and Split Block insertion, editing, shared styles,
+  preview rendering, deletion, and reload persistence.
+- Page settings, page/subpage creation and deletion, content drag-and-drop,
+  palette changes, and dark mode.
+- Project-global Menu and Footer editing, item types, ordering, removal, and
+  persistence across pages.
+- GET previews, the editor's POST-based iframe preview (including large payloads),
+  and mobile Split Block layout.
+
+Each test uses an isolated browser context and deterministic local project data.
+External fonts and placeholder images are intercepted, so tests do not depend on
+those services. Uncaught browser errors fail tests. Screenshots and traces are
+retained for failures in `test-results/`; the HTML report is in
+`playwright-report/`. Both directories are ignored by Git.
+
+The [Playwright workflow](./.github/workflows/playwright.yml) installs Chromium
+with its Linux system dependencies, runs type checks and the browser suite on
+pull requests and pushes to `main`, and uploads the HTML report. The editor's
+unimplemented Save/Publish actions are tested as explicit placeholder alerts,
+not as working publishing.
 
 ## Architecture Notes
 
@@ -297,7 +376,13 @@ Import `getCss` as `quoteCss` in the registry and add `css: quoteCss` to the Quo
 
 ### 6. Verify the block
 
-Run `npm run check`, then open a project in the editor and verify:
+Run `npm run check` and `npm test`. The registry-driven tests in
+[blocks.spec.ts](./tests/e2e/blocks.spec.ts) automatically exercise insertion,
+shared styles, persistence, and deletion for registered blocks. Add a dedicated
+test there for the new block's content controls and preview output, and extend
+the project fixture in [fixtures.ts](./tests/e2e/fixtures.ts) as needed.
+
+Then open a project in the editor and verify:
 
 - The block appears in the add-element list with the correct name and icon.
 - Adding multiple instances gives each its own content and settings.

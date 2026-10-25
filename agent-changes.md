@@ -1,5 +1,12 @@
 ## 2026-10-25
 
+- File: `README.md`
+- Updated the project structure with complete block files, page route descriptions, stylesheets, and Playwright test and automation files.
+
+- Files: `package.json`, `package-lock.json`, `playwright.config.ts`, `tests/e2e/{fixtures.ts,pages.spec.ts,blocks.spec.ts,editor.spec.ts,global-blocks.spec.ts}`, `.github/workflows/playwright.yml`, `.gitignore`, `.prettierignore`, `README.md`
+- Set up Playwright Chromium tests, isolated local project fixtures, and CI reporting; covered all page routes and block editors/previews, persistence, page management, global settings, and responsive layout; documented browser test commands.
+- Verified all 37 browser tests, Astro checks, TypeScript checks, and targeted Prettier checks.
+
 - File: `src/blocks/shared/Padding.svelte`
 - Narrowed selected elements before accessing padding styles and replaced an unassociated label.
 

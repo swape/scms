@@ -1,4 +1,59 @@
+## 2026-10-25
+
+- File: `src/blocks/shared/Padding.svelte`
+- Narrowed selected elements before accessing padding styles and replaced an unassociated label.
+
+- File: `src/blocks/shared/Margin.svelte`
+- Narrowed selected elements before accessing margin styles and replaced an unassociated label.
+
+- File: `src/blocks/shared/TextAndBackgroundColors.svelte`
+- Narrowed the selected element before passing its style to the color update helper.
+
+- File: `src/blocks/shared/Wrapper.svelte`
+- Narrowed the selected element before reading or updating its wrapper style.
+
+- File: `src/blocks/Page/index.svelte`
+- Narrowed the selected element to a page before reading or updating its order.
+
+- File: `src/blocks/Text/index.svelte`
+- Narrowed the selected element before reading or updating text block styles.
+
+- File: `src/components/project/Edit.svelte`
+- Initialized the required menu and footer fields in the project editor state.
+
+- File: `src/blocks/shared/helpers.ts`
+- Consolidated the repeated default link-settings shape into one private factory.
+
+- Files: `src/blocks/shared/{defaults.ts,helpers.ts}`, `src/blocks/Link/index.svelte`, `src/components/editor/elements-list.ts`, `README.md`
+- Moved the registry's link defaults into `helpers.ts` and renamed the Link editor-specific fallback to preserve its distinct text default.
+
+- Files: `src/blocks/shared/{helper.ts,helpers.ts}`, shared helper callers, `README.md`
+- Combined the editor helpers into `helpers.ts` and injected the selected-element store to keep the module free of runtime store dependencies.
+
+- Files: `src/blocks/shared/helper.ts`, `src/blocks/shared/helpers.ts`, `src/blocks/{Link,SplitBlock}/index.svelte`, `README.md`
+- Moved Link and Split Block default link factories into the shared helper module while keeping them independent of project-store imports.
+
+- Files: `src/blocks/Link/index.svelte`, `src/blocks/shared/helper.ts`
+- Moved the Link block's default link-settings factory into the shared editor helpers.
+
+- Files: `src/blocks/SplitBlock/index.svelte`, `src/blocks/shared/helper.ts`
+- Moved Split Block's link-settings factory into the shared editor helpers.
+
+- File: `src/utils/elements.ts`
+- Removed the unused re-export of shared link defaults; the editor registry imports them directly from their shared defaults module.
+
 ## 2026-10-23
+
+- File: `src/blocks/SplitBlock/index.svelte`
+- Used the narrowed Split Block selection when reading style properties, resolving selected-element union type errors.
+
+- File: `src/blocks/SplitBlock/splitBlockStyles.css`
+- Added a minimum height to Split Block images so the image area remains visible when the text content is short.
+- Files: `src/blocks/SplitBlock/{index.svelte,css.ts}`, `README.md`
+- Added an editor setting for Split Block image minimum height, defaulting to 300px, and applied saved values in generated preview CSS.
+
+- File: `README.md`
+- Clarified current editor capabilities, browser-only prototype limitations, project structure, and page-reordering roadmap.
 
 - File: `src/blocks/Footer/index.svelte`
 - Added Up and Down controls to reorder footer elements and save their new order.

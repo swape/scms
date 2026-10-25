@@ -64,9 +64,7 @@ src/
 │       ├── TextAndBackgroundColors.svelte
 │       ├── Wrapper.svelte
 │       ├── css.ts        # CSS value validation and formatting
-│       ├── defaults.ts   # Shared link defaults
-│       ├── helper.ts     # Shared editor helpers
-│       └── helpers.ts    # Shared preview helpers
+│       └── helpers.ts    # Shared editor, preview, and link helpers
 ├── components/
 │   ├── Checkbox.svelte     # Shared accessible toggle switch
 │   ├── Input.svelte        # Shared labeled text, URL, number, and color field

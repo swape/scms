@@ -22,6 +22,10 @@ export function getStorage(name: string, validateTime = 60) {
   return storedData.data
 }
 
+export function removeStorage(name: string) {
+  localStorage.removeItem(name)
+}
+
 export function resetAllStorage() {
   return localStorage.clear()
 }

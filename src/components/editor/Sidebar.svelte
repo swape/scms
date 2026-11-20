@@ -65,5 +65,6 @@ function addPage(parentId: string | null = null, order: number = 0) {
 .project-items {
   max-height: 100svh;
   overflow-y: auto;
+  background-color: black;
 }
 </style>

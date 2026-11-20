@@ -17,12 +17,14 @@ A visual, component-based page builder CMS for building responsive websites — 
 - **Visual Editor** — Add, edit, delete, and drag to reorder content blocks, with a live iframe preview.
 - **Content Blocks** — Text, Header, Image, Link, and Split Block, plus separate page-level settings.
 - **Project Management** — Create and edit projects with nested pages, project settings, and project color palettes.
-- **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview.
-- **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview.
+- **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview. Menu settings use labeled Material Symbols arrow and delete buttons for moving and removing items.
+- **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview. Footer settings match the menu's item cards and accessible Material Symbols arrow and delete controls.
 - **Color Theming** — Light/dark palette support per project, with per-page color overrides.
 - **Page Settings** — Edit page titles, numeric order, and palette-based background and text colors.
-- **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius; Split Block also supports a configurable image minimum height.
+- **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius; Split Block also supports a configurable image minimum height. Use **Float settings panel** to open a floating overlay and expand the preview into the freed sidebar space; **Pin settings panel to side** restores the right-hand column without resetting your edits. The pin control stays available while scrolling or when nothing is selected.
+  Drag the floating panel's top bar horizontally or vertically; the pin button and form fields remain independent. Floating mode uses a compact, scrollable height so downward movement is not blocked by a full-height panel. Movement stays within the viewport, including after resizing the window. Focus the header and use arrow keys to move by 10px, or Shift+arrow keys for 50px. Pinning clears the custom position.
 - **Responsive Preview** — Preview generated pages with responsive layouts and project-wide menu and footer.
+- **JSON Backups** — Download the entire current project and restore it from a validated JSON file, including the latest pending edits.
 
 ## Project Structure
 
@@ -121,9 +123,11 @@ src/
 │   ├── global.css         # Application styles
 │   └── preview.css        # Preview layout and selection styles
 └── utils/
+    ├── editor-save.ts     # Debounced editor saves and synchronous export/import flush
     ├── elements.ts        # Content-block creation and updates
     ├── footer.ts          # Footer settings helpers
     ├── menu.ts            # Menu settings helpers
+    ├── project-json.ts    # Project JSON validation before import
     └── projects.ts        # Project defaults and local retrieval
 ```
 
@@ -138,7 +142,7 @@ tests/
     ├── fixtures.ts        # Isolated browser state, project data, and preview helpers
     ├── pages.spec.ts      # Routes, authentication, project settings, and previews
     ├── blocks.spec.ts     # Content block insertion, editing, styling, and deletion
-    ├── editor.spec.ts     # Page management, reordering, persistence, and dark mode
+    ├── editor.spec.ts     # Page management, reordering, persistence, dark mode, and JSON backups
     └── global-blocks.spec.ts # Project-global Menu and Footer editors
 playwright.config.ts       # Chromium project and dedicated Astro test server
 .prettierignore            # Excluded generated test reports and results
@@ -199,6 +203,8 @@ The suites in [tests/e2e](./tests/e2e) cover:
   persistence across pages.
 - GET previews, the editor's POST-based iframe preview (including large payloads),
   and mobile Split Block layout.
+- JSON backup roundtrips with pending edits, same-ID restoration, invalid/cyclic
+  project rejection, and canceled imports followed by retry.
 
 Each test uses an isolated browser context and deterministic local project data.
 External fonts and placeholder images are intercepted, so tests do not depend on
@@ -209,8 +215,7 @@ retained for failures in `test-results/`; the HTML report is in
 The [Playwright workflow](./.github/workflows/playwright.yml) installs Chromium
 with its Linux system dependencies, runs type checks and the browser suite on
 pull requests and pushes to `main`, and uploads the HTML report. The editor's
-unimplemented Save/Publish actions are tested as explicit placeholder alerts,
-not as working publishing.
+existing Save to server/Save and Publish actions remain placeholders; JSON backups work independently.
 
 ## Architecture Notes
 
@@ -218,12 +223,23 @@ not as working publishing.
 - **Persistence:** Data is written to `localStorage` via `src/localstorage.ts`. A backend integration is planned.
 - **Preview:** The editor sends page data and project settings to an Astro-powered preview page inside an iframe. The preview generates scoped CSS via `cssHelpers.ts`.
 - **Editor/Preview Separation:** Block editors are imported lazily. Server-side preview code uses block markup and CSS helpers without executing browser-only editor stores.
+- **Pending Edits:** Block, page, and footer editors keep their existing debounce delays. JSON export/import synchronously flushes queued edits through `src/utils/editor-save.ts` before reading or replacing the draft.
+
+## Save and Load Project JSON
+
+Open **Save & load** in the editor toolbar. The dropdown groups **Save to server** and **Save and Publish** under **Server**, and **Save as JSON** and **Load from JSON** under **JSON files**, with matching Material Symbols icons. Use Tab to move through actions and Escape or an outside click to close the dropdown; choosing an action also closes it.
+
+- **Save as JSON** downloads a formatted `.json` file named after the current project. It includes all pages, blocks, colors, navigation, footer, and project settings—not login state or the editor's dark-mode preference. Image URLs are included; image files are not bundled. The button is disabled when no project is selected.
+- **Load from JSON** opens a file picker, validates the file, and asks before replacing the current local draft. Export a backup first if you need to keep that draft. Invalid files display an error without replacing the draft; canceling leaves it unchanged.
+- Imports reload the editor with the imported project's ID and `local=true`, so the preview, page list, and block/global settings use the restored data even when the ID matches the previous project. Reloading that editor URL resumes the imported draft. Loading also works from the editor's no-project state.
+- The file is the plain project object, matching `ProjectType` in `src/types/types.ts`, without a wrapper. Validation checks nested data, registered block types, duplicate IDs, and missing/cyclic page parents. Empty projects are supported; additional fields are retained.
+- Only import files you trust. Project custom HTML, head markup, and styles are preserved, and scripts can run in the preview. JSON backup does not publish a site or add server storage.
 
 ## Current Limitations
 
 - Project and editor state are browser-local; there is no database or cross-device synchronization.
 - Sign-in is a local demo flow, not production authentication.
-- The editor's **Save** and **Save and Publish** buttons are placeholders; publishing is not implemented.
+- The editor's **Save to server** and **Save and Publish** buttons are placeholders; publishing is not implemented.
 - Content blocks can be drag-reordered, but pages cannot yet be reordered by drag and drop.
 
 ## Adding a New Block

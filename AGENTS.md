@@ -22,6 +22,15 @@ Use [README.md](./README.md) as the source of truth for:
 - Keep components focused and move reusable logic into `.ts` helpers.
 - Use one component per file and keep naming consistent with current folders.
 
+## Typescript and JavaScript
+
+- Prefer explicit types over `any`.
+- Keep utility functions in separate `.ts` files.
+- Use `src/types/types.ts` for shared type definitions.
+- Guard browser-only APIs in SSR contexts.
+- Keep code consistent with existing store and component patterns.
+- Never use onleLiners ( if or for loops ) without braces.
+
 ## CSS And Tailwind
 
 - Keep class names kebab-case.

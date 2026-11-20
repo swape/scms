@@ -1,3 +1,41 @@
+## 2026-11-20
+
+- Files: `src/blocks/Menu/index.svelte`, `README.md`
+- Replaced menu settings Up, Down, and Remove text with Material Symbols arrows and a delete icon, retained accessible labels and disabled states, and added hover tooltips.
+- Verified the rendered icons and move-up, move-down, and removal actions in the running editor; Astro checks reported no errors or warnings.
+
+- Files: `src/blocks/Footer/index.svelte`, `README.md`
+- Matched footer item cards and action controls to the menu, grouped Material Symbols arrows and delete icons in each item header, and retained accessible labels, tooltips, and disabled states.
+- Verified matching computed button styles, saved reorder/removal results, and disabled boundary controls in the running editor; Astro checks reported no errors or warnings.
+
+- Files: `src/components/editor/{EditorTopMenu,Settings}.svelte`, `src/blocks/{Page,Footer}/index.svelte`, `src/blocks/shared/helpers.ts`, `src/utils/{editor-save,project-json}.ts`, `src/localstorage.ts`, `tests/e2e/editor.spec.ts`, `README.md`
+- Added whole-project JSON downloads and validated file imports with replacement/trusted-content confirmation, error messages, selection reset, and local-draft reload.
+- Made delayed block, page, and footer edits synchronously flushable before export/import, captured edits after store updates, and canceled stale save callbacks.
+- Added backup/import data-loss regression coverage, removed placeholder-alert wording tests, and made preview-order assertions tolerate iframe navigation.
+- Verified the toolbar visually, JSON validation and pending-save boundaries, all 38 browser tests, and Astro type checks.
+
+- Files: `src/components/editor/EditorTopMenu.svelte`, `README.md`
+- Renamed the editor's Save button to Save to server without changing its behavior, and verified the label in the running editor.
+
+- Files: `src/components/editor/EditorTopMenu.svelte`, `tests/e2e/editor.spec.ts`, `README.md`
+- Grouped the four save/load actions under a native Save & load dropdown with Server and JSON files sections, matching Material Symbols icons, and action dismissal without changing save/import behavior.
+- Verified desktop and narrow layouts, keyboard access, Escape/outside-click dismissal, all nine editor tests including JSON roundtrips, and clean Astro diagnostics.
+
+- Files: `src/components/editor/Settings.svelte`, `src/styles/global.css`, `tests/e2e/editor.spec.ts`, `README.md`
+- Replaced Toggle width with explicit floating/pinned settings modes, action-specific icons and labels, a persistent panel header, and a bounded floating overlay below the toolbar.
+- Released the sidebar column to the preview while floating and restored it on pinning without remounting the active editor or losing edits.
+- Verified desktop/narrow layouts, keyboard pinning, the visible pin control while scrolling, all ten editor tests, and clean Astro diagnostics.
+
+- Files: `src/components/editor/Settings.svelte`, `tests/e2e/editor.spec.ts`, `README.md`
+- Made the floating settings header draggable with pointer capture across the preview, a grab handle, viewport clamping, resize handling, and keyboard movement; kept pin and form controls independent.
+- Preserved the panel size and edits during dragging, cleared pointer capture on release/cancel, and reset custom coordinates when pinning.
+- Verified mouse dragging, pointer release, viewport bounds, keyboard movement, resize containment, pin restoration, all ten editor tests, and clean Astro diagnostics.
+
+- Files: `src/components/editor/Settings.svelte`, `tests/e2e/editor.spec.ts`, `README.md`
+- Removed bottom-stretched floating height and used a compact responsive height with internal scrolling, leaving room to drag downward as well as upward and sideways.
+- Removed fixed drag-height overrides and recalculated vertical bounds from the rendered size on window resize.
+- Verified downward movement from the initial position, upward/sideways movement, resized-window movement, all ten editor tests, and clean Astro diagnostics.
+
 ## 2026-10-25
 
 - File: `README.md`

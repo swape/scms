@@ -1,4 +1,56 @@
+import { readFile } from 'node:fs/promises'
 import { expect, preview, storedProject, test } from './fixtures'
+
+test('settings drag over an expanded preview and pin back without losing edits', async ({ editorPage: page }) => {
+  await preview(page).locator('section[data-id="text"]').click()
+  const panel = page.getByRole('region', { name: 'Settings', exact: true })
+  const content = panel.getByLabel('Content:', { exact: true })
+  await expect(content).toBeVisible()
+  const pinnedPanel = (await panel.boundingBox())!
+  const pinnedPreview = (await page.locator('iframe[title="Preview"]').boundingBox())!
+
+  await content.fill('Edits survive floating and pinning')
+  await page.getByRole('button', { name: 'Float settings panel', exact: true }).click()
+  await expect(panel.getByText('Floating', { exact: true })).toBeVisible()
+  const expandedPreview = (await page.locator('iframe[title="Preview"]').boundingBox())!
+  const floatingPanel = (await panel.boundingBox())!
+  expect(expandedPreview.width).toBeCloseTo(pinnedPreview.width + pinnedPanel.width, 0)
+  expect(floatingPanel.x).toBeLessThan(expandedPreview.x + expandedPreview.width)
+  expect(floatingPanel.x + floatingPanel.width).toBeLessThan(page.viewportSize()!.width)
+  await expect(content).toHaveValue('Edits survive floating and pinning')
+  await expect(preview(page).locator('section[data-id="text"] p')).toHaveText('Edits survive floating and pinning')
+
+  const handle = (await page.getByRole('button', { name: 'Move settings panel', exact: true }).boundingBox())!
+  const startX = handle.x + handle.width / 2
+  const startY = handle.y + handle.height / 2
+  await page.mouse.move(startX, startY)
+  await page.mouse.down()
+  await page.mouse.move(startX, startY + 100, { steps: 5 })
+  await page.mouse.up()
+  const movedDown = (await panel.boundingBox())!
+  expect(movedDown.y).toBeCloseTo(floatingPanel.y + 100, 0)
+  expect(movedDown.x).toBeCloseTo(floatingPanel.x, 0)
+  expect(movedDown.height).toBeCloseTo(floatingPanel.height, 0)
+
+  await page.mouse.move(startX, startY + 100)
+  await page.mouse.down()
+  await page.mouse.move(startX - 160, startY - 64, { steps: 5 })
+  await page.mouse.up()
+  const movedPanel = (await panel.boundingBox())!
+  expect(movedPanel.x).toBeCloseTo(floatingPanel.x - 160, 0)
+  expect(movedPanel.y).toBeCloseTo(floatingPanel.y - 64, 0)
+  expect(movedPanel.height).toBeCloseTo(floatingPanel.height, 0)
+  await expect(content).toHaveValue('Edits survive floating and pinning')
+
+  await page.getByRole('button', { name: 'Pin settings panel to side', exact: true }).click()
+  await expect(panel.getByText('Pinned', { exact: true })).toBeVisible()
+  const restoredPanel = (await panel.boundingBox())!
+  const restoredPreview = (await page.locator('iframe[title="Preview"]').boundingBox())!
+  expect(restoredPanel.x).toBeCloseTo(pinnedPanel.x, 0)
+  expect(restoredPreview.width).toBeCloseTo(pinnedPreview.width, 0)
+  await expect(content).toHaveValue('Edits survive floating and pinning')
+  expect((await storedProject(page)).pages[0].content[0].content).toBe('Edits survive floating and pinning')
+})
 
 test('Page settings update title, order, palette, and persist on reload', async ({ editorPage: page }) => {
   await page.locator('.page-button').filter({ hasText: 'Home page' }).click()
@@ -60,21 +112,15 @@ test('content drag-and-drop updates preview order and persists normalized order'
   const expected = ['header', 'text', 'image', 'link', 'splitBlock']
   await expect.poll(async () => (await storedProject(page)).pages[0].content.map((block) => block.id)).toEqual(expected)
   expect((await storedProject(page)).pages[0].content.map((block) => block.order)).toEqual([1, 2, 3, 4, 5])
-  await expect
-    .poll(() =>
-      preview(page)
-        .locator('main section')
-        .evaluateAll((sections) => sections.map((section) => section.getAttribute('data-id')))
-    )
-    .toEqual(expected)
+  await expect(preview(page).locator('main section')).toHaveCount(expected.length)
+  for (const [index, id] of expected.entries()) {
+    await expect(preview(page).locator('main section').nth(index)).toHaveAttribute('data-id', id)
+  }
   await page.reload()
-  await expect
-    .poll(() =>
-      preview(page)
-        .locator('main section')
-        .evaluateAll((sections) => sections.map((section) => section.getAttribute('data-id')))
-    )
-    .toEqual(expected)
+  await expect(preview(page).locator('main section')).toHaveCount(expected.length)
+  for (const [index, id] of expected.entries()) {
+    await expect(preview(page).locator('main section').nth(index)).toHaveAttribute('data-id', id)
+  }
 })
 
 test('canceling block deletion preserves content', async ({ editorPage: page }) => {
@@ -97,14 +143,71 @@ test('dark mode updates preview palette and survives reload', async ({ editorPag
   await expect(preview(page).locator('body')).toHaveCSS('background-color', 'rgb(248, 250, 252)')
 })
 
-for (const name of ['save Save', 'save Save and Publish']) {
-  test(`${name} explicitly reports unimplemented publishing`, async ({ editorPage: page }) => {
-    const dialogPromise = page.waitForEvent('dialog').then(async (dialog) => {
-      const message = dialog.message()
-      await dialog.accept()
-      return message
-    })
-    await page.getByRole('button', { name, exact: true }).click()
-    expect(await dialogPromise).toBe('Save functionality not implemented yet')
+test('JSON export includes pending footer edits and restores a same-ID project', async ({ editorPage: page, project }) => {
+  await preview(page).locator('[data-items="footer"]').click()
+  const field = page.getByLabel('Text content', { exact: true })
+  await expect(field).toBeVisible()
+  await page.getByRole('button', { name: 'Save & load', exact: true }).click()
+  const downloadPromise = page.waitForEvent('download')
+  // Dispatch both actions in one task so the footer debounce cannot fire first.
+  await field.evaluate((input) => {
+    ;(input as HTMLInputElement).value = 'Latest footer draft'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    const saveButton = Array.from(document.querySelectorAll('button')).find((button) => button.textContent?.includes('Save as JSON'))
+    saveButton?.click()
   })
-}
+  const download = await downloadPromise
+  await expect(page.getByRole('group', { name: 'Save and load actions', exact: true })).toBeHidden()
+  const file = await download.path()
+  expect(file).not.toBeNull()
+  const exported = JSON.parse(await readFile(file!, 'utf8'))
+  project.footer.elements[0].text = 'Latest footer draft'
+  expect(exported).toEqual(project)
+
+  await field.fill('Changed after backup')
+  await expect.poll(async () => (await storedProject(page)).footer.elements[0].text).toBe('Changed after backup')
+  await page.getByRole('button', { name: 'Save & load', exact: true }).click()
+  const chooserPromise = page.waitForEvent('filechooser')
+  await page.getByRole('button', { name: 'Load from JSON', exact: true }).click()
+  page.once('dialog', (dialog) => dialog.accept())
+  await (await chooserPromise).setFiles(file!)
+  await expect(preview(page).getByRole('contentinfo')).toContainText('Latest footer draft')
+  await expect.poll(() => storedProject(page)).toEqual(project)
+  await preview(page).locator('[data-items="footer"]').click()
+  await expect(page.getByLabel('Text content', { exact: true })).toHaveValue('Latest footer draft')
+  await page.reload()
+  await expect(preview(page).getByRole('contentinfo')).toContainText('Latest footer draft')
+})
+
+test('invalid JSON and cyclic pages leave the current draft unchanged', async ({ editorPage: page, project }) => {
+  const upload = page.getByLabel('Project JSON file', { exact: true })
+  await upload.setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{') })
+  await expect(page.getByRole('alert')).toBeVisible()
+  expect(await storedProject(page)).toEqual(project)
+
+  const cyclic = structuredClone(project)
+  cyclic.pages[0].parentId = cyclic.pages[1].id
+  await upload.setInputFiles({ name: 'cyclic.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(cyclic)) })
+  await expect(page.getByRole('alert')).toBeVisible()
+  expect(await storedProject(page)).toEqual(project)
+  await expect(preview(page).getByRole('heading', { name: 'Welcome', exact: true })).toBeVisible()
+})
+
+test('canceling an import preserves the draft and allows retrying the same file', async ({ editorPage: page, project }) => {
+  const imported = structuredClone(project)
+  imported.title = 'Imported project'
+  imported.pages[0].content[0].content = 'Restored JSON content'
+  const file = { name: 'project.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(imported)) }
+  const upload = page.getByLabel('Project JSON file', { exact: true })
+  const canceled = page.waitForEvent('dialog').then((dialog) => dialog.dismiss())
+  await upload.setInputFiles(file)
+  await canceled
+  await page.getByRole('button', { name: 'Save & load', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Load from JSON', exact: true })).toBeEnabled()
+  expect(await storedProject(page)).toEqual(project)
+
+  page.once('dialog', (dialog) => dialog.accept())
+  await upload.setInputFiles(file)
+  await expect(preview(page).locator('section[data-id="text"] p')).toHaveText('Restored JSON content')
+  await expect.poll(() => storedProject(page)).toEqual(imported)
+})

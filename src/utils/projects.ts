@@ -1,4 +1,4 @@
-import type { ProjectType } from '../types/types.ts'
+import type { ColorType, ProjectColorKind, ProjectType } from '../types/types.ts'
 
 // TODO: add example menu structure for new projects
 export function getEmptyProjectStructure(id: number | string): ProjectType {
@@ -116,6 +116,21 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
   font-style: normal;
 }`,
     },
+  }
+}
+
+export function getNewProjectColor(colors: ColorType[], kind: ProjectColorKind): ColorType {
+  const prefix = kind === 'background' ? 'bg' : 'text'
+  const keys = new Set(colors.map((color) => color.key))
+  let index = 1
+  while (keys.has(`${prefix}_${index}`)) {
+    index += 1
+  }
+  return {
+    key: `${prefix}_${index}`,
+    name: `${kind === 'background' ? 'Background' : 'Text'} ${index}`,
+    c: kind === 'background' ? '#ffffff' : '#1e1e1e',
+    cDark: kind === 'background' ? '#1e1e1e' : '#ffffff',
   }
 }
 

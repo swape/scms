@@ -1,5 +1,5 @@
 <script lang="ts">
-import { projects } from '../../store'
+import { projects, currentProject as savedProject } from '../../store'
 import type { ProjectType } from '../../types/types.ts'
 import { getProjectFromLocalStorage } from '../../utils/projects.ts'
 import Colors from './Colors.svelte'
@@ -10,21 +10,22 @@ const ID = URLSearchParams ? new URLSearchParams(window.location.search).get('p'
 
 let currentProject = $state<ProjectType | null>(null)
 let tab = $state('')
-let currentProjectIsInLocalStorage = $state(false)
 
 const localProject = getProjectFromLocalStorage()
+const currentProjectIsInLocalStorage = $derived(String($savedProject?.id) === ID || (localProject !== null && String(localProject.id) === ID))
+
+if (localProject && String(localProject.id) === ID) {
+  projects.update((items) => {
+    const catalog = items ?? []
+    return catalog.some((item) => String(item.id) === ID) ? catalog.map((item) => (String(item.id) === ID ? localProject : item)) : [...catalog, localProject]
+  })
+}
 
 $effect(() => {
   if ($projects && $projects.length > 0) {
-    currentProject = $projects.find((p) => p.id === ID) || null
+    currentProject = $projects.find((p) => String(p.id) === ID) || null
   }
 })
-
-if (ID === localProject?.id) {
-  currentProjectIsInLocalStorage = true
-} else {
-  currentProjectIsInLocalStorage = false
-}
 
 function changeTab(selectedTab: string) {
   tab = selectedTab
@@ -45,7 +46,7 @@ const tabs = [
         <button class={['btn p-3', tab === id ? 'active' : '']} type="button" onclick={() => changeTab(id)}>{name}</button>
       {/each}
     </div>
-    <div>
+    <div class="pb-10">
       {#if tab === ''}
         Summery {ID}
         {currentProject.title}

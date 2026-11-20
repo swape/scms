@@ -1,136 +1,95 @@
 <script lang="ts">
-import { projects } from '../../store.ts'
-import type { ColorType, ProjectType } from '../../types/types.ts'
-import Input from '../Input.svelte'
+import { tick } from 'svelte'
+import { currentProject, projects } from '../../store.ts'
+import type { ColorType, ProjectColorKind } from '../../types/types.ts'
+import { getNewProjectColor } from '../../utils/projects.ts'
+import Button from '../Button.svelte'
+import PanelSection from '../PanelSection.svelte'
+import ColorPair from './ColorPair.svelte'
 
-let { id } = $props()
+const { id }: { id: string | null } = $props()
+const project = $derived($projects?.find((item) => String(item.id) === id))
+const colors = $derived(project?.colors ?? [])
+const groups = $derived([
+  { title: 'Background colors', kind: 'background' as const, colors: colors.filter((color) => color.key.startsWith('bg_')) },
+  { title: 'Text colors', kind: 'text' as const, colors: colors.filter((color) => color.key.startsWith('text_')) },
+])
+const otherColors = $derived(colors.filter((color) => !color.key.startsWith('bg_') && !color.key.startsWith('text_')))
+let palette: HTMLDivElement | undefined = $state()
 
-let project = $state<ProjectType | null>(null)
-
-let colors = $state<ColorType[]>([])
-
-$effect(() => {
-  if ($projects) {
-    const found = $projects.find((item) => item.id === id)
-    if (found) {
-      project = found
-      colors = found.colors || []
-    }
-  }
-})
-
-function changeColor(key: string, value: string, isDark: boolean = false) {
-  const newColors = colors.map((color) => {
-    if (color.key === key) {
-      if (isDark) {
-        return { ...color, cDark: value }
-      } else {
-        return { ...color, c: value }
-      }
-    }
-    return color
-  })
-  colors = newColors
-
-  if (project) {
-    project.colors = colors
-    save()
-  }
-}
-
-function save() {
-  if (!$projects || !project) {
+function saveColors(nextColors: ColorType[]) {
+  if (!project) {
     return
   }
-  const updatedProjects = $projects.map((p) => (p.id === project?.id ? project : p))
-  projects.set(updatedProjects)
+  const updated = { ...project, colors: nextColors }
+  projects.update((items) => items?.map((item) => (item.id === updated.id ? updated : item)) ?? [])
+  currentProject.set(updated)
+}
+
+function changeColor(key: string, field: 'name' | 'c' | 'cDark', value: string) {
+  saveColors(colors.map((color) => (color.key === key ? { ...color, [field]: value } : color)))
+}
+
+async function addColor(kind: ProjectColorKind) {
+  const color = getNewProjectColor(colors, kind)
+  saveColors([...colors, color])
+  await tick()
+  const label = palette?.querySelector<HTMLInputElement>(`[data-color-key="${color.key}"] input`)
+  label?.focus()
+  label?.select()
 }
 </script>
 
-{#if project?.id}
-  <h2 class="mb-5 text-2xl">Colors for {project.title}</h2>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-    {#each colors as color}
-      <div class="flex flex-col">
-        <div class="color-row">
-          <Input
-            label={color.name}
-            wrapperClass="color-picker"
-            type="color"
-            bind:value={color.c}
-            oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement).value)} />
-          <Input
-            label={`${color.name} value`}
-            wrapperClass="color-value"
-            bind:value={color.c}
-            oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement).value)} />
+{#if project}
+  <div class="palette" bind:this={palette}>
+    <header class="palette-heading">
+      <h2>Colors for {project.title}</h2>
+      <p>Give each color a useful label and choose its light and dark values. Labels appear in the editor's color selectors.</p>
+    </header>
+    {#each groups as group (group.kind)}
+      <PanelSection title={group.title}>
+        {#snippet actions()}
+          <Button icon="add" aria-label={`Add ${group.kind} color pair`} onclick={() => addColor(group.kind)}>Add color pair</Button>
+        {/snippet}
+        <div class="palette-grid">
+          {#each group.colors as color (color.key)}
+            <ColorPair {color} onchange={changeColor} />
+          {:else}
+            <p class="palette-empty">No {group.kind} colors yet. Add a light/dark pair to get started.</p>
+          {/each}
         </div>
-        <div class="color-row">
-          <Input
-            label={`Dark ${color.name}`}
-            wrapperClass="color-picker"
-            type="color"
-            bind:value={color.cDark}
-            oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement).value, true)} />
-          <Input
-            label={`Dark ${color.name} value`}
-            wrapperClass="color-value"
-            bind:value={color.cDark}
-            oninput={({ target }) => changeColor(color.key, (target as HTMLInputElement).value, true)} />
-        </div>
-      </div>
+      </PanelSection>
     {/each}
+    {#if otherColors.length > 0}
+      <PanelSection title="Other colors">
+        <div class="palette-grid">
+          {#each otherColors as color (color.key)}
+            <ColorPair {color} onchange={changeColor} />
+          {/each}
+        </div>
+      </PanelSection>
+    {/if}
   </div>
 {/if}
 
 <style>
-.color-row {
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: 0.5rem;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 5px 12px;
-  margin-top: 2px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(255, 255, 100, 0.1);
-  }
-}
-
-.color-row :global(.color-picker) {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 12px;
-}
-
-.color-row :global(.color-picker label) {
-  flex: 1;
+.palette-heading h2 {
+  font-size: 18px;
   font-weight: 600;
 }
-
-.color-row :global(.color-value) {
-  min-width: 0;
-  flex: 1;
+.palette-heading p {
+  max-width: 64ch;
+  margin-top: 6px;
+  color: var(--ui-muted);
+  font-size: 12px;
 }
-
-.color-row :global(.color-value label) {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: 16px;
 }
-
-.color-row :global(input) {
-  min-width: 9ch;
-  min-height: 4ch;
-  max-width: 100%;
+.palette-empty {
+  color: var(--ui-muted);
+  padding: 12px 0;
 }
 </style>

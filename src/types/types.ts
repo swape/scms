@@ -136,6 +136,14 @@ export interface ColorType {
   key: string
   name: string
 }
+
+export type ProjectColorKind = 'background' | 'text'
+
+export interface ColorPairProps {
+  color: ColorType
+  onchange: (key: string, field: 'name' | 'c' | 'cDark', value: string) => void
+}
+
 export interface ProjectType {
   id: string | number
   title: string

@@ -1,5 +1,10 @@
 ## 2026-11-20
 
+- Files: `src/components/project/{Colors,ColorPair,index}.svelte`, `src/types/types.ts`, `src/utils/projects.ts`, `tests/e2e/pages.spec.ts`, `README.md`
+- Grouped project palette entries into Background and Text sections with reusable light/dark cards, editable labels, and per-group Add color pair actions; retained stable keys and preserved imported custom-key colors.
+- Allocated unused color keys, focused new labels, saved palette changes to the current draft, and restored matching drafts on the project page without losing page content.
+- Verified desktop/mobile layout, label/value editing, additions to empty/populated palettes, imported-key collisions, reload and JSON persistence, selector labels, and light/dark preview rendering. All 42 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
 - Files: `src/blocks/Menu/MenuItem.astro`, `tests/e2e/global-blocks.spec.ts`, `README.md`
 - Made menu links render the edited item title instead of stale link-settings text, fixing top-level and nested label updates as well as dropdown-to-link conversions.
 - Verified updated labels and unchanged destinations in the live preview; added regression coverage for nested links, reload persistence, and type conversion. All five global-block browser tests and Astro checks passed.

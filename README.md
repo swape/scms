@@ -19,7 +19,7 @@ A visual, component-based page builder CMS for building responsive websites — 
 - **Project Management** — Create and edit projects with nested pages, project settings, and project color palettes.
 - **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview. Menu settings use labeled Material Symbols arrow and delete buttons for moving and removing items.
 - **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview. Footer settings match the menu's item cards and accessible Material Symbols arrow and delete controls.
-- **Color Theming** — Light/dark palette support per project, with per-page color overrides.
+- **Color Theming** — Project palettes grouped into Background and Text colors, with editable labels, paired light/dark values, and support for adding more pairs; per-page color overrides are supported.
 - **Page Settings** — Edit page titles, numeric order, and palette-based background and text colors.
 - **Settings Panels** — Block-owned content and style controls, including padding, margin, colors, and border radius; Split Block also supports a configurable image minimum height. Use **Float settings panel** to open a floating overlay and expand the preview into the freed sidebar space; **Pin settings panel to side** restores the right-hand column without resetting your edits. The pin control stays available while scrolling or when nothing is selected.
   Drag the floating panel's top bar horizontally or vertically; the pin button and form fields remain independent. Floating mode uses a compact, scrollable height so downward movement is not blocked by a full-height panel. Movement stays within the viewport, including after resizing the window. Focus the header and use arrow keys to move by 10px, or Shift+arrow keys for 50px. Pinning clears the custom position.
@@ -101,6 +101,7 @@ src/
 │   │   └── elements-list.ts # Registry: editors, previews, defaults, CSS
 │   ├── project/           # Project settings
 │   │   ├── Colors.svelte
+│   │   ├── ColorPair.svelte # Reusable labeled light/dark palette card
 │   │   ├── Edit.svelte
 │   │   └── index.svelte
 │   ├── projects/          # Project listing
@@ -245,6 +246,14 @@ All visible sidebar, inspector, block-settings, file-picker, and toolbar buttons
 - `PanelSection`: a `title`, optional `actions` snippet, and child content for compact property groups with dividers.
 
 Floating settings retain header dragging in both axes, keyboard movement, viewport containment, and a shorter scrollable body. Switching between floating and pinned modes preserves edits.
+
+## Project Color Palette
+
+Open a project's **Colors** tab to edit **Background colors** and **Text colors**. Each card groups an editable **Label** with light-mode and dark-mode swatches and value fields. Labels appear in editor palette selectors; changing a label never changes the stable color key used by existing blocks, pages, and menus.
+
+Use **Add color pair** in either group to create another light/dark pair. New entries receive unused `bg_` or `text_` keys and focus their label for naming. Both groups work with an empty palette; imported entries with other key prefixes remain editable under **Other colors**. Values and labels are included in project JSON backups.
+
+Palette edits save to the current local draft, and the project page restores a matching draft on reload without discarding its page content. Open **Editor (continue last unsaved)** from the project summary to use that saved palette in the editor; the separate fresh-editor route retains its existing default-project behavior.
 
 ## Menu Appearance
 

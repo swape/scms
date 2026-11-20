@@ -87,7 +87,27 @@ function validateLink(value: unknown, path: string): void {
   string(link.pageId, `${path}.pageId`)
   enumeration(link.target, `${path}.target`, linkTargets)
   boolean(link.asButton, `${path}.asButton`)
-  if (link.style !== undefined) validateStyle(link.style, `${path}.style`)
+  if (link.style !== undefined) {
+    validateStyle(link.style, `${path}.style`)
+  }
+}
+
+function validateFaqItems(value: unknown, path: string): void {
+  const ids = new Set<string>()
+  array(value, path).forEach((entry, index) => {
+    const itemPath = `${path}[${index}]`
+    const item = object(entry, itemPath)
+    const id = string(item.id, `${itemPath}.id`)
+    if (ids.has(id)) {
+      invalid(`${itemPath}.id`, 'duplicates another FAQ item ID')
+    }
+    ids.add(id)
+    string(item.question, `${itemPath}.question`)
+    string(item.answer, `${itemPath}.answer`)
+    if (item.openOnStart !== undefined) {
+      boolean(item.openOnStart, `${itemPath}.openOnStart`)
+    }
+  })
 }
 
 function validateContent(value: unknown, path: string): void {
@@ -96,21 +116,41 @@ function validateContent(value: unknown, path: string): void {
     const itemPath = `${path}[${index}]`
     const item = object(entry, itemPath)
     const id = identifier(item.id, `${itemPath}.id`)
-    if (ids.has(id)) invalid(`${itemPath}.id`, 'duplicates another block ID on this page')
+    if (ids.has(id)) {
+      invalid(`${itemPath}.id`, 'duplicates another block ID on this page')
+    }
     ids.add(id)
     number(item.order, `${itemPath}.order`)
     nullableString(item.parent, `${itemPath}.parent`)
     string(item.pageId, `${itemPath}.pageId`)
     string(item.title, `${itemPath}.title`)
     const type = string(item.type, `${itemPath}.type`)
-    if (!blockTypes.has(type)) invalid(`${itemPath}.type`, `unregistered content block type ${JSON.stringify(type)}`)
-    for (const field of contentStringFields) {
-      if (item[field] !== undefined) string(item[field], `${itemPath}.${field}`)
+    if (!blockTypes.has(type)) {
+      invalid(`${itemPath}.type`, `unregistered content block type ${JSON.stringify(type)}`)
     }
-    if (item.style !== undefined) validateStyle(item.style, `${itemPath}.style`)
-    if (item.link !== undefined) validateLink(item.link, `${itemPath}.link`)
-    if (item.headerLevel !== undefined) enumeration(item.headerLevel, `${itemPath}.headerLevel`, headerLevels)
-    if (item.flipped !== undefined) boolean(item.flipped, `${itemPath}.flipped`)
+    for (const field of contentStringFields) {
+      if (item[field] !== undefined) {
+        string(item[field], `${itemPath}.${field}`)
+      }
+    }
+    if (item.style !== undefined) {
+      validateStyle(item.style, `${itemPath}.style`)
+    }
+    if (item.link !== undefined) {
+      validateLink(item.link, `${itemPath}.link`)
+    }
+    if (item.headerLevel !== undefined) {
+      enumeration(item.headerLevel, `${itemPath}.headerLevel`, headerLevels)
+    }
+    if (item.flipped !== undefined) {
+      boolean(item.flipped, `${itemPath}.flipped`)
+    }
+    if (item.faqItems !== undefined) {
+      validateFaqItems(item.faqItems, `${itemPath}.faqItems`)
+    }
+    if (item.faqCloseOthers !== undefined) {
+      boolean(item.faqCloseOthers, `${itemPath}.faqCloseOthers`)
+    }
   })
 }
 
@@ -120,15 +160,23 @@ function validatePages(value: unknown): void {
     const path = `project.pages[${index}]`
     const page = object(entry, path)
     const id = string(page.id, `${path}.id`)
-    if (!id) invalid(`${path}.id`, 'must not be empty')
-    if (pages.has(id)) invalid(`${path}.id`, 'duplicates another page ID')
+    if (!id) {
+      invalid(`${path}.id`, 'must not be empty')
+    }
+    if (pages.has(id)) {
+      invalid(`${path}.id`, 'duplicates another page ID')
+    }
     const parentId = nullableString(page.parentId, `${path}.parentId`)
     pages.set(id, { parentId, path })
     string(page.title, `${path}.title`)
     number(page.order, `${path}.order`)
-    if (page.type !== 'page') invalid(`${path}.type`, 'must be page')
+    if (page.type !== 'page') {
+      invalid(`${path}.type`, 'must be page')
+    }
     validateContent(page.content, `${path}.content`)
-    if (page.style !== undefined) validateStyle(page.style, `${path}.style`)
+    if (page.style !== undefined) {
+      validateStyle(page.style, `${path}.style`)
+    }
     if (page.colors !== undefined) {
       const colors = object(page.colors, `${path}.colors`)
       string(colors.textColorKey, `${path}.colors.textColorKey`)
@@ -148,23 +196,35 @@ function validatePages(value: unknown): void {
   for (const id of pages.keys()) {
     let current: string | null = id
     while (current !== null && !complete.has(current)) {
-      if (chain.has(current)) invalid(`${pages.get(current)!.path}.parentId`, 'forms a cycle in the page hierarchy')
+      if (chain.has(current)) {
+        invalid(`${pages.get(current)!.path}.parentId`, 'forms a cycle in the page hierarchy')
+      }
       chain.add(current)
       current = pages.get(current)!.parentId
     }
-    for (const visited of chain) complete.add(visited)
+    for (const visited of chain) {
+      complete.add(visited)
+    }
     chain.clear()
   }
 }
 
 function validateMenu(value: unknown): void {
   const menu = object(value, 'project.menu')
-  if (menu.type !== 'menu1') invalid('project.menu.type', 'must be menu1')
+  if (menu.type !== 'menu1') {
+    invalid('project.menu.type', 'must be menu1')
+  }
   if (menu.style !== undefined) {
     const style = object(menu.style, 'project.menu.style')
-    if (style.layout !== undefined) enumeration(style.layout, 'project.menu.style.layout', menuLayouts)
-    if (style.backgroundColor !== undefined) string(style.backgroundColor, 'project.menu.style.backgroundColor')
-    if (style.textColor !== undefined) string(style.textColor, 'project.menu.style.textColor')
+    if (style.layout !== undefined) {
+      enumeration(style.layout, 'project.menu.style.layout', menuLayouts)
+    }
+    if (style.backgroundColor !== undefined) {
+      string(style.backgroundColor, 'project.menu.style.backgroundColor')
+    }
+    if (style.textColor !== undefined) {
+      string(style.textColor, 'project.menu.style.textColor')
+    }
   }
 
   const keys = new Set<string>()
@@ -175,18 +235,28 @@ function validateMenu(value: unknown): void {
       const path = `${group.path}[${index}]`
       const item = object(entry, path)
       const fallbackKey = `${group.keyPrefix}${index}`
-      if (item.id !== undefined) string(item.id, `${path}.id`)
+      if (item.id !== undefined) {
+        string(item.id, `${path}.id`)
+      }
       if (group.rendered) {
         // The menu editor flattens dropdown descendants into one keyed list.
         const key = item.id === undefined ? fallbackKey : string(item.id, `${path}.id`)
-        if (keys.has(key)) invalid(`${path}.id`, `duplicates menu render key ${JSON.stringify(key)} (including IDs derived from an item's position)`)
+        if (keys.has(key)) {
+          invalid(`${path}.id`, `duplicates menu render key ${JSON.stringify(key)} (including IDs derived from an item's position)`)
+        }
         keys.add(key)
       }
       enumeration(item.type, `${path}.type`, menuTypes)
       string(item.title, `${path}.title`)
-      if (item.link !== undefined) validateLink(item.link, `${path}.link`)
-      if (item.autoParentPageId !== undefined) string(item.autoParentPageId, `${path}.autoParentPageId`)
-      if (item.autoMaxItems !== undefined) number(item.autoMaxItems, `${path}.autoMaxItems`)
+      if (item.link !== undefined) {
+        validateLink(item.link, `${path}.link`)
+      }
+      if (item.autoParentPageId !== undefined) {
+        string(item.autoParentPageId, `${path}.autoParentPageId`)
+      }
+      if (item.autoMaxItems !== undefined) {
+        number(item.autoMaxItems, `${path}.autoMaxItems`)
+      }
       if (item.children !== undefined) {
         pending.push({
           items: array(item.children, `${path}.children`),
@@ -201,21 +271,35 @@ function validateMenu(value: unknown): void {
 
 function validateFooter(value: unknown): void {
   const footer = object(value, 'project.footer')
-  if (footer.type !== 'footer1') invalid('project.footer.type', 'must be footer1')
-  if (footer.style !== undefined) validateStyle(footer.style, 'project.footer.style')
+  if (footer.type !== 'footer1') {
+    invalid('project.footer.type', 'must be footer1')
+  }
+  if (footer.style !== undefined) {
+    validateStyle(footer.style, 'project.footer.style')
+  }
   const ids = new Set<string>()
   array(footer.elements, 'project.footer.elements').forEach((entry, index) => {
     const path = `project.footer.elements[${index}]`
     const item = object(entry, path)
     const id = string(item.id, `${path}.id`)
-    if (ids.has(id)) invalid(`${path}.id`, 'duplicates another footer element ID')
+    if (ids.has(id)) {
+      invalid(`${path}.id`, 'duplicates another footer element ID')
+    }
     ids.add(id)
     enumeration(item.type, `${path}.type`, footerTypes)
     string(item.title, `${path}.title`)
-    if (item.link !== undefined) validateLink(item.link, `${path}.link`)
-    if (item.socialPlatform !== undefined) enumeration(item.socialPlatform, `${path}.socialPlatform`, socialPlatforms)
-    if (item.html !== undefined) string(item.html, `${path}.html`)
-    if (item.text !== undefined) string(item.text, `${path}.text`)
+    if (item.link !== undefined) {
+      validateLink(item.link, `${path}.link`)
+    }
+    if (item.socialPlatform !== undefined) {
+      enumeration(item.socialPlatform, `${path}.socialPlatform`, socialPlatforms)
+    }
+    if (item.html !== undefined) {
+      string(item.html, `${path}.html`)
+    }
+    if (item.text !== undefined) {
+      string(item.text, `${path}.text`)
+    }
   })
 }
 
@@ -228,7 +312,9 @@ export function parseProjectJson(text: string): ProjectType {
   }
 
   const project = object(parsed, 'project')
-  if (identifier(project.id, 'project.id') === '') invalid('project.id', 'must not be empty')
+  if (identifier(project.id, 'project.id') === '') {
+    invalid('project.id', 'must not be empty')
+  }
   string(project.title, 'project.title')
   string(project.description, 'project.description')
   string(project.url, 'project.url')

@@ -138,6 +138,13 @@ export interface MenuElement {
   autoMaxItems?: number // if type is auto, this is the max number of items to list
 }
 
+export interface FaqItem {
+  id: string
+  question: string
+  answer: string
+  openOnStart?: boolean
+}
+
 export interface ContentType {
   id: string | number
   order: number
@@ -161,6 +168,9 @@ export interface ContentType {
   imageId?: string
   // split block element
   flipped?: boolean
+  // FAQ block
+  faqItems?: FaqItem[]
+  faqCloseOthers?: boolean
 }
 
 export type FooterElementType = 'link' | 'social' | 'html' | 'text'

@@ -41,6 +41,7 @@ export const prerender = false
     <meta name="theme-color" content="#FF0000" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Preview</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     {parsedSettings?.extra?.style && <style is:global set:html={parsedSettings?.extra?.style} />}
     <style is:global set:html={cssVars}></style>
     <Fragment set:html={parsedSettings?.extra?.head ?? ''} />
@@ -94,7 +95,10 @@ export const prerender = false
             selectable.addEventListener('click', (event) => {
               const target = event.currentTarget
               event.stopPropagation()
-              event.preventDefault()
+              // Keep native disclosure controls usable while still selecting their block.
+              if (!(event.target instanceof Element && event.target.closest('details > summary'))) {
+                event.preventDefault()
+              }
 
               document.querySelectorAll('section[data-id].active, [data-items].active').forEach((active) => active.classList.remove('active'))
               target.classList.add('active')

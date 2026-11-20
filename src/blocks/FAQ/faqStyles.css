@@ -1,0 +1,67 @@
+.faq-block {
+  min-height: 2rem;
+  overflow-wrap: anywhere;
+}
+
+.faq-block .faq-item {
+  border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: 0.4rem;
+  margin-block: 0.65rem;
+}
+
+.faq-block summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  list-style: none;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+.faq-block summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-block summary:hover {
+  background: color-mix(in srgb, currentColor 5%, transparent);
+}
+
+.faq-block .faq-question {
+  flex: 1;
+  min-width: 0;
+}
+
+.faq-block .faq-icon {
+  flex: 0 0 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  overflow: hidden;
+  transition: transform 180ms ease;
+}
+
+.faq-block .faq-item[open] > summary .faq-icon {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-block .faq-icon {
+    transition: none;
+  }
+}
+
+.faq-block summary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 0.4rem;
+}
+
+.faq-block .faq-answer {
+  padding: 0 1rem 1rem;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}

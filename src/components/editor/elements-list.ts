@@ -1,3 +1,4 @@
+import { getCss as faqCss } from '../../blocks/FAQ/css.ts'
 import { getCss as headerCss } from '../../blocks/Header/css.ts'
 import { getCss as imageCss } from '../../blocks/Image/css.ts'
 import { getCss as linkCss } from '../../blocks/Link/css.ts'
@@ -56,6 +57,15 @@ export const elementsList: ElementDefinition[] = [
       flipped: false,
     }),
     css: splitBlockCss,
+  },
+  {
+    type: 'faq',
+    name: 'FAQ',
+    icon: 'quiz',
+    editor: () => import('../../blocks/FAQ/index.svelte'),
+    preview: '/src/blocks/FAQ/Preview.astro',
+    defaults: () => ({ faqItems: [{ id: 'question-1', question: 'What would you like to know?', answer: 'Add your answer here.' }] }),
+    css: faqCss,
   },
 ]
 

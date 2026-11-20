@@ -1,0 +1,29 @@
+---
+import './faqStyles.css'
+import type { BlockPreviewProps } from '../../types/types.ts'
+
+interface Props extends BlockPreviewProps {}
+
+const { data } = Astro.props
+const title = data?.title || ''
+const items = data?.faqItems ?? []
+const containerClass = data?.style?.wrapper || ''
+const closeOthers = Boolean(data?.faqCloseOthers)
+const groupName = closeOthers ? `faq-${String(data?.id ?? '')}` : undefined
+const firstOpenIndex = closeOthers ? items.findIndex((item) => item.openOnStart) : -1
+---
+
+<section data-id={String(data?.id ?? '')} class={`faq-block ${containerClass} scms_${String(data?.id ?? '')}`.trim()}>
+  {title && <h2>{title}</h2>}
+  {items.map((item, index) => (
+    <details class="faq-item" name={groupName} open={Boolean(item.openOnStart) && (!closeOthers || index === firstOpenIndex)}>
+      <summary>
+        <span class="faq-question">{item.question}</span>
+        <span class="material-symbols-outlined faq-icon" aria-hidden="true">
+          expand_more
+        </span>
+      </summary>
+      <div class="faq-answer">{item.answer}</div>
+    </details>
+  ))}
+</section>

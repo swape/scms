@@ -77,9 +77,9 @@ export function updateSelectedLink(
     }
 
     updateFn(block, link)
-    debounce()
     return { ...block, link }
   })
+  debounce()
 }
 
 export function sanitizeHref(url: string): string {

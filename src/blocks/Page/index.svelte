@@ -1,7 +1,9 @@
 <script lang="ts">
+import { onDestroy } from 'svelte'
 import Input from '../../components/Input.svelte'
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { BlockEditorProps, PageType } from '../../types/types.ts'
+import { createPendingSave } from '../../utils/editor-save.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
 
 const {}: BlockEditorProps = $props()
@@ -16,71 +18,80 @@ function getPageOrder(): number | '' {
   return element && isPage(element) ? element.order : ''
 }
 
+const pendingSave = createPendingSave(300)
+let pendingElement: PageType | null = null
+let pendingChanges: Partial<Pick<PageType, 'title' | 'order' | 'colors'>> = {}
+
+const unsubscribeSelection = selectedElement.subscribe((element) => {
+  if (pendingElement && element !== pendingElement) {
+    pendingSave.flush()
+  }
+})
+
+onDestroy(() => {
+  unsubscribeSelection()
+  pendingSave.flush()
+})
+
+function updatePage(changes: typeof pendingChanges) {
+  const project = $currentProject
+  const element = $selectedElement
+  if (!project || !element || element.type !== 'page' || !isPage(element)) {
+    return
+  }
+  const page = project.pages.find((candidate) => candidate.id === element.id)
+  if (!page) {
+    return
+  }
+
+  pendingElement = element
+  pendingChanges = { ...pendingChanges, ...changes }
+  const editedFields = pendingChanges
+  selectedElement.update((selected) => {
+    Object.assign(element, changes)
+    return selected
+  })
+
+  pendingSave.schedule(() => {
+    pendingElement = null
+    pendingChanges = {}
+    const current = $currentProject
+    if (current?.id !== project.id || !current.pages.includes(page)) {
+      return
+    }
+
+    const updatedPage = { ...page, ...editedFields }
+    currentProject.set({ ...current, pages: current.pages.map((candidate) => (candidate === page ? updatedPage : candidate)) })
+    if ($selectedPage?.id === page.id) {
+      selectedPage.set(updatedPage)
+    }
+  })
+}
+
 function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
-  selectedElement.update((element) => {
-    if (element) {
-      // limit the title to 100 characters
-      const newTitle = input.value.slice(0, 100)
-      element.title = newTitle
-    }
-    updatePageWithDebounce()
-    return element
-  })
+  updatePage({ title: input.value.slice(0, 100) })
 }
 
 function updateOrder(event: Event) {
   const input = event.target as HTMLInputElement
-  selectedElement.update((element) => {
-    if (element && isPage(element)) {
-      element.order = Number.parseInt(input.value, 10) || 0
-    }
-    updatePageWithDebounce()
-    return element
-  })
-}
-
-// update the project's page with debounced input
-let debounceTimeout: ReturnType<typeof setTimeout>
-
-function updatePageWithDebounce() {
-  clearTimeout(debounceTimeout)
-  debounceTimeout = setTimeout(() => {
-    currentProject.update((project) => {
-      if (project?.pages && $selectedElement) {
-        const pageIndex = project.pages.findIndex((page: PageType) => page.id === $selectedElement.id)
-        if (pageIndex !== -1 && $selectedElement.type === 'page' && isPage($selectedElement)) {
-          project.pages[pageIndex] = { ...$selectedElement }
-          selectedPage.set($selectedElement)
-        }
-      }
-      return project
-    })
-  }, 300)
+  updatePage({ order: Number.parseInt(input.value, 10) || 0 })
 }
 
 function updateBackgroundColorKey(event: Event) {
   const select = event.target as HTMLSelectElement
-  selectedElement.update((element) => {
-    if (element) {
-      const page = element as PageType
-      page.colors = { textColorKey: page.colors?.textColorKey || '', backgroundColorKey: select.value }
-    }
-    updatePageWithDebounce()
-    return element
-  })
+  const page = $selectedElement
+  if (page && isPage(page)) {
+    updatePage({ colors: { ...page.colors, textColorKey: page.colors?.textColorKey || '', backgroundColorKey: select.value } })
+  }
 }
 
 function updateTextColorKey(event: Event) {
   const select = event.target as HTMLSelectElement
-  selectedElement.update((element) => {
-    if (element) {
-      const page = element as PageType
-      page.colors = { textColorKey: select.value, backgroundColorKey: page.colors?.backgroundColorKey || '' }
-    }
-    updatePageWithDebounce()
-    return element
-  })
+  const page = $selectedElement
+  if (page && isPage(page)) {
+    updatePage({ colors: { ...page.colors, textColorKey: select.value, backgroundColorKey: page.colors?.backgroundColorKey || '' } })
+  }
 }
 </script>
 

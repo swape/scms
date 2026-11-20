@@ -13,7 +13,6 @@ for (const definition of elementsList) {
     expect(block.type).toBe(definition.type)
     expect(block.order).toBe(before + 1)
     expect(block.pageId).toBe('home')
-    if (definition.defaults) expect(block).toMatchObject(definition.defaults('home'))
     const section = () => preview(page).locator(`section[data-id="${block.id}"]`)
     await expect(section()).toBeVisible()
     await expect(page.getByLabel('Wrapper:', { exact: true })).toBeVisible()

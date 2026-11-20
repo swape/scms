@@ -1,5 +1,24 @@
 ## 2026-11-20
 
+- Files: `src/blocks/FAQ/{Preview.astro,faqStyles.css}`, `src/pages/preview/index.astro`, `README.md`
+- Replaced native FAQ markers with trailing Material Symbols chevrons, added row spacing and hover feedback, and rotated the icons with disclosure state while preserving native keyboard behavior.
+- Loaded the existing Material Symbols font in previews containing FAQ blocks and kept icons decorative for assistive technology.
+- Verified loaded icons, trailing alignment on desktop and wrapped narrow-screen questions, initial-open rendering, icon clicks, exclusive opening, and keyboard focus/toggling in the live preview. Astro checks passed without errors or warnings.
+
+- Files: `src/blocks/FAQ/{index.svelte,Preview.astro}`, `src/types/types.ts`, `src/utils/project-json.ts`, `README.md`
+- Added a block-level close-others switch and per-question Open on start checkboxes, persisted their optional booleans, and validated them during JSON import.
+- Used native named disclosure groups scoped to each FAQ block, kept only the first marked question initially open in exclusive mode, and preserved all saved initial-open choices.
+- Verified initial-state combinations, mouse/keyboard exclusive opening, isolation between FAQ blocks, switching back to independent mode, reload persistence, JSON roundtrips, and invalid boolean rejection in the live editor. Astro checks passed without errors or warnings.
+
+- Files: `src/utils/project-json.ts`, `tests/e2e/fixtures.ts`
+- Expanded all 32 unbraced one-line control statements into multiline braced blocks without changing their conditions or bodies.
+- Scanned 83 project source, test, configuration, and documentation files, including Svelte scripts/template handlers and Astro scripts; found no remaining unbraced or single-line control bodies. Formatted the changed files, passed Astro checks without errors or warnings, and passed all 40 browser tests.
+
+- Files: `src/blocks/FAQ/{index.svelte,Preview.astro,css.ts,faqStyles.css}`, `src/types/types.ts`, `src/components/editor/elements-list.ts`, `src/utils/project-json.ts`, `src/pages/preview/index.astro`, `tests/e2e/blocks.spec.ts`, `README.md`
+- Added a registered FAQ block with editable questions and multiline answers, matching Material Symbols reorder/delete controls, shared styles, and escaped native disclosure previews.
+- Preserved native summary activation in the preview selection handler and validated FAQ entries during JSON import, including duplicate IDs and malformed fields.
+- Verified insertion, editing, mouse/keyboard disclosure, both reorder directions, removal through an empty list, reload persistence, JSON validation, and escaped HTML in the live editor; all 11 block tests and Astro checks passed. Removed a defaults-copy assertion that tested registry implementation rather than behavior.
+
 - Files: `src/blocks/Menu/index.svelte`, `README.md`
 - Replaced menu settings Up, Down, and Remove text with Material Symbols arrows and a delete icon, retained accessible labels and disabled states, and added hover tooltips.
 - Verified the rendered icons and move-up, move-down, and removal actions in the running editor; Astro checks reported no errors or warnings.

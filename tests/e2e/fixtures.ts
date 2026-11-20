@@ -58,7 +58,9 @@ export function createProject(): ProjectType {
 export async function seedProject(page: Page, project: ProjectType) {
   await page.addInitScript((data) => {
     // Seed once per tab so reloads and sign-out exercise actual persisted state.
-    if (sessionStorage.getItem('e2e-seeded')) return
+    if (sessionStorage.getItem('e2e-seeded')) {
+      return
+    }
     sessionStorage.setItem('e2e-seeded', 'true')
     localStorage.setItem('scms', JSON.stringify({ uid: 'e2e-user', displayName: 'Test user', email: 'test@example.com' }))
     localStorage.setItem('currentProject', JSON.stringify({ data, storeDate: Date.now() }))

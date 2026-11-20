@@ -15,7 +15,7 @@ A visual, component-based page builder CMS for building responsive websites — 
 ## Features
 
 - **Visual Editor** — Add, edit, delete, and drag to reorder content blocks, with a live iframe preview.
-- **Content Blocks** — Text, Header, Image, Link, and Split Block, plus separate page-level settings.
+- **Content Blocks** — Text, Header, Image, Link, Split Block, and FAQ, plus separate page-level settings.
 - **Project Management** — Create and edit projects with nested pages, project settings, and project color palettes.
 - **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview. Menu settings use labeled Material Symbols arrow and delete buttons for moving and removing items.
 - **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview. Footer settings match the menu's item cards and accessible Material Symbols arrow and delete controls.
@@ -224,6 +224,18 @@ existing Save to server/Save and Publish actions remain placeholders; JSON backu
 - **Preview:** The editor sends page data and project settings to an Astro-powered preview page inside an iframe. The preview generates scoped CSS via `cssHelpers.ts`.
 - **Editor/Preview Separation:** Block editors are imported lazily. Server-side preview code uses block markup and CSS helpers without executing browser-only editor stores.
 - **Pending Edits:** Block, page, and footer editors keep their existing debounce delays. JSON export/import synchronously flushes queued edits through `src/utils/editor-save.ts` before reading or replacing the draft.
+
+## FAQ Block
+
+Choose **FAQ** under **Add element** to insert a question-and-answer block. Edit its title, questions, and multiline answers in Settings. Use **Add question**, the Material Symbols up/down arrows, and the delete icons to manage the list; the controls match the menu and footer settings.
+
+By default, questions expand or collapse independently using native disclosure controls with mouse and keyboard support. Enable **Close other answers when opening one** to keep only one answer open within that FAQ block; other FAQ blocks remain independent. Mark **Open on start** on each question that should initially show its answer. With exclusive opening enabled, only the first marked question in list order starts open; the other saved checkboxes are preserved for independent mode. With no questions marked, all answers start closed.
+
+Question rows display a Material Symbols chevron after the text, pointing down when closed and up when open. The icon remains aligned at the end of wrapped questions, supports clicking anywhere on the row, and respects reduced-motion preferences.
+
+Questions and answers are plain text: line breaks are preserved in answers, and HTML is displayed rather than executed. Title/content alignment and the shared wrapper, colors, padding, and margins are configurable. Empty lists are supported and remain selectable.
+
+FAQ entries and opening options persist with the project and are included in JSON backups. Imports validate each entry's ID, question, answer, and optional opening booleans and reject duplicate entry IDs within a block. Older backups without these options keep independent, initially closed answers.
 
 ## Save and Load Project JSON
 

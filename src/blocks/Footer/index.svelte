@@ -1,8 +1,10 @@
 <script lang="ts">
+import { onDestroy } from 'svelte'
 import Input from '../../components/Input.svelte'
 import Select from '../../components/Select.svelte'
 import { currentProject } from '../../store.ts'
 import type { BlockEditorProps, FooterElement, ProjectType, SocialPlatform } from '../../types/types.ts'
+import { createPendingSave } from '../../utils/editor-save.ts'
 import { createFooterHtml, createFooterLink, createFooterSocial, createFooterText, saveFooterToProject } from '../../utils/footer.ts'
 
 const {}: BlockEditorProps = $props()
@@ -11,7 +13,9 @@ let project = $state<ProjectType | null>(null)
 let elements = $state<FooterElement[]>([])
 let footerType = $state<'footer1'>('footer1')
 let loadedId = $state<string | number | null>(null)
-let saveTimeout: ReturnType<typeof setTimeout>
+const pendingSave = createPendingSave(500)
+
+onDestroy(pendingSave.flush)
 
 function cloneFooterElements(source: FooterElement[]): FooterElement[] {
   return source.map((element) => ({
@@ -37,17 +41,33 @@ $effect(() => {
   }
 })
 
-function save() {
-  clearTimeout(saveTimeout)
-  if (!project) {
+function captureSave() {
+  const target = $currentProject
+  if (!target || target.id !== loadedId) {
     return
   }
-  saveFooterToProject(project.id, { type: footerType, elements: cloneFooterElements(elements) })
+  const originalFooter = target.footer
+  const editedFooter = { ...originalFooter, type: footerType, elements: cloneFooterElements(elements) }
+  return () => {
+    const current = $currentProject
+    if (current?.id === target.id && current.footer === originalFooter) {
+      saveFooterToProject(current.id, editedFooter)
+    }
+  }
+}
+
+function save() {
+  pendingSave.cancel()
+  captureSave()?.()
 }
 
 function saveDebounced() {
-  clearTimeout(saveTimeout)
-  saveTimeout = setTimeout(save, 500)
+  const callback = captureSave()
+  if (callback) {
+    pendingSave.schedule(callback)
+  } else {
+    pendingSave.cancel()
+  }
 }
 
 function updateElementField(elementId: string, field: 'title' | 'text' | 'html' | 'linkUrl', value: string) {
@@ -119,10 +139,31 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
 
     {#each elements as el, index (el.id)}
       <div class="footer-element">
-        <span class="element-badge">{el.type}</span>
-        <div class="footer-element-order">
-          <button type="button" class="btn p-2" aria-label={`Move ${el.title} up`} disabled={index === 0} onclick={() => moveElement(index, -1)}>Up</button>
-          <button type="button" class="btn p-2" aria-label={`Move ${el.title} down`} disabled={index === elements.length - 1} onclick={() => moveElement(index, 1)}>Down</button>
+        <div class="footer-element-heading">
+          <span class="element-badge">{el.type}</span>
+          <div class="footer-element-order">
+            <button
+              type="button"
+              class="footer-icon-button"
+              aria-label={`Move ${el.title} up`}
+              title={`Move ${el.title} up`}
+              disabled={index === 0}
+              onclick={() => moveElement(index, -1)}>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
+            </button>
+            <button
+              type="button"
+              class="footer-icon-button"
+              aria-label={`Move ${el.title} down`}
+              title={`Move ${el.title} down`}
+              disabled={index === elements.length - 1}
+              onclick={() => moveElement(index, 1)}>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+            </button>
+          </div>
+          <button type="button" class="footer-remove" aria-label="Remove" title={`Remove ${el.title}`} onclick={() => removeElement(el.id)}>
+            <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+          </button>
         </div>
 
         {#if el.type === 'link'}
@@ -176,8 +217,6 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
         {#if el.type === 'html'}
           <textarea class="footer-textarea" placeholder="Custom HTML" value={el.html} oninput={(event) => updateElementField(el.id, 'html', event.currentTarget.value)}></textarea>
         {/if}
-
-        <button type="button" class="btn delete p-2" onclick={() => removeElement(el.id)}>Remove</button>
       </div>
     {/each}
 
@@ -228,16 +267,54 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  margin-bottom: 0.25rem;
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: 0.375rem;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 0.7rem;
+  margin-bottom: 0.55rem;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  background: rgba(128, 128, 128, 0.045);
+}
+
+.footer-element-heading {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  gap: 0.4rem;
 }
 
 .footer-element-order {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.2rem;
+}
+
+.footer-icon-button,
+.footer-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  border: 1px solid rgba(128, 128, 128, 0.45);
+  border-radius: 3px;
+  padding: 0.3rem 0.55rem;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.footer-icon-button:focus-visible,
+.footer-remove:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.footer-icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.footer-remove {
+  color: #dc2626;
 }
 
 .footer-textarea {
@@ -247,12 +324,11 @@ const socialPlatforms: SocialPlatform[] = ['facebook', 'twitter', 'instagram', '
 }
 
 .element-badge {
+  margin-right: auto;
+  color: #2563eb;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  padding: 3px 6px;
-  background-color: rgba(99, 102, 241, 0.4);
-  border-radius: 0.25rem;
   white-space: nowrap;
 }
 

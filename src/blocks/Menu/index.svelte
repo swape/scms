@@ -210,16 +210,24 @@ function pageName(pageId: string, pages: PageType[]): string {
                 type="button"
                 class="menu-icon-button"
                 aria-label={`Move ${row.element.title} up`}
+                title={`Move ${row.element.title} up`}
                 disabled={row.path[row.path.length - 1] === 0}
-                onclick={() => moveItem(row.path, -1)}>Up</button>
+                onclick={() => moveItem(row.path, -1)}>
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
+              </button>
               <button
                 type="button"
                 class="menu-icon-button"
                 aria-label={`Move ${row.element.title} down`}
+                title={`Move ${row.element.title} down`}
                 disabled={row.path[row.path.length - 1] === (row.depth === 0 ? elements.length : (findParent(row.path)?.children?.length ?? 0)) - 1}
-                onclick={() => moveItem(row.path, 1)}>Down</button>
+                onclick={() => moveItem(row.path, 1)}>
+                <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
+              </button>
             </div>
-            <button type="button" class="menu-remove" onclick={() => removeItem(row.path)}>Remove</button>
+            <button type="button" class="menu-remove" aria-label="Remove" title={`Remove ${row.element.title}`} onclick={() => removeItem(row.path)}>
+              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+            </button>
           </div>
 
           <div class="menu-item-fields">
@@ -428,6 +436,13 @@ function pageName(pageId: string, pages: PageType[]): string {
   background: transparent;
   color: inherit;
   cursor: pointer;
+}
+
+.menu-icon-button,
+.menu-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-icon-button:disabled {

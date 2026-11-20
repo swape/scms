@@ -157,7 +157,7 @@ function deleteElementWithConfirmation(elementId: string | number) {
 .layer-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0.125rem;
 }
 .layer-row :global(.layer-button) {
   flex: 1;
@@ -167,7 +167,7 @@ function deleteElementWithConfirmation(elementId: string | number) {
 .layer-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   min-width: 0;
 }
 .layer-name {
@@ -177,6 +177,6 @@ function deleteElementWithConfirmation(elementId: string | number) {
 }
 .layer-empty {
   color: var(--ui-muted);
-  padding: 4px 0;
+  padding: 0.25rem 0;
 }
 </style>

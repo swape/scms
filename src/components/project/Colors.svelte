@@ -74,22 +74,22 @@ async function addColor(kind: ProjectColorKind) {
 
 <style>
 .palette-heading h2 {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 600;
 }
 .palette-heading p {
   max-width: 64ch;
-  margin-top: 6px;
+  margin-top: 0.375rem;
   color: var(--ui-muted);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .palette-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22.5rem), 1fr));
+  gap: 1rem;
 }
 .palette-empty {
   color: var(--ui-muted);
-  padding: 12px 0;
+  padding: 0.75rem 0;
 }
 </style>

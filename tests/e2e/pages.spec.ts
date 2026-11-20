@@ -64,6 +64,50 @@ test('project settings, colors, users, and summary tabs work', async ({ authenti
   await expect(page.locator('article')).toContainText('Updated project')
 })
 
+test('project font choices only update extra tags and styles, persist, and render in preview', async ({ page, project }) => {
+  project.extra = { head: '<meta name="test-tag" content="keep">\n', style: '\nbody { letter-spacing: 1px; }\n' }
+  await seedProject(page, project)
+  await page.goto('/project?p=1')
+  const settings = page.getByRole('button', { name: 'Settings', exact: true })
+  await settings.click()
+  const headings = page.getByLabel('Headings and titles', { exact: true })
+  const body = page.getByLabel('Body text', { exact: true })
+  await expect(headings.locator('optgroup[label="Serif"] option')).toHaveCount(10)
+  await expect(headings.locator('optgroup[label="Sans serif"] option')).toHaveCount(10)
+  await headings.selectOption('Playfair Display')
+  await body.selectOption('Playfair Display')
+  expect((await storedProject(page)).extra.head.match(/family=Playfair\+Display/g)).toHaveLength(1)
+  await body.selectOption('Inter')
+  const { extra, ...otherSettings } = await storedProject(page)
+  const { extra: originalExtra, ...originalSettings } = project
+  expect(otherSettings).toEqual(originalSettings)
+  expect(extra.head).toContain(originalExtra.head)
+  expect(extra.style).toContain(originalExtra.style)
+  expect(extra.head).toContain('family=Inter:')
+  expect(extra.head).toContain('family=Playfair+Display:')
+
+  await page.reload()
+  await settings.click()
+  await expect(headings).toHaveValue('Playfair Display')
+  await expect(body).toHaveValue('Inter')
+  await page.getByRole('button', { name: 'Summery', exact: true }).click()
+  await page.getByRole('link', { name: 'Editor (continue last unsaved)', exact: true }).click()
+  const textBlock = preview(page).locator('section[data-id="text"]')
+  await expect(textBlock.getByRole('heading', { name: 'Welcome' })).toHaveCSS('font-family', '"Playfair Display", serif')
+  await expect(textBlock.locator('p')).toHaveCSS('font-family', 'Inter, sans-serif')
+  await expect(preview(page).locator('body')).toHaveCSS('letter-spacing', '1px')
+  await expect(preview(page).locator('meta[name="test-tag"]')).toHaveAttribute('content', 'keep')
+
+  await page.goto('/project?p=1')
+  await settings.click()
+  await headings.selectOption('')
+  const afterClearingHeading = (await storedProject(page)).extra
+  expect(afterClearingHeading.head).not.toContain('Playfair')
+  expect(afterClearingHeading.head).toContain('family=Inter:')
+  await body.selectOption('')
+  await expect.poll(async () => (await storedProject(page)).extra).toEqual(project.extra)
+})
+
 test('palette labels and added mode pairs survive reload and render in both themes', async ({ authenticatedPage: page, project }) => {
   await page.goto('/project?p=1')
   await page.getByRole('button', { name: 'Colors', exact: true }).click()
@@ -89,6 +133,7 @@ test('palette labels and added mode pairs survive reload and render in both them
   await page.getByRole('button', { name: 'Summery', exact: true }).click()
   await page.getByRole('link', { name: 'Editor (continue last unsaved)', exact: true }).click()
   await page.locator('.layer-content[data-id="text"]').click()
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByLabel('Background color:', { exact: true }).selectOption({ label: 'Brand surface' })
   await page.getByLabel('Text color:', { exact: true }).selectOption({ label: 'Brand ink' })
   const block = preview(page).locator('section[data-id="text"]')

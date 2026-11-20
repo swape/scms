@@ -3,6 +3,7 @@ import { currentProject, projects } from '../../store.ts'
 import type { ProjectType } from '../../types/types.ts'
 import Input from '../Input.svelte'
 import Textarea from '../Textarea.svelte'
+import Fonts from './Fonts.svelte'
 
 let { id } = $props()
 
@@ -56,13 +57,19 @@ function save() {
   <Input label="Url:" wrapperClass="flex flex-col gap-1 mb-2" type="url" bind:value={project.url} onkeyup={save} />
 
   <Textarea label="Description:" class="project-textarea" bind:value={project.description} onkeyup={save} />
+  <Fonts
+    extra={project.extra}
+    onchange={(extra) => {
+      project.extra = extra
+      save()
+    }} />
   <Textarea label="Extra head tags:" class="project-textarea" bind:value={project.extra.head} onkeyup={save} />
-  <Textarea label="Extra styles:(etc. font styles)" class="project-textarea" bind:value={project.extra.style} onkeyup={save} />
+  <Textarea label="Extra styles:" class="project-textarea" bind:value={project.extra.style} onkeyup={save} />
 </div>
 
 <style>
 div :global(.project-textarea) {
-  min-height: 200px;
-  max-height: 500px;
+  min-height: 12.5rem;
+  max-height: 31.25rem;
 }
 </style>

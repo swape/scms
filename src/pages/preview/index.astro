@@ -4,7 +4,7 @@ import { ClientRouter } from 'astro:transitions'
 import Footer from '../../blocks/Footer/Footer.astro'
 import Menu from '../../blocks/Menu/Menu.astro'
 import type { PageType, ProjectType } from '../../types/types.ts'
-import { cssHelpers, getColorValue } from './cssHelpers.ts'
+import { cssHelpers, getPageColorCss } from './cssHelpers.ts'
 import ElementSelector from './ElementSelector.astro'
 
 const page = Astro.url.searchParams.get('page')
@@ -26,10 +26,7 @@ try {
 
 const projectColors = Array.isArray(parsedSettings?.colors) ? parsedSettings.colors : []
 
-const pageBackgroundColor = getColorValue(parsedData?.colors?.backgroundColorKey)
-const pageTextColor = getColorValue(parsedData?.colors?.textColorKey)
-const pageColorDeclarations = [pageBackgroundColor ? `background-color: ${pageBackgroundColor};` : '', pageTextColor ? `color: ${pageTextColor};` : ''].filter(Boolean).join(' ')
-const pageColorCss = pageColorDeclarations ? `body.preview-body { ${pageColorDeclarations} }` : ''
+const pageColorCss = getPageColorCss(parsedData)
 
 const cssVars = cssHelpers(projectColors)
 export const prerender = false

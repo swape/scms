@@ -1,5 +1,6 @@
 <script lang="ts">
-import { currentProject, selectedPage } from '../../store.ts'
+import { MOBILE_STYLE_MAX_WIDTH } from '../../constants.ts'
+import { currentProject, previewMode, selectedPage } from '../../store.ts'
 import type { PageType, ProjectType } from '../../types/types.ts'
 
 let iframePage = $state<string | null>(null)
@@ -57,10 +58,29 @@ $effect(() => {
   </form>
 {/if}
 
-<iframe name="preview-frame" title="Preview" class="w-full h-full preview-iframe"></iframe>
+<div class="preview-stage" class:device-preview={$previewMode !== 'desktop'}>
+  <iframe
+    name="preview-frame"
+    title="Preview"
+    class="preview-iframe"
+    style:max-width={$previewMode === 'desktop' ? null : `${$previewMode === 'tablet' ? MOBILE_STYLE_MAX_WIDTH : 390}px`}></iframe>
+</div>
 
 <style>
+.preview-stage {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.device-preview {
+  background: var(--ui-panel);
+}
+
 .preview-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
   max-height: 100svh;
   overflow-y: auto;
 }

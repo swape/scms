@@ -1,5 +1,6 @@
+import { readFile } from 'node:fs/promises'
 import { elementsList } from '../../src/components/editor/elements-list'
-import { expect, preview, selectBlock, storedProject, test } from './fixtures'
+import { expect, preview, seedProject, selectBlock, storedProject, test } from './fixtures'
 
 for (const definition of elementsList) {
   test(`${definition.name} can be inserted, styled, persisted, and deleted`, async ({ editorPage: page }) => {
@@ -12,9 +13,11 @@ for (const definition of elementsList) {
     expect(block.pageId).toBe('home')
     const section = () => preview(page).locator(`section[data-id="${block.id}"]`)
     await expect(section()).toBeVisible()
+    await page.getByRole('tab', { name: 'Style', exact: true }).click()
     await expect(page.getByLabel('Wrapper:', { exact: true })).toBeVisible()
     await page.getByLabel('Wrapper:', { exact: true }).selectOption('container')
-    await page.getByLabel('Padding (px):', { exact: true }).fill('12')
+    await expect(page.getByLabel('Padding unit', { exact: true })).toHaveValue('px')
+    await page.getByLabel('Padding:', { exact: true }).fill('12')
     await page.getByLabel('Background color:', { exact: true }).selectOption('bg_2')
     await page.getByLabel('Text color:', { exact: true }).selectOption('text_2')
     const styled = () => preview(page).locator(`.scms_${block.id}`)
@@ -26,7 +29,7 @@ for (const definition of elementsList) {
       .poll(async () => (await storedProject(page)).pages[0].content.at(-1)?.style)
       .toMatchObject({
         wrapper: 'container',
-        paddingAll: 12,
+        paddingAll: '12px',
         backgroundColor: 'bg_2',
         textColor: 'text_2',
       })
@@ -44,6 +47,7 @@ test('Text edits title, multiline content, alignment, and individual spacing', a
   await selectBlock(page, 'text')
   await page.getByLabel('Title:', { exact: true }).fill('Updated welcome')
   await page.getByLabel('Content:', { exact: true }).fill('Changed first line\nChanged second line')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByLabel('Title Alignment:', { exact: true }).selectOption('center')
   await page.getByLabel('Content Alignment:', { exact: true }).selectOption('right')
   await page.getByLabel('Padding Mode:', { exact: true }).selectOption('individual')
@@ -72,6 +76,7 @@ test('Header updates its text and all six heading levels', async ({ editorPage: 
     await page.getByLabel('Level:', { exact: true }).selectOption(`h${level}`)
     await expect(preview(page).getByRole('heading', { name: 'Updated heading', level })).toBeVisible()
   }
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByLabel('Text Alignment:', { exact: true }).selectOption('center')
   await expect(preview(page).getByRole('heading', { name: 'Updated heading' })).toHaveCSS('text-align', 'center')
 })
@@ -96,7 +101,9 @@ test('Link switches URL/page destinations, targets, and button appearance', asyn
   await selectBlock(page, 'link')
   await page.getByLabel('Text:', { exact: true }).fill('Visit example')
   await page.getByLabel('URL:', { exact: true }).fill('https://example.com/updated')
+  await page.getByRole('tab', { name: 'Other settings', exact: true }).click()
   await page.getByLabel('Target:', { exact: true }).selectOption('_blank')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByRole('switch', { name: 'Render as button' }).press('Space')
   const link = () => preview(page).locator('section[data-id="link"] a')
   await expect(link()).toHaveText('Visit example')
@@ -108,9 +115,12 @@ test('Link switches URL/page destinations, targets, and button appearance', asyn
   await page.getByLabel('Button text color:', { exact: true }).selectOption('text_3')
   await expect(link()).toHaveCSS('background-color', 'rgb(99, 102, 241)')
   await expect(link()).toHaveCSS('color', 'rgb(255, 255, 255)')
+  await page.getByRole('tab', { name: 'Content', exact: true }).click()
   await page.getByLabel('Destination Type:', { exact: true }).selectOption('page')
   await page.getByLabel('Page:', { exact: true }).selectOption('about')
+  await page.getByRole('tab', { name: 'Other settings', exact: true }).click()
   await page.getByLabel('Target:', { exact: true }).selectOption('_self')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByRole('switch', { name: 'Render as button' }).press('Space')
   await expect(link()).toHaveAttribute('href', '#page-about')
   await expect(link()).toHaveAttribute('target', '_self')
@@ -125,11 +135,14 @@ test('Split Block edits content, file, CTA, flipping, and image minimum height',
   await page.getByLabel('Button text:').fill('Open about')
   await page.getByLabel('Destination type:', { exact: true }).selectOption('page')
   await page.getByLabel('Page:', { exact: true }).selectOption('about')
+  await page.getByRole('tab', { name: 'Other settings', exact: true }).click()
   await page.getByLabel('Target:', { exact: true }).selectOption('_blank')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByRole('switch', { name: 'Flip sides (image on left)' }).press('Space')
-  await page.getByLabel('Image minimum height (px):').fill('420')
-  await page.getByLabel('Text padding (px):').fill('32')
-  await page.getByLabel('Border radius (px):').fill('16')
+  await page.getByLabel('Image minimum height:').fill('420')
+  await page.getByLabel('Text padding:').fill('32')
+  await page.getByLabel('Border radius:').fill('16')
+  await page.getByRole('tab', { name: 'Content', exact: true }).click()
   await page.getByRole('button', { name: 'Select file', exact: true }).click()
   await page
     .locator('#file-popover-wrapper')
@@ -149,5 +162,135 @@ test('Split Block edits content, file, CTA, flipping, and image minimum height',
   await page.reload()
   await expect(block().locator('.split-image')).toHaveCSS('min-height', '420px')
   await selectBlock(page, 'splitBlock')
-  await expect(page.getByLabel('Image minimum height (px):')).toHaveValue('420')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await expect(page.getByLabel('Image minimum height:')).toHaveValue('420')
+})
+
+test('legacy spacing imports keep their size and rem edits scale with root text size', async ({ page, project }) => {
+  project.pages[0].content[0].style = { paddingAll: 24, marginTop: '-8px', marginBottom: '32', borderRadius: '0.5rem', backgroundColor: 'bg_2' }
+  await seedProject(page, project)
+  await page.goto('/editor?p=1&local=true')
+  await selectBlock(page, 'text')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  const block = preview(page).locator('section[data-id="text"]')
+  await expect(page.getByLabel('Padding:', { exact: true })).toHaveValue('24')
+  await expect(page.getByLabel('Padding unit', { exact: true })).toHaveValue('px')
+  await expect(page.locator('#margin-top')).toHaveValue('-8')
+  await expect(page.locator('#margin-top-unit')).toHaveValue('px')
+  await expect(block).toHaveCSS('padding-top', '24px')
+  await expect(block).toHaveCSS('margin-top', '-8px')
+
+  page.once('dialog', (dialog) => dialog.accept())
+  const imported = page.waitForEvent('load')
+  await page.getByLabel('Project JSON file', { exact: true }).setInputFiles({ name: 'legacy.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(project)) })
+  await imported
+  await expect(block).toHaveCSS('padding-top', '24px')
+  await expect(block).toHaveCSS('border-radius', '8px')
+  await selectBlock(page, 'text')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await expect(page.locator('#margin-bottom')).toHaveValue('32')
+  await expect(page.locator('#margin-bottom-unit')).toHaveValue('px')
+  await expect(page.locator('#text-border-radius')).toHaveValue('0.5')
+  await expect(page.locator('#text-border-radius-unit')).toHaveValue('rem')
+  await page.getByLabel('Padding unit', { exact: true }).selectOption('rem')
+  await page.getByLabel('Padding:', { exact: true }).fill('2.25')
+  await expect(block).toHaveCSS('padding-top', '36px')
+  await page.reload()
+  await expect(block).toHaveCSS('padding-top', '36px')
+  await page.locator('.layer-content[data-id="header"]').click()
+  await expect(block).not.toHaveClass(/active/)
+  await preview(page)
+    .locator('html')
+    .evaluate((element) => {
+      element.style.fontSize = '20px'
+    })
+  await expect(block).toHaveCSS('padding-top', '45px')
+  await expect(block).toHaveCSS('margin-top', '-8px')
+  await expect(block).toHaveCSS('margin-bottom', '32px')
+  await expect(block).toHaveCSS('border-radius', '10px')
+})
+
+test('mixed spacing units retain fractions, zero, and cleared values through JSON and reload', async ({ editorPage: page }) => {
+  await selectBlock(page, 'text')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await page.getByLabel('Padding Mode:', { exact: true }).selectOption('individual')
+  const block = preview(page).locator('section[data-id="text"]')
+  const top = page.locator('#padding-top')
+  await expect(page.locator('#padding-top-unit')).toHaveValue('px')
+  await top.fill('1.5')
+  expect(await top.evaluate((input) => (input as HTMLInputElement).validity.valid)).toBe(true)
+  await expect(block).toHaveCSS('padding-top', '1.5px')
+  await page.locator('#padding-top-unit').selectOption('rem')
+  await expect(top).toHaveValue('1.5')
+  await expect(block).toHaveCSS('padding-top', '24px')
+
+  await page.locator('#padding-right-unit').selectOption('ch')
+  await expect(page.locator('#padding-right')).toHaveValue('')
+  await expect.poll(async () => (await storedProject(page)).pages[0].content[0].style?.paddingRight).toBeUndefined()
+  await page.locator('#padding-right').fill('2.5')
+  await page.locator('#padding-bottom').fill('0')
+  await page.locator('#padding-left').fill('12.5')
+  await expect(block).toHaveCSS('padding-left', '12.5px')
+  await page.locator('#padding-left').fill('')
+  await expect(block).toHaveCSS('padding-left', '0px')
+  await expect.poll(async () => (await storedProject(page)).pages[0].content[0].style?.paddingLeft).toBeUndefined()
+  await page.locator('#margin-top').fill('-3.5')
+
+  const expectSpacing = async (rootSize: number) => {
+    await expect(block).toHaveCSS('padding-top', `${1.5 * rootSize}px`)
+    await expect(block).toHaveCSS('padding-bottom', '0px')
+    await expect(block).toHaveCSS('padding-left', '0px')
+    await expect(block).toHaveCSS('margin-top', '-3.5px')
+    await expect
+      .poll(async () =>
+        block.evaluate((element) => {
+          const probe = element.ownerDocument.createElement('span')
+          probe.style.cssText = 'position: absolute; visibility: hidden; box-sizing: content-box; width: 2.5ch; padding: 0; border: 0; font: inherit'
+          element.append(probe)
+          const expected = probe.getBoundingClientRect().width
+          const actual = Number.parseFloat(getComputedStyle(element).paddingRight)
+          probe.remove()
+          return Math.abs(actual - expected)
+        })
+      )
+      .toBeLessThan(0.05)
+  }
+  await expectSpacing(16)
+  const savedStyle = { paddingMode: 'individual', paddingTop: '1.5rem', paddingRight: '2.5ch', paddingBottom: '0px', marginTop: '-3.5px' }
+  await expect.poll(async () => (await storedProject(page)).pages[0].content[0].style).toMatchObject(savedStyle)
+
+  await page.getByRole('button', { name: 'Save & load', exact: true }).click()
+  const downloadPromise = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Save as JSON', exact: true }).click()
+  const file = await (await downloadPromise).path()
+  expect(file).not.toBeNull()
+  const exported = JSON.parse(await readFile(file!, 'utf8'))
+  expect(exported.pages[0].content[0].style).toMatchObject(savedStyle)
+  expect(exported.pages[0].content[0].style).not.toHaveProperty('paddingLeft')
+
+  await page.locator('#padding-top-unit').selectOption('px')
+  await top.fill('9')
+  await expect(block).toHaveCSS('padding-top', '9px')
+  page.once('dialog', (dialog) => dialog.accept())
+  const imported = page.waitForEvent('load')
+  await page.getByLabel('Project JSON file', { exact: true }).setInputFiles(file!)
+  await imported
+  await expectSpacing(16)
+  await page.reload()
+  await selectBlock(page, 'text')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await expect(top).toHaveValue('1.5')
+  await expect(page.locator('#padding-top-unit')).toHaveValue('rem')
+  await expect(page.locator('#padding-right')).toHaveValue('2.5')
+  await expect(page.locator('#padding-right-unit')).toHaveValue('ch')
+  await expect(page.locator('#padding-bottom')).toHaveValue('0')
+  await expect(page.locator('#padding-bottom-unit')).toHaveValue('px')
+  await expect(page.locator('#padding-left')).toHaveValue('')
+  await expect(page.locator('#margin-top-unit')).toHaveValue('px')
+  await preview(page)
+    .locator('html')
+    .evaluate((element) => {
+      element.style.fontSize = '20px'
+    })
+  await expectSpacing(20)
 })

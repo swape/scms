@@ -15,14 +15,14 @@ const { id, label, checked = false, disabled = false, oninput }: CheckboxProps =
 <style>
 .ui-switch {
   display: flex;
-  min-height: 32px;
+  min-height: 2rem;
   align-items: center;
-  gap: 12px;
-  margin: 0 0 12px;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
   color: var(--ui-text, #f5f5f5);
   font-family: inherit;
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
   cursor: pointer;
 }
 
@@ -36,8 +36,8 @@ const { id, label, checked = false, disabled = false, oninput }: CheckboxProps =
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  width: 28px;
-  height: 16px;
+  width: 1.75rem;
+  height: 1rem;
 }
 
 input {
@@ -52,19 +52,19 @@ input {
 }
 
 .switch-track {
-  width: 28px;
-  height: 16px;
-  border-radius: 8px;
+  width: 1.75rem;
+  height: 1rem;
+  border-radius: 0.5rem;
   background: var(--ui-hover, #444);
   transition: background-color 120ms ease;
 }
 
 .switch-track::after {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 12px;
-  height: 12px;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
   background: var(--ui-text, #f5f5f5);
   content: '';
@@ -76,12 +76,12 @@ input:checked + .switch-track {
 }
 
 input:checked + .switch-track::after {
-  transform: translateX(12px);
+  transform: translateX(0.75rem);
 }
 
 input:focus-visible + .switch-track {
-  outline: 2px solid var(--ui-accent, #0c8ce9);
-  outline-offset: 3px;
+  outline: 0.125rem solid var(--ui-accent, #0c8ce9);
+  outline-offset: 0.1875rem;
 }
 
 .is-disabled {

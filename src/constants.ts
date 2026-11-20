@@ -1,0 +1,1 @@
+export const MOBILE_STYLE_MAX_WIDTH = 768

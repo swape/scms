@@ -6,10 +6,12 @@ import PanelSection from '../../components/PanelSection.svelte'
 import Select from '../../components/Select.svelte'
 import { currentProject } from '../../store.ts'
 import type { BlockEditorProps, LinkSettings, MenuElement, PageType, ProjectType } from '../../types/types.ts'
+import { getStyleEditor } from '../../utils/editor-style.ts'
 import { createMenuElement, saveMenuToProject } from '../../utils/menu.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
 
-const {}: BlockEditorProps = $props()
+const { activeTab = 'content' }: BlockEditorProps = $props()
+const style = getStyleEditor()
 
 interface MenuRow {
   element: MenuElement
@@ -19,7 +21,6 @@ interface MenuRow {
 
 let project = $state<ProjectType | null>(null)
 let elements = $state<MenuElement[]>([])
-let menuStyle = $state<NonNullable<ProjectType['menu']['style']>>({ layout: 'horizontal' })
 let loadedId = $state<string | number | null>(null)
 let draggedPath = $state<number[] | null>(null)
 
@@ -30,7 +31,6 @@ $effect(() => {
     if (found.id !== loadedId) {
       loadedId = found.id
       elements = found.menu?.elements ?? []
-      menuStyle = { layout: 'horizontal', ...found.menu?.style }
     }
   }
 })
@@ -75,8 +75,9 @@ function updateItem(path: number[], update: (element: MenuElement) => MenuElemen
 }
 
 function save() {
-  if (project) {
-    saveMenuToProject(project.id, { type: 'menu1', elements, style: menuStyle })
+  const target = $currentProject
+  if (target && target.id === loadedId) {
+    saveMenuToProject(target.id, { ...target.menu, elements })
   }
 }
 
@@ -145,14 +146,11 @@ function dropItem(event: DragEvent, targetPath: number[]) {
   save()
 }
 
-function updateStyle<Key extends keyof NonNullable<ProjectType['menu']['style']>>(key: Key, value: NonNullable<ProjectType['menu']['style']>[Key]) {
-  menuStyle = { ...menuStyle, [key]: value }
-  save()
-}
-
-function updateColor(key: 'backgroundColor' | 'textColor', event: Event) {
-  const select = event.currentTarget as HTMLSelectElement
-  updateStyle(key, select.value)
+function updateSticky(sticky: boolean) {
+  const target = $currentProject
+  if (target && target.id === loadedId) {
+    saveMenuToProject(target.id, { ...target.menu, style: { ...target.menu.style, sticky } })
+  }
 }
 
 function pageName(pageId: string, pages: PageType[]): string {
@@ -163,202 +161,197 @@ function pageName(pageId: string, pages: PageType[]): string {
 {#if project}
   <h2 class="menu-title">Menu for {project.title}</h2>
 
-  <PanelSection title="Appearance" id="menu-style-title" class="menu-section">
-    <div class="menu-style-fields">
-      <Select
-        label="Layout"
-        wrapperClass="menu-field"
-        class="menu-select"
-        value={menuStyle.layout ?? 'horizontal'}
-        onchange={(event) => updateStyle('layout', event.currentTarget.value as 'horizontal' | 'vertical')}>
-        <option value="horizontal">Horizontal</option>
-        <option value="vertical">Vertical</option>
-      </Select>
-      <ColorSelect
-        element={{ style: menuStyle }}
-        title="Background color"
-        id="menu-background-color"
-        styleName="backgroundColor"
-        update={(event: Event) => updateColor('backgroundColor', event)}
-        isBgColors={true} />
-      <ColorSelect
-        element={{ style: menuStyle }}
-        title="Text color"
-        id="menu-text-color"
-        styleName="textColor"
-        update={(event: Event) => updateColor('textColor', event)}
-        isBgColors={false} />
-    </div>
-    <Checkbox id="menu-sticky" label="Sticky menu" checked={Boolean(menuStyle.sticky)} oninput={(event) => updateStyle('sticky', event.currentTarget.checked)} />
-  </PanelSection>
+  <div hidden={activeTab !== 'style'}>
+    <PanelSection title="Appearance" id="menu-style-title" class="menu-section">
+      <div class="menu-style-fields">
+        <Select
+          label="Layout"
+          wrapperClass="menu-field"
+          class="menu-select"
+          value={style.read('layout') ?? 'horizontal'}
+          onchange={(event) => style.set('layout', event.currentTarget.value)}>
+          <option value="horizontal">Horizontal</option>
+          <option value="vertical">Vertical</option>
+        </Select>
+        <ColorSelect title="Background color" id="menu-background-color" styleName="backgroundColor" isBgColors={true} />
+        <ColorSelect title="Text color" id="menu-text-color" styleName="textColor" isBgColors={false} />
+      </div>
+    </PanelSection>
+  </div>
 
-  <PanelSection title="Menu structure" id="menu-items-title" class="menu-section">
-    {#if rows.length === 0}
-      <p class="menu-empty">No menu items yet.</p>
-    {/if}
+  <div hidden={activeTab !== 'content'}>
+    <PanelSection title="Menu structure" id="menu-items-title" class="menu-section">
+      {#if rows.length === 0}
+        <p class="menu-empty">No menu items yet.</p>
+      {/if}
 
-    <ol class="menu-items" aria-label="Menu items">
-      {#each rows as row, index (row.element.id ?? row.path.join('-'))}
-        <li
-          class="menu-item"
-          class:dragging={draggedPath?.join('.') === row.path.join('.')}
-          style={`--menu-depth: ${row.depth}`}
-          draggable="true"
-          ondragstart={(event) => {
-            draggedPath = row.path
-            event.dataTransfer?.setData('text/plain', row.path.join('.'))
-          }}
-          ondragend={() => {
-            draggedPath = null
-          }}
-          ondragover={(event) => event.preventDefault()}
-          ondrop={(event) => dropItem(event, row.path)}>
-          <div class="menu-item-heading">
-            <span class="menu-item-kind">{row.element.type}</span>
-            <div class="menu-item-order">
+      <ol class="menu-items" aria-label="Menu items">
+        {#each rows as row, index (row.element.id ?? row.path.join('-'))}
+          <li
+            class="menu-item"
+            class:dragging={draggedPath?.join('.') === row.path.join('.')}
+            style={`--menu-depth: ${row.depth}`}
+            draggable="true"
+            ondragstart={(event) => {
+              draggedPath = row.path
+              event.dataTransfer?.setData('text/plain', row.path.join('.'))
+            }}
+            ondragend={() => {
+              draggedPath = null
+            }}
+            ondragover={(event) => event.preventDefault()}
+            ondrop={(event) => dropItem(event, row.path)}>
+            <div class="menu-item-heading">
+              <span class="menu-item-kind">{row.element.type}</span>
+              <div class="menu-item-order">
+                <Button
+                  class="menu-icon-button"
+                  icon="arrow_upward"
+                  iconOnly
+                  variant="ghost"
+                  size="sm"
+                  aria-label={`Move ${row.element.title} up`}
+                  title={`Move ${row.element.title} up`}
+                  disabled={row.path[row.path.length - 1] === 0}
+                  onclick={() => moveItem(row.path, -1)} />
+                <Button
+                  class="menu-icon-button"
+                  icon="arrow_downward"
+                  iconOnly
+                  variant="ghost"
+                  size="sm"
+                  aria-label={`Move ${row.element.title} down`}
+                  title={`Move ${row.element.title} down`}
+                  disabled={row.path[row.path.length - 1] === (row.depth === 0 ? elements.length : (findParent(row.path)?.children?.length ?? 0)) - 1}
+                  onclick={() => moveItem(row.path, 1)} />
+              </div>
               <Button
-                class="menu-icon-button"
-                icon="arrow_upward"
+                class="menu-remove"
+                icon="delete"
                 iconOnly
                 variant="ghost"
                 size="sm"
-                aria-label={`Move ${row.element.title} up`}
-                title={`Move ${row.element.title} up`}
-                disabled={row.path[row.path.length - 1] === 0}
-                onclick={() => moveItem(row.path, -1)} />
-              <Button
-                class="menu-icon-button"
-                icon="arrow_downward"
-                iconOnly
-                variant="ghost"
-                size="sm"
-                aria-label={`Move ${row.element.title} down`}
-                title={`Move ${row.element.title} down`}
-                disabled={row.path[row.path.length - 1] === (row.depth === 0 ? elements.length : (findParent(row.path)?.children?.length ?? 0)) - 1}
-                onclick={() => moveItem(row.path, 1)} />
+                aria-label="Remove"
+                title={`Remove ${row.element.title}`}
+                onclick={() => removeItem(row.path)} />
             </div>
-            <Button
-              class="menu-remove"
-              icon="delete"
-              iconOnly
-              variant="ghost"
-              size="sm"
-              aria-label="Remove"
-              title={`Remove ${row.element.title}`}
-              onclick={() => removeItem(row.path)} />
-          </div>
 
-          <div class="menu-item-fields">
-            <Select
-              label="Item type"
-              wrapperClass="menu-field"
-              class="menu-select"
-              value={row.element.type}
-              onchange={(event) => setItemType(row.path, event.currentTarget.value as MenuElement['type'])}>
-              <option value="link">Link</option>
-              <option value="dropdown">Manual submenu</option>
-              <option value="auto">Automatic pages</option>
-            </Select>
-            <Input
-              label="Label"
-              wrapperClass="menu-field menu-title-field"
-              class="menu-input"
-              type="text"
-              value={row.element.title}
-              oninput={(event) => updateItem(row.path, (element) => ({ ...element, title: event.currentTarget.value }))} />
-
-            {#if row.element.type === 'link'}
+            <div class="menu-item-fields">
               <Select
-                label="Destination"
+                label="Item type"
                 wrapperClass="menu-field"
                 class="menu-select"
-                value={row.element.link?.mode ?? 'page'}
-                onchange={(event) => updateLink(row.path, { mode: event.currentTarget.value as LinkSettings['mode'] })}>
-                <option value="page">Project page</option>
-                <option value="url">External URL</option>
+                value={row.element.type}
+                onchange={(event) => setItemType(row.path, event.currentTarget.value as MenuElement['type'])}>
+                <option value="link">Link</option>
+                <option value="dropdown">Manual submenu</option>
+                <option value="auto">Automatic pages</option>
               </Select>
-              {#if row.element.link?.mode === 'url'}
-                <Input
-                  label="URL"
-                  wrapperClass="menu-field menu-destination-field"
-                  class="menu-input"
-                  type="url"
-                  placeholder="https://example.com"
-                  value={row.element.link.url}
-                  oninput={(event) => updateLink(row.path, { url: event.currentTarget.value })} />
-              {:else}
+              <Input
+                label="Label"
+                wrapperClass="menu-field menu-title-field"
+                class="menu-input"
+                type="text"
+                value={row.element.title}
+                oninput={(event) => updateItem(row.path, (element) => ({ ...element, title: event.currentTarget.value }))} />
+
+              {#if row.element.type === 'link'}
                 <Select
-                  label="Page"
-                  wrapperClass="menu-field menu-destination-field"
+                  label="Destination"
+                  wrapperClass="menu-field"
                   class="menu-select"
-                  value={row.element.link?.pageId ?? ''}
-                  onchange={(event) => updateLink(row.path, { pageId: event.currentTarget.value })}>
-                  <option value="">Choose a page</option>
+                  value={row.element.link?.mode ?? 'page'}
+                  onchange={(event) => updateLink(row.path, { mode: event.currentTarget.value as LinkSettings['mode'] })}>
+                  <option value="page">Project page</option>
+                  <option value="url">External URL</option>
+                </Select>
+                {#if row.element.link?.mode === 'url'}
+                  <Input
+                    label="URL"
+                    wrapperClass="menu-field menu-destination-field"
+                    class="menu-input"
+                    type="url"
+                    placeholder="https://example.com"
+                    value={row.element.link.url}
+                    oninput={(event) => updateLink(row.path, { url: event.currentTarget.value })} />
+                {:else}
+                  <Select
+                    label="Page"
+                    wrapperClass="menu-field menu-destination-field"
+                    class="menu-select"
+                    value={row.element.link?.pageId ?? ''}
+                    onchange={(event) => updateLink(row.path, { pageId: event.currentTarget.value })}>
+                    <option value="">Choose a page</option>
+                    {#each project.pages as page (page.id)}
+                      <option value={page.id}>{page.title}</option>
+                    {/each}
+                  </Select>
+                {/if}
+                <Select
+                  label="Open in"
+                  wrapperClass="menu-field"
+                  class="menu-select"
+                  value={row.element.link?.target ?? '_self'}
+                  onchange={(event) => updateLink(row.path, { target: event.currentTarget.value as LinkSettings['target'] })}>
+                  <option value="_self">Same tab</option>
+                  <option value="_blank">New tab</option>
+                </Select>
+              {/if}
+
+              {#if row.element.type === 'auto'}
+                <Select
+                  label="List child pages of"
+                  wrapperClass="menu-field menu-destination-field"
+                  hint={row.element.autoParentPageId ? `Current pages: ${pageName(row.element.autoParentPageId, project.pages)}` : undefined}
+                  class="menu-select"
+                  value={row.element.autoParentPageId ?? ''}
+                  onchange={(event) => updateItem(row.path, (element) => ({ ...element, autoParentPageId: event.currentTarget.value }))}>
+                  <option value="">Choose a parent page</option>
                   {#each project.pages as page (page.id)}
                     <option value={page.id}>{page.title}</option>
                   {/each}
                 </Select>
+                <Input
+                  label="Maximum items"
+                  wrapperClass="menu-field"
+                  hint="0 lists every child page."
+                  class="menu-input menu-number"
+                  type="number"
+                  min="0"
+                  value={row.element.autoMaxItems ?? 0}
+                  oninput={(event) => updateItem(row.path, (element) => ({ ...element, autoMaxItems: Number(event.currentTarget.value) }))} />
               {/if}
-              <Select
-                label="Open in"
-                wrapperClass="menu-field"
-                class="menu-select"
-                value={row.element.link?.target ?? '_self'}
-                onchange={(event) => updateLink(row.path, { target: event.currentTarget.value as LinkSettings['target'] })}>
-                <option value="_self">Same tab</option>
-                <option value="_blank">New tab</option>
-              </Select>
-            {/if}
-
-            {#if row.element.type === 'auto'}
-              <Select
-                label="List child pages of"
-                wrapperClass="menu-field menu-destination-field"
-                hint={row.element.autoParentPageId ? `Current pages: ${pageName(row.element.autoParentPageId, project.pages)}` : undefined}
-                class="menu-select"
-                value={row.element.autoParentPageId ?? ''}
-                onchange={(event) => updateItem(row.path, (element) => ({ ...element, autoParentPageId: event.currentTarget.value }))}>
-                <option value="">Choose a parent page</option>
-                {#each project.pages as page (page.id)}
-                  <option value={page.id}>{page.title}</option>
-                {/each}
-              </Select>
-              <Input
-                label="Maximum items"
-                wrapperClass="menu-field"
-                hint="0 lists every child page."
-                class="menu-input menu-number"
-                type="number"
-                min="0"
-                value={row.element.autoMaxItems ?? 0}
-                oninput={(event) => updateItem(row.path, (element) => ({ ...element, autoMaxItems: Number(event.currentTarget.value) }))} />
-            {/if}
-          </div>
-
-          {#if row.element.type === 'dropdown'}
-            <div class="menu-child-actions" aria-label={`Add item inside ${row.element.title}`}>
-              <span>Submenu items</span>
-              <Button class="menu-add-button" icon="add" onclick={() => addItem('link', row.path)}>Link</Button>
-              <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown', row.path)}>Submenu</Button>
-              <Button class="menu-add-button" icon="add" onclick={() => addItem('auto', row.path)}>Automatic pages</Button>
             </div>
-          {/if}
-        </li>
-      {/each}
-    </ol>
 
-    <div class="menu-add-actions" aria-label="Add menu item">
-      <Button class="menu-add-button" icon="add" onclick={() => addItem('link')}>Link</Button>
-      <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown')}>Manual submenu</Button>
-      <Button class="menu-add-button" icon="add" onclick={() => addItem('auto')}>Automatic pages</Button>
-    </div>
-  </PanelSection>
+            {#if row.element.type === 'dropdown'}
+              <div class="menu-child-actions" aria-label={`Add item inside ${row.element.title}`}>
+                <span>Submenu items</span>
+                <Button class="menu-add-button" icon="add" onclick={() => addItem('link', row.path)}>Link</Button>
+                <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown', row.path)}>Submenu</Button>
+                <Button class="menu-add-button" icon="add" onclick={() => addItem('auto', row.path)}>Automatic pages</Button>
+              </div>
+            {/if}
+          </li>
+        {/each}
+      </ol>
+
+      <div class="menu-add-actions" aria-label="Add menu item">
+        <Button class="menu-add-button" icon="add" onclick={() => addItem('link')}>Link</Button>
+        <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown')}>Manual submenu</Button>
+        <Button class="menu-add-button" icon="add" onclick={() => addItem('auto')}>Automatic pages</Button>
+      </div>
+    </PanelSection>
+  </div>
+
+  <div hidden={activeTab !== 'other'}>
+    <Checkbox id="menu-sticky" label="Sticky menu" checked={Boolean($currentProject?.menu.style?.sticky)} oninput={(event) => updateSticky(event.currentTarget.checked)} />
+  </div>
 {/if}
 
 <style>
 .menu-title {
-  margin: 0 0 12px;
-  font-size: 12px;
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--ui-text, #f5f5f5);
 }
@@ -366,13 +359,13 @@ function pageName(pageId: string, pages: PageType[]): string {
 .menu-style-fields,
 .menu-item-fields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.25rem), 1fr));
   align-items: end;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .menu-style-fields {
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 }
 
 .menu-style-fields :global(.ui-field),
@@ -391,16 +384,16 @@ function pageName(pageId: string, pages: PageType[]): string {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .menu-add-actions {
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
 
 .menu-items {
   display: grid;
-  gap: 8px;
+  gap: 0.5rem;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -408,10 +401,10 @@ function pageName(pageId: string, pages: PageType[]): string {
 
 .menu-item {
   min-width: 0;
-  margin-inline-start: min(calc(var(--menu-depth) * 12px), 36px);
-  padding: 8px;
-  border: 1px solid var(--ui-border, #444);
-  border-radius: 6px;
+  margin-inline-start: min(calc(var(--menu-depth) * 0.75rem), 2.25rem);
+  padding: 0.5rem;
+  border: 0.0625rem solid var(--ui-border, #444);
+  border-radius: 0.375rem;
   background: var(--ui-panel, #2c2c2c);
 }
 
@@ -422,40 +415,40 @@ function pageName(pageId: string, pages: PageType[]): string {
 .menu-item-heading {
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .menu-item-kind {
   margin-right: auto;
   color: var(--ui-muted, #b3b3b3);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   text-transform: capitalize;
 }
 
 .menu-item-order {
   display: flex;
-  gap: 2px;
+  gap: 0.125rem;
 }
 
 .menu-child-actions {
-  margin-top: 12px;
-  padding-top: 8px;
-  border-top: 1px solid var(--ui-border, #444);
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 0.0625rem solid var(--ui-border, #444);
 }
 
 .menu-child-actions > span {
   flex-basis: 100%;
   color: var(--ui-muted, #b3b3b3);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
 .menu-empty {
   margin: 0;
   color: var(--ui-muted, #b3b3b3);
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.5;
 }
 </style>

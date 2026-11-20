@@ -6,7 +6,7 @@ import type { BlockEditorProps, PageType } from '../../types/types.ts'
 import { createPendingSave } from '../../utils/editor-save.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
 
-const {}: BlockEditorProps = $props()
+const { activeTab = 'content' }: BlockEditorProps = $props()
 
 function isPage(element: NonNullable<typeof $selectedElement>): element is PageType {
   return 'parentId' in element
@@ -20,7 +20,7 @@ function getPageOrder(): number | '' {
 
 const pendingSave = createPendingSave(300)
 let pendingElement: PageType | null = null
-let pendingChanges: Partial<Pick<PageType, 'title' | 'order' | 'colors'>> = {}
+let pendingChanges: Partial<Pick<PageType, 'title' | 'order'>> = {}
 
 const unsubscribeSelection = selectedElement.subscribe((element) => {
   if (pendingElement && element !== pendingElement) {
@@ -77,38 +77,17 @@ function updateOrder(event: Event) {
   const input = event.target as HTMLInputElement
   updatePage({ order: Number.parseInt(input.value, 10) || 0 })
 }
-
-function updateBackgroundColorKey(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const page = $selectedElement
-  if (page && isPage(page)) {
-    updatePage({ colors: { ...page.colors, textColorKey: page.colors?.textColorKey || '', backgroundColorKey: select.value } })
-  }
-}
-
-function updateTextColorKey(event: Event) {
-  const select = event.target as HTMLSelectElement
-  const page = $selectedElement
-  if (page && isPage(page)) {
-    updatePage({ colors: { ...page.colors, textColorKey: select.value, backgroundColorKey: page.colors?.backgroundColorKey || '' } })
-  }
-}
 </script>
 
-<Input id="title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
-<Input id="order" label="Order:" value={getPageOrder()} oninput={updateOrder} />
+<div hidden={activeTab !== 'content'}>
+  <Input id="title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
+</div>
 
-<ColorSelect
-  element={{ style: { backgroundColorKey: ($selectedElement as PageType)?.colors?.backgroundColorKey || '' } }}
-  title="Page background color"
-  id="page-background-color"
-  styleName="backgroundColorKey"
-  update={updateBackgroundColorKey}
-  isBgColors={true} />
-<ColorSelect
-  element={{ style: { textColorKey: ($selectedElement as PageType)?.colors?.textColorKey || '' } }}
-  title="Page text color"
-  id="page-text-color"
-  styleName="textColorKey"
-  update={updateTextColorKey}
-  isBgColors={false} />
+<div hidden={activeTab !== 'style'}>
+  <ColorSelect title="Page background color" id="page-background-color" styleName="backgroundColorKey" isBgColors={true} />
+  <ColorSelect title="Page text color" id="page-text-color" styleName="textColorKey" isBgColors={false} />
+</div>
+
+<div hidden={activeTab !== 'other'}>
+  <Input id="order" label="Order:" value={getPageOrder()} oninput={updateOrder} />
+</div>

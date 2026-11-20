@@ -6,35 +6,6 @@ export function updateBlockField(key: string, value: unknown, update: BlockEdito
   debounce()
 }
 
-export function updateStyleNumber(
-  key: string,
-  event: Event,
-  style: ContentType['style'] | undefined,
-  update: BlockEditorProps['update'],
-  debounce: BlockEditorProps['updatePageContentWithDebounce']
-) {
-  const input = event.target as HTMLInputElement
-  const nextStyle = { ...style }
-  if (!input.value.trim()) {
-    delete nextStyle[key]
-  } else {
-    nextStyle[key] = Number(input.value)
-  }
-
-  updateBlockField('style', nextStyle, update, debounce)
-}
-
-export function updateStyleColor(
-  key: string,
-  event: Event,
-  style: ContentType['style'] | undefined,
-  update: BlockEditorProps['update'],
-  debounce: BlockEditorProps['updatePageContentWithDebounce']
-) {
-  const input = event.target as HTMLInputElement
-  updateBlockField('style', { ...style, [key]: input.value }, update, debounce)
-}
-
 function createDefaultLinkSettings(firstPageId: string, text: string, asButton: boolean): LinkSettings {
   return {
     text,

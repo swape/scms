@@ -55,7 +55,7 @@ function addPage(parentId: string | null = null, order: number = 0) {
 <aside class="project-items editor-panel" aria-label="Project navigation">
   {#if $currentProject}
     <div class="sidebar-heading">
-      <span class="project-mark"><Icon name="dashboard" size={18} /></span>
+      <span class="project-mark"><Icon name="dashboard" size={1.125} /></span>
       <div class="project-identity">
         <strong>{$currentProject.title}</strong>
         <span>Pages and layers</span>
@@ -81,24 +81,24 @@ function addPage(parentId: string | null = null, order: number = 0) {
 
 .project-items :global(.ui-panel-section) {
   margin: 0;
-  padding: 12px;
+  padding: 0.75rem;
 }
 
 .sidebar-heading {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 16px;
-  border-bottom: 1px solid var(--ui-border);
+  gap: 0.625rem;
+  padding: 1rem;
+  border-bottom: 0.0625rem solid var(--ui-border);
 }
 
 .project-mark {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   flex-shrink: 0;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--ui-selection);
   color: #8acfff;
 }
@@ -106,19 +106,19 @@ function addPage(parentId: string | null = null, order: number = 0) {
 .project-identity {
   min-width: 0;
   display: grid;
-  gap: 2px;
+  gap: 0.125rem;
 }
 
 .project-identity strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .project-identity > span {
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 </style>

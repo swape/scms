@@ -18,11 +18,11 @@ const description = $derived(hint ? `${describedBy ? `${describedBy} ` : ''}${id
 <style>
 select {
   appearance: none;
-  padding-right: 28px;
+  padding-right: 1.75rem;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m5 6.5 3 3 3-3' stroke='%23b3b3b3' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 6px center;
-  background-size: 16px;
+  background-position: right 0.375rem center;
+  background-size: 1rem;
   cursor: pointer;
 }
 

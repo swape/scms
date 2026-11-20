@@ -9,6 +9,22 @@ export interface InputProps extends Omit<HTMLInputAttributes, 'value' | 'type' |
   hint?: string
 }
 
+export type SizeUnit = 'px' | 'rem' | 'ch'
+export type CssLengthUnit = SizeUnit | 'em' | '%'
+
+export interface CssLength {
+  value: number
+  unit: CssLengthUnit
+}
+
+export interface SizeInputProps extends Omit<InputProps, 'type' | 'value' | 'oninput' | 'onchange' | 'placeholder' | 'step'> {
+  value?: string | number
+  defaultUnit?: SizeUnit
+  allowAuto?: boolean
+  fallback?: string | number
+  onvaluechange: (value: string | undefined) => void
+}
+
 export interface SelectProps<T extends string | number> extends Omit<HTMLSelectAttributes, 'value' | 'multiple' | 'children'> {
   label: string
   wrapperClass?: string
@@ -65,9 +81,36 @@ export interface PanelSectionProps {
   id?: string
 }
 
+export type SettingsTab = 'content' | 'style' | 'other'
+
+export interface TabOption<T extends string = string> {
+  value: T
+  label: string
+}
+
+export interface TabsProps<T extends string = string> {
+  id: string
+  label: string
+  options: readonly TabOption<T>[]
+  value: T
+  onvaluechange: (value: T) => void
+}
+
+export type StyleMode = 'normal' | 'mobile'
+export type StyleValue = string | number | boolean
+export type StyleValues = Record<string, StyleValue>
+
+export interface StyleEditor {
+  readonly mode: StyleMode
+  read: (key: string) => string | number | undefined
+  checked: (key: string) => boolean
+  set: (key: string, value: StyleValue | undefined) => void
+}
+
 export interface BlockEditorProps {
   update: (key: string, value: unknown) => void
   updatePageContentWithDebounce: () => void
+  activeTab?: SettingsTab
 }
 
 export interface EditorDefinition {
@@ -79,7 +122,7 @@ export interface EditorDefinition {
 
 export type BlockStyleSection = 'wrapper' | 'colors' | 'padding' | 'margin' | 'custom'
 
-export interface BlockStylesProps extends BlockEditorProps {
+export interface BlockStylesProps {
   sections?: readonly BlockStyleSection[]
   allowCenter?: boolean
   children?: Snippet
@@ -101,7 +144,7 @@ export interface ElementDefinition {
   editor: () => Promise<{ default: Component<BlockEditorProps> }>
   preview: `/src/blocks/${string}/Preview.astro`
   defaults?: (firstPageId: string) => Partial<ContentType>
-  css?: (item: ContentType, selector: string) => BlockCssRule[]
+  css?: (item: ContentType, selector: string, mode?: StyleMode) => BlockCssRule[]
 }
 
 export interface PageDefinition extends EditorDefinition {
@@ -128,6 +171,7 @@ export interface PageType {
   style?: {
     [key: string]: string | number
   }
+  mobileStyle?: StyleValues
 }
 
 export interface ColorType {
@@ -167,6 +211,7 @@ export interface ProjectType {
       backgroundColor?: string
       textColor?: string
     }
+    mobileStyle?: StyleValues
   }
   footer: {
     type: 'footer1' // this is the first footer style, we can add more footer styles later
@@ -174,6 +219,7 @@ export interface ProjectType {
     style?: {
       [key: string]: string | number
     }
+    mobileStyle?: StyleValues
   }
 }
 
@@ -204,6 +250,7 @@ export interface ContentType {
   style?: {
     [key: string]: string | number
   }
+  mobileStyle?: StyleValues
   content?: string
   // link element
   link?: LinkSettings

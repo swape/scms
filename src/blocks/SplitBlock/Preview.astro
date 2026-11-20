@@ -26,18 +26,16 @@ const containerClass = String(data?.style?.wrapper || '')
     <div class="split-text">
       <div class="content-wrapper">
         {title && <h2>{title}</h2>}
-        {
-          content && (
-            <p>
-              {content.split('\n').map((line: string, index: number) => (
-                <>
-                  {index > 0 && <br />}
-                  {line}
-                </>
-              ))}
-            </p>
-          )
-        }
+        {content && (
+          <p>
+            {content.split('\n').map((line: string, index: number) => (
+              <>
+                {index > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </p>
+        )}
       </div>
       <a class="link-button" href={sanitizeHref(href)} target={target} rel={rel}>
         {buttonText}

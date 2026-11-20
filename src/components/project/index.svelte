@@ -41,7 +41,7 @@ const tabs = [
 
 {#if currentProject}
   {#if currentProject?.id}
-    <div class="flex border-b border-slate-700 mb-5">
+    <div class="flex border-b-[0.0625rem] border-slate-700 mb-5">
       {#each tabs as { name, id }}
         <button class={['btn p-3', tab === id ? 'active' : '']} type="button" onclick={() => changeTab(id)}>{name}</button>
       {/each}

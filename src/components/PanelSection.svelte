@@ -18,36 +18,36 @@ const { title, actions, children, class: className = '', id = generatedId }: Pan
 <style>
 .ui-panel-section {
   min-width: 0;
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--ui-border, #444);
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 0.0625rem solid var(--ui-border, #444);
   color: var(--ui-text, #f5f5f5);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.4;
 }
 
 header {
   display: flex;
-  min-height: 24px;
+  min-height: 1.5rem;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 h3 {
   min-width: 0;
   margin: 0;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 1.125rem;
 }
 
 .section-actions {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 }
 </style>

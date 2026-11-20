@@ -20,7 +20,7 @@ export function buildNewElement(type: string, name: string, pageId: string, orde
     content: defaults?.content ?? '',
     style: {
       wrapper: 'container',
-      marginBottom: '24',
+      marginBottom: '24px',
       ...defaults?.style,
     },
   }

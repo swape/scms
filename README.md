@@ -86,7 +86,9 @@ src/
 │   ├── PanelSection.svelte # Properties section heading, actions, and divider
 │   ├── Checkbox.svelte     # Shared accessible toggle switch
 │   ├── Input.svelte        # Shared labeled text, URL, number, and color field
+│   ├── SizeInput.svelte    # Shared numeric size with px/rem/ch selector
 │   ├── Select.svelte       # Shared native single-select control
+│   ├── Tabs.svelte         # Reusable keyboard-accessible tab navigation
 │   ├── FileSelector/
 │   │   └── index.svelte
 │   ├── editor/            # Visual editor UI
@@ -233,19 +235,46 @@ existing Save to server/Save and Publish actions remain placeholders; JSON backu
 
 ## Editor Interface and Shared Controls
 
-The sidebar and settings inspector follow [Figma's own editor interface](https://help.figma.com/hc/en-us/articles/360039832014-Design-prototype-and-explore-layer-properties-in-the-right-sidebar): neutral charcoal panels, compact 32px controls, section dividers, blue selected rows, and small icon actions. The sidebar groups Pages, Add element, and Layers; the inspector shows the selected object's properties. Narrow windows stack the panels instead of squeezing the preview. **Toggle dark mode** controls the rendered page, not the editor chrome.
+The sidebar and settings inspector follow [Figma's own editor interface](https://help.figma.com/hc/en-us/articles/360039832014-Design-prototype-and-explore-layer-properties-in-the-right-sidebar): neutral charcoal panels, compact 2rem controls, section dividers, blue selected rows, and small icon actions. The sidebar groups Pages, Add element, and Layers; the inspector shows the selected object's properties. Narrow windows stack the panels instead of squeezing the preview. **Toggle dark mode** controls the rendered page, not the editor chrome.
 
-Home and Dashboard use the same charcoal application shell, typography, rounded surfaces, and blue accents. Main navigation highlights the current page. Sign-in/out, New project, and project cards reuse `Button` and `Icon`; the project grid stacks on narrow screens. The shared 44px navigation bar also preserves the editor's viewport sizing. Authentication and project-creation behavior are unchanged.
+Settings are grouped into **Content**, **Style**, and **Other settings** tabs. Content contains text, images, links, and item lists. Style contains alignment, colors, layout, and size controls. Other settings contains behavior such as link targets, sticky navigation, FAQ opening rules, and page order, plus read-only element details. A new selection starts on Content. Tabs stay available in the pinned or floating header; switching tabs keeps controls mounted so drafts and pending unit selections survive. Use Left/Right arrows or Home/End while a tab is focused.
+
+Inside **Style**, choose **Normal** or **Mobile overrides**. Normal is the base appearance; Mobile overrides stores only fields you change and inherits the rest. Mobile rules apply at preview viewport widths **768px and below**, including a small iPad in portrait; 769px and above uses Normal styles. This uses the iframe's actual width, not the outer editor window or the selected editing mode. Selecting Mobile overrides does not force the preview to a different size.
+
+Beside **Toggle dark mode**, the preview size button cycles through **Desktop** (default, fills the available preview area), **Tablet** (up to 768px), and **Phone** (up to 390px). The iframe resizes without reloading and fits within the available space.
+
+Use **Reset mobile overrides** to restore inheritance for the selected block, page, or global element. Clearing a mobile size field restores that field's normal value. Zero, false, and explicit None selections are retained as overrides. Styles support the existing appearance controls, including wrappers, alignment, colors, spacing, link-button presentation, Split Block flipping, page palettes, and menu layout/palettes. Content and Other settings remain shared across sizes. The footer currently has only one appearance, so its only style choice looks the same in both modes.
+
+Overrides are saved in an optional sparse `mobileStyle` object on the block/page/menu/footer and included in JSON backups. Normal changes continue to affect inherited mobile properties. New selections start in Normal mode; mode changes preserve content edits. `MOBILE_STYLE_MAX_WIDTH` in `src/constants.ts` defines the shared breakpoint.
+
+Home and Dashboard use the same charcoal application shell, typography, rounded surfaces, and blue accents. Main navigation highlights the current page. Sign-in/out, New project, and project cards reuse `Button` and `Icon`; the project grid stacks on narrow screens. The shared 2.75rem navigation bar also preserves the editor's viewport sizing. Authentication and project-creation behavior are unchanged.
 
 All visible sidebar, inspector, block-settings, file-picker, and toolbar buttons use `Button.svelte`; fields use `Input`, `Select`, `Checkbox`, or `Textarea`. Hidden JSON file and preview transport inputs remain native. Design tokens (`--ui-*`) live in `src/styles/global.css`; controls have fallback tokens for reuse elsewhere.
 
 - `Button`: `variant="ghost|secondary|primary|danger"`, `size="sm|md"`, `icon`, `iconPosition`, `iconOnly`, `active`, and `fullWidth`. Native events, ARIA, disabled state, and popover attributes forward to the real button. Use `bind:ref` for native focus or popover operations. Icon-only actions require an accessible label and should provide a tooltip.
-- `Icon`: a decorative Material Symbol with `name` and optional pixel `size`.
+- `Icon`: a decorative Material Symbol with `name` and optional numeric `size` in rem (default `1`).
 - `Field`: the reusable `ui-field` wrapper, label, and hint used by text, numeric, select, and multiline controls. Existing `wrapperClass` hooks are retained; native controls use `ui-control`.
 - `Textarea`: `label`, optional `id`, `value`/`bind:value`, `rows`, `hint`, and native textarea attributes/events. It supports vertical resizing, a visible neutral border at rest, and the shared blue focus highlight. Project descriptions and extra markup/style fields use this component too.
 - `PanelSection`: a `title`, optional `actions` snippet, and child content for compact property groups with dividers.
+- `Tabs`: typed options, selected value, and `onvaluechange`, with tab roles, selected states, roving focus, and arrow/Home/End navigation. Its `id` connects tab IDs to the caller's labeled panel.
 
 Floating settings retain header dragging in both axes, keyboard movement, viewport containment, and a shorter scrollable body. Switching between floating and pinned modes preserves edits.
+
+## Spacing and Size Units
+
+Blocks with **Margin Block** (top and bottom) also have **Margin Inline** (start and end: left and right in left-to-right text). Each side can be set independently in **Normal** and **Mobile overrides**. Choose **Auto** on either side to use the available space, or on both sides to center a block that is narrower than its container.
+
+Every existing size input in Settings uses a number field with its own **px**, **rem**, or **ch** selector. Padding, margins, border radii, and Split Block dimensions default to px; rendered blocks also use px for fixed spacing, gaps, and width defaults. Font styling remains rem-based. Existing explicit units are preserved when reopening a draft or importing JSON, rather than reset to the default. Editor interface styling remains rem-based.
+
+Changing a unit keeps the entered number and applies the new CSS unit: `2px` becomes `2rem` when rem is selected. `rem` follows the page root text size; `ch` follows the width of the font's zero glyph. Fractional values and zero are supported; margins can be negative. Clearing a field removes its saved override. Selecting a unit on an empty field does not add an override, and unsaved unit selections reset when switching blocks. Numeric page order and menu item counts remain unitless.
+
+Use `SizeInput` for size settings: pass `value`, `onvaluechange`, optional `fallback`, and `defaultUnit` (px by default; use `defaultUnit="rem"` for font-size controls). It composes the shared Input/Select controls. Read effective style values through `getStyleEditor().read(key)` and write a single field through `.set(key, value)`; undefined clears the current-mode override. `parseCssLength` parses values and `getCssLength` emits safe CSS. Bare legacy length values default to px; explicit px/rem/ch and existing em/% values keep their units. Responsive percentages, viewport sizing, image intrinsic dimensions, SVG coordinates, and user-authored CSS/HTML retain their meaning. Floating-panel browser coordinates are still handled independently from content size settings.
+
+## Project Fonts
+
+Under **Project → Settings → Fonts**, choose one font for **Headings and titles** and another for **Body text**. Both lists offer ten serif and ten sans-serif families ranked by popularity in [Google Fonts metadata](https://fonts.google.com/metadata/fonts), limited to families with Latin support. No monospace fonts are included.
+
+Selections write only to **Extra head tags** and **Extra styles**. Keep manual edits outside the marked font blocks; **Use existing styles** removes the generated rule for that role. The editor interface does not change, and the font settings are included in project JSON through the existing extra fields.
 
 ## Project Color Palette
 
@@ -257,17 +286,17 @@ Palette edits save to the current local draft, and the project page restores a m
 
 ## Menu Appearance
 
-Select the menu in the preview to open its settings. Under **Appearance**, choose the layout and select **Background color** and **Text color** from the project's named palette. The menu and its dropdowns use those palette entries in both light and dark themes. **None** uses the primary project colors; older drafts with literal hex menu colors also fall back to primary colors until you choose palette entries.
+Select the menu in the preview to open its settings. Under **Style → Appearance**, choose the layout and select **Background color** and **Text color** from the project's named palette. The menu and its dropdowns use those palette entries in both light and dark themes. **None** uses the primary project colors; older drafts with literal hex menu colors also fall back to primary colors until you choose palette entries.
 
 The menu's **Label** field controls the displayed text of links and submenu headings. Label edits update the preview without changing destinations or opening targets, including nested links and items converted to links.
 
-Enable **Sticky menu** to keep navigation at the top while the page scrolls. It is off by default, works with horizontal and vertical layouts, and stays above page content without removing the menu's initial space. In the editor, it sticks to the top of the preview iframe. Menu appearance settings are project-global and included in JSON backups.
+Enable **Other settings → Sticky menu** to keep navigation at the top while the page scrolls. It is off by default, works with horizontal and vertical layouts, and stays above page content without removing the menu's initial space. In the editor, it sticks to the top of the preview iframe. Menu appearance settings are project-global and included in JSON backups.
 
 ## FAQ Block
 
-Choose **FAQ** under **Add element** to insert a question-and-answer block. Edit its title, questions, and multiline answers in Settings. Use **Add question**, the Material Symbols up/down arrows, and the delete icons to manage the list; the controls match the menu and footer settings.
+Choose **FAQ** under **Add element** to insert a question-and-answer block. Edit its title, questions, and multiline answers in **Content**. Use **Add question**, the Material Symbols up/down arrows, and the delete icons to manage the list; the controls match the menu and footer settings. Alignment, colors, and spacing are in **Style**.
 
-By default, questions expand or collapse independently using native disclosure controls with mouse and keyboard support. Enable **Close other answers when opening one** to keep only one answer open within that FAQ block; other FAQ blocks remain independent. Mark **Open on start** on each question that should initially show its answer. With exclusive opening enabled, only the first marked question in list order starts open; the other saved checkboxes are preserved for independent mode. With no questions marked, all answers start closed.
+By default, questions expand or collapse independently using native disclosure controls with mouse and keyboard support. In **Other settings**, enable **Close other answers when opening one** to keep only one answer open within that FAQ block; other FAQ blocks remain independent. Mark the question-labeled **Open on start** switches for answers that should initially show. With exclusive opening enabled, only the first marked question in list order starts open; the other saved checkboxes are preserved for independent mode. With no questions marked, all answers start closed.
 
 Question rows display a Material Symbols chevron after the text, pointing down when closed and up when open. The icon remains aligned at the end of wrapped questions, supports clicking anywhere on the row, and respects reduced-motion preferences.
 
@@ -282,7 +311,7 @@ Open **Save & load** in the editor toolbar. The dropdown groups **Save to server
 - **Save as JSON** downloads a formatted `.json` file named after the current project. It includes all pages, blocks, colors, navigation, footer, and project settings—not login state or the editor's dark-mode preference. Image URLs are included; image files are not bundled. The button is disabled when no project is selected.
 - **Load from JSON** opens a file picker, validates the file, and asks before replacing the current local draft. Export a backup first if you need to keep that draft. Invalid files display an error without replacing the draft; canceling leaves it unchanged.
 - Imports reload the editor with the imported project's ID and `local=true`, so the preview, page list, and block/global settings use the restored data even when the ID matches the previous project. Reloading that editor URL resumes the imported draft. Loading also works from the editor's no-project state.
-- The file is the plain project object, matching `ProjectType` in `src/types/types.ts`, without a wrapper. Validation checks nested data, registered block types, duplicate IDs, and missing/cyclic page parents. Empty projects are supported; additional fields are retained.
+- The file is the plain project object, matching `ProjectType` in `src/types/types.ts`, without a wrapper. Validation checks nested data, registered block types, duplicate IDs, and missing/cyclic page parents. Empty projects are supported; additional fields and explicit size units are retained, and bare legacy size/spacing values receive px units.
 - Only import files you trust. Project custom HTML, head markup, and styles are preserved, and scripts can run in the preview. JSON backup does not publish a site or add server storage.
 
 ## Current Limitations
@@ -320,7 +349,7 @@ Create `src/blocks/Quote/index.svelte`:
   import Textarea from '../../components/Textarea.svelte';
   import Styles from '../shared/Styles.svelte';
 
-  const { update, updatePageContentWithDebounce }: BlockEditorProps = $props();
+  const { update, activeTab = 'content' }: BlockEditorProps = $props();
   const quote = $derived(
     $selectedElement && 'content' in $selectedElement
       ? ($selectedElement.content ?? '')
@@ -333,12 +362,20 @@ Create `src/blocks/Quote/index.svelte`:
   }
 </script>
 
-<Textarea id="quote-content" label="Quote:" value={quote} oninput={updateContent} />
+<div hidden={activeTab !== 'content'}>
+  <Textarea id="quote-content" label="Quote:" value={quote} oninput={updateContent} />
+</div>
 
-<Styles {update} {updatePageContentWithDebounce} />
+<div hidden={activeTab !== 'style'}>
+  <Styles />
+</div>
 ```
 
 Each block chooses the style controls it exposes using [Styles.svelte](./src/blocks/shared/Styles.svelte). It includes the Styles heading and defaults to `sections={['wrapper', 'colors', 'padding', 'margin']}`. Pass a subset in the desired order, such as `sections={['colors', 'padding']}`, to select which controls appear; an empty list hides the entire section. Set `allowCenter` to enable the wrapper's Center option. To insert block-specific fields, include `'custom'` at the desired position and pass those fields as child content, as in the Split Block editor. Individual controls remain available in [blocks/shared](./src/blocks/shared).
+
+Style controls use the settings context from `getStyleEditor()` in `src/utils/editor-style.ts`: `read(key)` returns the effective inherited string/number, `checked(key)` reads boolean fields, and `set(key, value)` updates only the selected mode. Shared `ColorSelect`, `TextAlign`, spacing, and wrapper controls handle this internally and no longer take element/update props. Custom controls must use the context rather than mutate the selected block's normal styles directly. The context is editor-only; never import it from preview code.
+
+Each block editor receives `activeTab` through `BlockEditorProps`. Group its fields using native `hidden` wrappers for `content`, `style`, and optional `other`; do not conditionally mount/unmount the editor on tab changes. The settings panel owns the tab navigation, accessible panel label, and generic Other details.
 
 For boolean settings, use [Checkbox.svelte](./src/components/Checkbox.svelte) with `id`, `label`, `checked`, and `oninput` props. It displays a toggle switch with an animated thumb, a clickable label, keyboard focus feedback, and optional `disabled` support. A native checkbox with `role="switch"` preserves keyboard interaction and exposes its state to assistive technology; animations respect reduced-motion preferences.
 
@@ -437,6 +474,8 @@ export function getCss(item: ContentType, selector: string): BlockCssRule[] {
 ```
 
 Import `getCss` as `quoteCss` in the registry and add `css: quoteCss` to the Quote entry. Use the validation helpers in [shared/css.ts](./src/blocks/shared/css.ts) for saved color, length, and alignment values. If you expose text alignment in the editor, compose the shared `TextAlign` control with `styleName="textAlign"`.
+
+CSS hooks receive the effective item and an optional third `mode` argument (`normal` or `mobile`). Normal markup is reused on mobile; class-based presentation such as wrappers, buttons, and flipped layouts must be overridden with CSS rather than duplicating content. Keep responsive declarations below normal rules and use the shared breakpoint.
 
 ### 6. Verify the block
 

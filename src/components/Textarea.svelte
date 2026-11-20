@@ -16,8 +16,8 @@ const description = $derived(hint ? `${describedBy ? `${describedBy} ` : ''}${id
 <style>
 textarea {
   display: block;
-  min-height: 96px;
-  padding: 8px;
+  min-height: 6rem;
+  padding: 0.5rem;
   border-color: var(--ui-border, #444);
   resize: vertical;
 }

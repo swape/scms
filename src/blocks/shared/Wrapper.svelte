@@ -1,24 +1,12 @@
 <script lang="ts">
 import Select from '../../components/Select.svelte'
-import { selectedElement } from '../../store.ts'
-import type { BlockEditorProps } from '../../types/types.ts'
+import { getStyleEditor } from '../../utils/editor-style.ts'
 
-const { updatePageContentWithDebounce, update, allowCenter = false }: BlockEditorProps & { allowCenter?: boolean } = $props()
-
-function getSelectedStyle(): Record<string, string | number> | undefined {
-  const element = $selectedElement
-
-  return element && 'style' in element ? element.style : undefined
-}
-
-function updateWrapper(event: Event) {
-  const select = event.target as HTMLSelectElement
-  update('style', { ...getSelectedStyle(), wrapper: select.value })
-  updatePageContentWithDebounce()
-}
+const { allowCenter = false }: { allowCenter?: boolean } = $props()
+const style = getStyleEditor()
 </script>
 
-<Select id="wrapper-options" label="Wrapper:" value={getSelectedStyle()?.wrapper || ''} onchange={updateWrapper}>
+<Select id="wrapper-options" label="Wrapper:" value={style.read('wrapper') ?? ''} onchange={(event) => style.set('wrapper', event.currentTarget.value)}>
   <option value="container">Container</option>
   {#if allowCenter}
     <option value="center">Center</option>

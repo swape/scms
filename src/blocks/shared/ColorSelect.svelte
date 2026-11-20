@@ -1,41 +1,16 @@
 <script lang="ts">
 import Select from '../../components/Select.svelte'
 import { currentProject } from '../../store.ts'
-import type { ColorType } from '../../types/types.ts'
+import { getStyleEditor } from '../../utils/editor-style.ts'
 
-const { element, title, id, update, styleName, isBgColors = true } = $props()
-
-let bgColors = $state([] as ColorType[])
-let textColors = $state([] as ColorType[])
-
-currentProject.subscribe((project) => {
-  if (project) {
-    const projectColors = project.colors ?? []
-    bgColors = []
-    textColors = []
-
-    projectColors.forEach((value) => {
-      if (value.key.startsWith('bg_')) {
-        bgColors.push(value)
-      }
-
-      if (value.key.startsWith('text_')) {
-        textColors.push(value)
-      }
-    })
-  }
-})
+const { title, id, styleName, isBgColors = true }: { title: string; id: string; styleName: string; isBgColors?: boolean } = $props()
+const style = getStyleEditor()
+const colors = $derived(($currentProject?.colors ?? []).filter((color) => color.key.startsWith(isBgColors ? 'bg_' : 'text_')))
 </script>
 
-<Select {id} label={`${title}:`} value={(element?.style?.[styleName] as string) || ''} onchange={update}>
-  {#if isBgColors}
-    {#each bgColors as color}
-      <option value={color.key}>{color.name}</option>
-    {/each}
-  {:else}
-    {#each textColors as color}
-      <option value={color.key}>{color.name}</option>
-    {/each}
-  {/if}
+<Select {id} label={`${title}:`} value={style.read(styleName) ?? ''} onchange={(event) => style.set(styleName, event.currentTarget.value)}>
+  {#each colors as color}
+    <option value={color.key}>{color.name}</option>
+  {/each}
   <option value="">None</option>
 </Select>

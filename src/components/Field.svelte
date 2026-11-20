@@ -16,11 +16,11 @@ const { id, label, wrapperClass = '', hint, children }: FieldProps = $props()
 .ui-field {
   display: grid;
   min-width: 0;
-  gap: 6px;
-  margin: 0 0 12px;
+  gap: 0.375rem;
+  margin: 0 0 0.75rem;
   color: var(--ui-text, #f5f5f5);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.75rem;
   line-height: 1.4;
 }
 
@@ -28,32 +28,32 @@ label {
   display: block;
   margin: 0;
   color: var(--ui-muted, #b3b3b3);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  line-height: 16px;
+  line-height: 1rem;
 }
 
 small {
   color: var(--ui-muted, #b3b3b3);
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 0.6875rem;
+  line-height: 1rem;
 }
 
 :where(.ui-field) :global(.ui-control) {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  min-height: 32px;
+  min-height: 2rem;
   margin: 0;
-  padding: 6px 8px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  padding: 0.375rem 0.5rem;
+  border: 0.0625rem solid transparent;
+  border-radius: 0.3125rem;
   background-color: var(--ui-field, #383838);
   color: var(--ui-text, #f5f5f5);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  line-height: 18px;
+  line-height: 1.125rem;
   color-scheme: dark;
   transition:
     border-color 120ms ease,
@@ -66,7 +66,7 @@ small {
 
 :where(.ui-field) :global(.ui-control:focus-visible) {
   border-color: var(--ui-accent, #0c8ce9);
-  outline: 1px solid var(--ui-accent, #0c8ce9);
+  outline: 0.0625rem solid var(--ui-accent, #0c8ce9);
   outline-offset: 0;
   box-shadow: none;
 }

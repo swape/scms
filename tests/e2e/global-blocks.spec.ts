@@ -3,9 +3,11 @@ import { expect, preview, storedProject, test } from './fixtures'
 test('Menu edits appearance, destinations, and automatic child-page limits', async ({ editorPage: page }) => {
   await preview(page).locator('[data-items="menu"]').click()
   await expect(page.getByRole('heading', { name: 'Menu for Test project' })).toBeVisible()
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
   await page.getByLabel('Layout', { exact: true }).selectOption('vertical')
   await page.getByLabel('Background color:', { exact: true }).selectOption('bg_2')
   await page.getByLabel('Text color:', { exact: true }).selectOption('text_2')
+  await page.getByRole('tab', { name: 'Content', exact: true }).click()
   const first = page.getByRole('list', { name: 'Menu items', exact: true }).locator(':scope > li').first()
   await first.getByLabel('Destination', { exact: true }).selectOption('url')
   await first.getByLabel('URL', { exact: true }).fill('https://example.com/menu')

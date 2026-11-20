@@ -1,19 +1,17 @@
 <script lang="ts">
 import Input from '../../components/Input.svelte'
+import SizeInput from '../../components/SizeInput.svelte'
 import Textarea from '../../components/Textarea.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
-import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helpers.ts'
+import { getStyleEditor } from '../../utils/editor-style.ts'
+import { updateBlockField } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
-const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
+const { updatePageContentWithDebounce, update, activeTab = 'content' }: BlockEditorProps = $props()
 
-function getSelectedStyle(): Record<string, string | number> | undefined {
-  const element = $selectedElement
-
-  return element && 'style' in element ? element.style : undefined
-}
+const style = getStyleEditor()
 
 function updateContent(event: Event) {
   const textarea = event.target as HTMLTextAreaElement
@@ -24,30 +22,30 @@ function updateTitle(event: Event) {
   const input = event.target as HTMLInputElement
   updateBlockField('title', input.value.slice(0, 100), update, updatePageContentWithDebounce)
 }
-
-function updateBorderRadius(event: Event) {
-  updateStyleNumberShared('borderRadius', event, getSelectedStyle(), update, updatePageContentWithDebounce)
-}
-
-function getBorderRadius(): string {
-  const value = getSelectedStyle()?.borderRadius
-  if (value === undefined || value === null || value === '') {
-    return '8'
-  }
-  return String(value)
-}
 </script>
 
-<Input id="text-title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
+<div hidden={activeTab !== 'content'}>
+  <Input id="text-title" label="Title:" value={$selectedElement?.title || ''} oninput={updateTitle} />
 
-<TextAlign element={$selectedElement} {update} title="Title Alignment" id="title-alignment" styleName="titleAlign" />
+  <Textarea id="text-content" label="Content:" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
+</div>
 
-<Textarea id="text-content" label="Content:" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
+<div hidden={activeTab !== 'style'}>
+  <TextAlign title="Title Alignment" id="title-alignment" styleName="titleAlign" />
 
-<TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
+  <TextAlign title="Content Alignment" id="content-alignment" styleName="textAlign" />
 
-{#if getSelectedStyle()?.backgroundColor}
-  <Input id="text-border-radius" label="Border Radius (px):" type="number" min="0" value={getBorderRadius()} oninput={updateBorderRadius} />
-{/if}
+  {#key `${$selectedElement?.id}:${style.mode}`}
+    {#if style.read('backgroundColor')}
+      <SizeInput
+        id="text-border-radius"
+        label="Border Radius:"
+        min="0"
+        fallback="8px"
+        value={style.read('borderRadius')}
+        onvaluechange={(value) => style.set('borderRadius', value)} />
+    {/if}
+  {/key}
 
-<Styles {updatePageContentWithDebounce} {update} />
+  <Styles />
+</div>

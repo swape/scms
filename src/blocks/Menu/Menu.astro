@@ -1,7 +1,7 @@
 ---
 import './menuStyles.css'
+import { getMenuCss } from '../../pages/preview/cssHelpers.ts'
 import type { MenuElement, PageType, ProjectType } from '../../types/types.ts'
-import { getColorValue } from '../shared/css.ts'
 import MenuItems from './MenuItems.astro'
 
 interface Props {
@@ -10,13 +10,12 @@ interface Props {
 }
 
 const { menu, pages } = Astro.props
-const backgroundColor = getColorValue(menu?.style?.backgroundColor)
-const textColor = getColorValue(menu?.style?.textColor)
-const menuStyle = [backgroundColor ? `--menu-background: ${backgroundColor}` : '', textColor ? `--menu-text: ${textColor}` : ''].filter(Boolean).join('; ')
+const menuCss = getMenuCss(menu)
 const menuItems: MenuElement[] = menu?.elements ?? []
 ---
 
-<header id="menu" data-items="menu" class:list={['menu-inner', { 'menu-sticky': menu?.style?.sticky }]} style={menuStyle}>
+{menuCss && <style is:global set:html={menuCss} />}
+<header id="menu" data-items="menu" class:list={['menu-inner', { 'menu-sticky': menu?.style?.sticky }]}>
   <nav aria-label="Project menu">
     <MenuItems items={menuItems} pages={pages} layout={menu?.style?.layout} />
   </nav>

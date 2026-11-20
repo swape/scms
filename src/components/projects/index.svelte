@@ -30,7 +30,7 @@ function gotoProject(pid: string | number) {
   <div class="projects-grid">
     {#each $projects ?? [] as p (p.id)}
       <Button class="project-card" aria-label={`Open project ${p.id}: ${p.title}`} onclick={() => gotoProject(p.id)}>
-        <span class="project-cover"><Icon name="web" size={36} /></span>
+        <span class="project-cover"><Icon name="web" size={2.25} /></span>
         <span class="project-info">
           <span class="project-name">{p.title}</span>
           <span class="project-description">{p.description}</span>
@@ -51,27 +51,27 @@ function gotoProject(pid: string | number) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--ui-border);
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 0.0625rem solid var(--ui-border);
 }
 .projects-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .projects-title h2 {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .project-count {
   color: var(--ui-muted);
 }
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
-  gap: 16px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.75rem), 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
 }
 .projects-grid :global(.project-card) {
   display: flex;
@@ -82,24 +82,24 @@ function gotoProject(pid: string | number) {
   padding: 0;
   min-width: 0;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   text-align: left;
 }
 .project-cover {
   display: grid;
   place-items: center;
-  height: 132px;
+  height: 8.25rem;
   background: #242424;
   color: var(--ui-muted);
-  border-bottom: 1px solid var(--ui-border);
+  border-bottom: 0.0625rem solid var(--ui-border);
 }
 .project-info {
   display: grid;
-  gap: 6px;
-  padding: 14px;
+  gap: 0.375rem;
+  padding: 0.875rem;
 }
 .project-name {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
@@ -113,23 +113,23 @@ function gotoProject(pid: string | number) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
 .projects-empty {
   color: var(--ui-muted);
   grid-column: 1 / -1;
-  padding: 24px 0;
+  padding: 1.5rem 0;
   text-align: center;
 }
-@media (max-width: 600px) {
+@media (max-width: 37.5rem) {
   .projects-heading {
-    padding: 12px;
+    padding: 0.75rem;
   }
   .projects-grid {
-    padding: 12px;
-    gap: 12px;
+    padding: 0.75rem;
+    gap: 0.75rem;
   }
 }
 </style>

@@ -3,7 +3,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 0;
 
-  @media (max-width: 640px) {
+  @media (max-width: 40rem) {
     grid-template-columns: 1fr;
 
     .split-image {
@@ -13,7 +13,7 @@
 }
 
 .split-block-flipped {
-  gap: 2rem;
+  gap: 32px;
 
   .split-text {
     order: 2;
@@ -23,6 +23,7 @@
 .split-text,
 .split-image {
   width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
@@ -30,8 +31,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.5rem;
+  gap: 16px;
+  padding: 24px;
 
   h2 {
     margin-top: 0;
@@ -44,11 +45,12 @@
 
 .split-image {
   display: flex;
+  min-height: 300px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  @media (max-width: 640px) {
+  @media (max-width: 40rem) {
     aspect-ratio: 4 / 3;
   }
 }

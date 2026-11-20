@@ -31,22 +31,22 @@ const { color, onchange }: ColorPairProps = $props()
 <style>
 .color-pair {
   min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
+  padding: 1rem;
+  border: 0.0625rem solid var(--ui-border);
+  border-radius: 0.5rem;
   background: var(--ui-panel);
 }
 legend {
   max-width: 100%;
-  padding-inline: 6px;
-  font-size: 12px;
+  padding-inline: 0.375rem;
+  font-size: 0.75rem;
   font-weight: 600;
   overflow-wrap: anywhere;
 }
 .color-modes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0.75rem;
 }
 .color-mode {
   min-width: 0;
@@ -54,39 +54,39 @@ legend {
 h4 {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 0.375rem;
+  margin-bottom: 0.5rem;
   font-weight: 500;
   color: var(--ui-muted);
 }
 .color-values {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.375rem;
 }
 .color-values :global(.ui-field) {
   margin: 0;
 }
 .color-values :global(label) {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 0.0625rem;
+  height: 0.0625rem;
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
 }
 .color-values :global(input) {
-  height: 32px;
+  height: 2rem;
 }
 .color-values :global(.color-value input) {
   font-family: monospace;
 }
 .color-key {
-  margin-top: 12px;
+  margin-top: 0.75rem;
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
 }
-@media (max-width: 420px) {
+@media (max-width: 26.25rem) {
   .color-modes {
     grid-template-columns: minmax(0, 1fr);
   }

@@ -1,18 +1,26 @@
-export function getCssLength(value: string | number | undefined): string {
-  if (value === undefined || value === '') {
-    return ''
-  }
+import type { CssLength, CssLengthUnit, SizeUnit } from '../../types/types.ts'
 
+export function parseCssLength(value: string | number | undefined, defaultUnit: SizeUnit = 'px'): CssLength | undefined {
   if (typeof value === 'number') {
-    return `${value}px`
+    return Number.isFinite(value) ? { value, unit: defaultUnit } : undefined
   }
-
-  const trimmed = value.trim()
-  if (!/^-?(?:\d+|\d*\.\d+)(?:px|rem|em|%)?$/i.test(trimmed)) {
-    return ''
+  if (typeof value !== 'string') {
+    return undefined
   }
+  const match = /^(-?(?:\d+|\d*\.\d+)(?:e[+-]?\d+)?)(px|rem|ch|em|%)?$/i.exec(value.trim())
+  if (!match) {
+    return undefined
+  }
+  const numericValue = Number(match[1])
+  if (!Number.isFinite(numericValue)) {
+    return undefined
+  }
+  return { value: numericValue, unit: (match[2]?.toLowerCase() as CssLengthUnit | undefined) ?? defaultUnit }
+}
 
-  return /^-?(?:\d+|\d*\.\d+)$/.test(trimmed) ? `${trimmed}px` : trimmed
+export function getCssLength(value: string | number | undefined): string {
+  const length = parseCssLength(value)
+  return length ? `${length.value}${length.unit}` : ''
 }
 
 export function getColorValue(value: string | number | undefined): string {

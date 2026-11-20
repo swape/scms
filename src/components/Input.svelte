@@ -19,8 +19,8 @@ const description = $derived(hint ? `${describedBy ? `${describedBy} ` : ''}${id
 
 <style>
 input[type='color'] {
-  height: 32px;
-  padding: 3px;
+  height: 2rem;
+  padding: 0.1875rem;
   cursor: pointer;
 }
 
@@ -30,11 +30,11 @@ input[type='color']::-webkit-color-swatch-wrapper {
 
 input[type='color']::-webkit-color-swatch {
   border: 0;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
 }
 
 input[type='color']::-moz-color-swatch {
   border: 0;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
 }
 </style>

@@ -7,7 +7,7 @@ import FrontPageLayout from '../layouts/FrontPageLayout.astro'
   <div class="app-page">
     <section class="app-surface home-panel" aria-labelledby="home-title">
       <div class="home-mark">
-        <Icon name="dashboard" size={28} />
+        <Icon name="dashboard" size={1.75} />
       </div>
       <div class="app-page-heading">
         <h1 id="home-title">SCMS</h1>
@@ -21,26 +21,26 @@ import FrontPageLayout from '../layouts/FrontPageLayout.astro'
   .home-panel {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 32px;
+    gap: 1.25rem;
+    padding: 2rem;
   }
   .home-mark {
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
     background: var(--ui-selection);
     color: #8acfff;
   }
   .home-panel .app-page-heading {
     margin: 0;
   }
-  @media (max-width: 600px) {
+  @media (max-width: 37.5rem) {
     .home-panel {
-      padding: 24px;
-      gap: 16px;
+      padding: 1.5rem;
+      gap: 1rem;
     }
   }
 </style>

@@ -1,85 +1,66 @@
 <script lang="ts">
-import Input from '../../components/Input.svelte'
+import SizeInput from '../../components/SizeInput.svelte'
 import { selectedElement } from '../../store.ts'
-import type { BlockEditorProps } from '../../types/types.ts'
+import { getStyleEditor } from '../../utils/editor-style.ts'
 
-const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
-
-function getSelectedStyle(): Record<string, string | number> | undefined {
-  const element = $selectedElement
-
-  return element && 'style' in element ? element.style : undefined
-}
-
-function getStyleNumberValue(key: string): string {
-  const value = getSelectedStyle()?.[key]
-
-  if (value === '' || value === undefined || value === null) {
-    return ''
-  }
-
-  return String(value)
-}
-
-function updateMarginValue(key: string, event: Event) {
-  const input = event.target as HTMLInputElement
-  const style = getSelectedStyle() || {}
-  const nextStyle: Record<string, string | number> = { ...style }
-
-  if (!input.value.trim()) {
-    delete nextStyle[key]
-  } else {
-    nextStyle[key] = Number(input.value)
-  }
-
-  update('style', nextStyle)
-  updatePageContentWithDebounce()
-}
+const style = getStyleEditor()
 </script>
 
-<fieldset class="margin-fields">
-  <legend>Margin Block (px):</legend>
-  <div class="margin-block-grid">
-    <Input
-      id="margin-top"
-      label="Top"
-      wrapperClass="grid min-w-0 gap-1"
-      type="number"
-      placeholder="Top"
-      value={getStyleNumberValue('marginTop')}
-      oninput={(event) => updateMarginValue('marginTop', event)} />
-    <Input
-      id="margin-bottom"
-      label="Bottom"
-      wrapperClass="grid min-w-0 gap-1"
-      type="number"
-      placeholder="Bottom"
-      value={getStyleNumberValue('marginBottom')}
-      oninput={(event) => updateMarginValue('marginBottom', event)} />
-  </div>
-</fieldset>
+{#key `${$selectedElement?.id}:${style.mode}`}
+  <fieldset class="margin-fields">
+    <legend>Margin Block:</legend>
+    <div class="margin-grid">
+      <SizeInput id="margin-top" label="Top" wrapperClass="grid min-w-0 gap-1" value={style.read('marginTop')} onvaluechange={(value) => style.set('marginTop', value)} />
+      <SizeInput
+        id="margin-bottom"
+        label="Bottom"
+        wrapperClass="grid min-w-0 gap-1"
+        value={style.read('marginBottom')}
+        onvaluechange={(value) => style.set('marginBottom', value)} />
+    </div>
+  </fieldset>
+  <fieldset class="margin-fields">
+    <legend>Margin Inline:</legend>
+    <div class="margin-grid">
+      <SizeInput
+        id="margin-inline-start"
+        label="Start"
+        allowAuto
+        wrapperClass="grid min-w-0 gap-1"
+        value={style.read('marginInlineStart')}
+        onvaluechange={(value) => style.set('marginInlineStart', value)} />
+      <SizeInput
+        id="margin-inline-end"
+        label="End"
+        allowAuto
+        wrapperClass="grid min-w-0 gap-1"
+        value={style.read('marginInlineEnd')}
+        onvaluechange={(value) => style.set('marginInlineEnd', value)} />
+    </div>
+  </fieldset>
+{/key}
 
 <style>
 .margin-fields {
   min-width: 0;
-  margin: 0 0 12px;
+  margin: 0 0 0.75rem;
   padding: 0;
   border: 0;
 }
 
 .margin-fields legend {
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   color: var(--ui-muted, #b3b3b3);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
-.margin-block-grid {
+.margin-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
-.margin-block-grid :global(.ui-field) {
+.margin-grid :global(.ui-field) {
   margin: 0;
 }
 </style>

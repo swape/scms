@@ -1,5 +1,41 @@
 ## 2026-11-20
 
+- Files: `src/components/project/{Edit,Fonts}.svelte`, `src/utils/project-fonts.ts`, `tests/e2e/pages.spec.ts`, `README.md`
+- Added separate heading and body font pickers and stored their choices in marked blocks in the existing extra HTML and CSS fields.
+
+- Files: `src/components/SizeInput.svelte`, `src/blocks/shared/Margin.svelte`, `src/types/types.ts`, `src/pages/preview/cssHelpers.ts`, `tests/e2e/responsive.spec.ts`, `README.md`
+- Added Auto as an optional inline margin value in Normal and Mobile overrides.
+
+- Files: `src/blocks/shared/Margin.svelte`, `src/pages/preview/cssHelpers.ts`, `src/utils/projects.ts`, `tests/e2e/responsive.spec.ts`, `README.md`
+- Added inline start and end margins to shared block settings, with independent units and mobile overrides.
+
+- Files: `src/store.ts`, `src/components/editor/{EditorTopMenu,PreviewWrapper}.svelte`, `tests/e2e/responsive.spec.ts`, `README.md`
+- Added a toolbar control to cycle through desktop, tablet, and phone preview widths without reloading the iframe.
+
+- Files: `src/components/editor/Settings.svelte`, `src/utils/editor-style.ts`, `src/constants.ts`, `src/types/types.ts`, block/shared Svelte style controls, `src/blocks/{Link,SplitBlock}/css.ts`, `src/blocks/Menu/Menu.astro`, `src/pages/preview/{cssHelpers.ts,index.astro}`, `src/utils/{projects,project-json}.ts`, `tests/e2e/responsive.spec.ts`, `README.md`
+- Added Normal/Mobile overrides subtabs with sparse inherited style editing and reset; routed all existing appearance controls through a shared editor-only context without overwriting content or normal values.
+- Generated mobile CSS at <=768px for block appearance, wrappers, Link/Split booleans, page palettes, and menu layout/colors; kept desktop behavior unchanged at769px. Preserved false, zero, explicit None, and independent units.
+- Validated/persisted mobileStyle in JSON and local drafts, preserved pending page/footer edits, and fixed reactive mode switching to read mobile overrides directly from stores.
+- Verified the actual iframe boundary at768/769px, mode separation, reset, keyboard access, sparse inheritance, JSON restore, and malformed override rejection. All49 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
+- Files: `src/components/Tabs.svelte`, `src/components/editor/Settings.svelte`, `src/types/types.ts`, all nine `src/blocks/*/index.svelte` editors, `tests/e2e/{blocks,editor,global-blocks,pages}.spec.ts`, `README.md`
+- Added Content, Style, and Other settings tabs with keyboard navigation and a labeled panel; kept controls mounted to preserve pending edits and size-unit choices.
+- Grouped every block/page/global editor by content, appearance, and behavior; moved FAQ opening controls, menu stickiness, page order, and link targets into Other settings alongside element details.
+- Kept tabs in the sticky pinned/floating header and reset to Content only when the selection changed.
+- Verified field visibility, keyboard focus, draft/unit retention, FAQ question-linked toggles, menu tab behavior, floating movement/pinning, and mobile containment. All 45 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
+- Files: `src/components/SizeInput.svelte`, `src/types/types.ts`, `src/blocks/shared/{css,helpers}.ts`, `src/blocks/shared/{Padding,Margin}.svelte`, `src/blocks/{Text,Header,SplitBlock}/index.svelte`, rendered block spacing styles, `src/styles/preview.css`, `src/pages/preview/cssHelpers.ts`, `src/utils/{elements,project-json}.ts`, `tests/e2e/blocks.spec.ts`, `README.md`
+- Added reusable px/rem/ch size controls with independent units, fractional inputs, empty-value handling, and block-scoped pending unit selection; replaced every existing dimension input while leaving numeric counts/order unchanged.
+- Defaulted new spacing and dimensions to px, kept font styling in rem, and preserved explicit saved units through CSS generation, JSON imports, and reloads. Changing units retained the entered number.
+- Fixed Split Block min-width constraints so its default minimum image height did not create horizontal mobile overflow.
+- Verified pixel defaults, legacy/rem/ch restoration, negative/zero/fractional values, clearing, JSON roundtrips, independent sides, and mobile layouts. All 44 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
+- Files: sizing styles in `src/components/`, `src/blocks/`, `src/styles/`, `src/pages/{index,project,404}.astro`; `src/blocks/shared/{css,helpers}.ts`; `src/pages/preview/cssHelpers.ts`; `src/utils/{projects,elements,project-json}.ts`; `tests/e2e/blocks.spec.ts`; `README.md`
+- Converted authored fixed pixel dimensions, typography, spacing, borders, shadows, icons, and breakpoints to rem at 16px equivalence; retained responsive units, intrinsic/SVG dimensions, and browser coordinate units.
+- Converted spacing/radius/size controls to fractional rem inputs and explicit rem storage; normalized legacy numeric/pixel settings on draft/JSON loading without double-converting existing rem values.
+- Made floating-panel positions and viewport insets root-size aware while retaining pixel pointer math and keyboard increments; observed panel/header resizing to preserve containment.
+- Verified unchanged default dimensions, legacy import/reload behavior, zero/negative/fractional values, 20px root scaling, rem-position dragging, and mobile containment. All 43 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
 - Files: `src/components/project/{Colors,ColorPair,index}.svelte`, `src/types/types.ts`, `src/utils/projects.ts`, `tests/e2e/pages.spec.ts`, `README.md`
 - Grouped project palette entries into Background and Text sections with reusable light/dark cards, editable labels, and per-group Add color pair actions; retained stable keys and preserved imported custom-key colors.
 - Allocated unused color keys, focused new labels, saved palette changes to the current draft, and restored matching drafts on the project page without losing page content.

@@ -3,14 +3,14 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding-inline: 1rem;
+  gap: 16px;
+  padding-inline: 16px;
 }
 
 .footer-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 16px;
   align-items: center;
 }
 

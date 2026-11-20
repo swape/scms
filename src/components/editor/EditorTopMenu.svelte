@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onDestroy } from 'svelte'
 import { removeStorage, saveStorage } from '../../localstorage.ts'
-import { currentProject, isDarkMode, selectedPage } from '../../store.ts'
+import { currentProject, isDarkMode, previewMode, selectedPage } from '../../store.ts'
 import { flushPendingEdits } from '../../utils/editor-save.ts'
 import { parseProjectJson } from '../../utils/project-json.ts'
 import Button from '../Button.svelte'
@@ -14,6 +14,14 @@ let jsonError = $state('')
 let downloadUrl: string | undefined
 let actionMenu: HTMLDivElement | undefined = $state()
 let actionTrigger: HTMLButtonElement | undefined = $state()
+
+const previewModes = {
+  desktop: { label: 'Desktop', icon: 'desktop_windows', next: 'tablet' },
+  tablet: { label: 'Tablet', icon: 'tablet_mac', next: 'phone' },
+  phone: { label: 'Phone', icon: 'smartphone', next: 'desktop' },
+} as const
+const currentPreviewMode = $derived(previewModes[$previewMode])
+const nextPreviewMode = $derived(previewModes[currentPreviewMode.next])
 
 function closeActionMenu() {
   actionMenu?.hidePopover()
@@ -125,6 +133,13 @@ selectedPage.subscribe((page) => {
     </div>
   </div>
   <Button variant="ghost" icon="dark_mode" onclick={toggleDarkMode}>Toggle dark mode</Button>
+  <Button
+    variant="ghost"
+    icon={currentPreviewMode.icon}
+    title={`Switch to ${nextPreviewMode.label.toLowerCase()} preview`}
+    onclick={() => previewMode.set(currentPreviewMode.next)}>
+    {currentPreviewMode.label} preview
+  </Button>
 
   <div class="save-load-actions">
     <Button bind:ref={actionTrigger} variant="primary" icon="save" class="save-load-trigger" popovertarget="save-load-menu" aria-controls="save-load-menu">
@@ -194,16 +209,16 @@ selectedPage.subscribe((page) => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  min-height: 48px;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  min-height: 3rem;
   background: var(--ui-panel);
-  border-bottom: 1px solid var(--ui-border);
+  border-bottom: 0.0625rem solid var(--ui-border);
 }
 .toolbar-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   flex: 1;
   min-width: 0;
 }
@@ -222,17 +237,17 @@ selectedPage.subscribe((page) => {
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
   padding: 0.4rem;
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
+  border: 0.0625rem solid var(--ui-border);
+  border-radius: 0.5rem;
   background: var(--ui-panel);
   color: var(--ui-text);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 35%);
+  box-shadow: 0 0.75rem 1.875rem rgb(0 0 0 / 35%);
 }
 
 .save-load-group + .save-load-group {
   margin-top: 0.4rem;
   padding-top: 0.4rem;
-  border-top: 1px solid var(--ui-border);
+  border-top: 0.0625rem solid var(--ui-border);
 }
 
 .save-load-group-title {
@@ -241,7 +256,7 @@ selectedPage.subscribe((page) => {
   gap: 0.5rem;
   padding: 0.45rem 0.65rem;
   color: var(--ui-muted);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 600;
 }
 

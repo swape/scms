@@ -7,7 +7,7 @@ import { updateBlockField } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
-const { updatePageContentWithDebounce, update }: BlockEditorProps = $props()
+const { updatePageContentWithDebounce, update, activeTab = 'content' }: BlockEditorProps = $props()
 
 const selectedImage = $derived($selectedElement as ContentType)
 
@@ -30,33 +30,35 @@ function updateTitle(title = '') {
 }
 </script>
 
-{#if selectedImage?.src}
-  <div class="mb-3">
-    <img src={selectedImage.src} alt={selectedImage.alt} class="w-full h-auto rounded" />
-  </div>
-{/if}
+<div hidden={activeTab !== 'content'}>
+  {#if selectedImage?.src}
+    <div class="mb-3">
+      <img src={selectedImage.src} alt={selectedImage.alt} class="w-full h-auto rounded" />
+    </div>
+  {/if}
 
-<Input
-  id="image-header"
-  label="Image Header:"
-  name="image-header"
-  placeholder="Image Title"
-  value={selectedImage?.title || ''}
-  onkeyup={({ target }) => updateTitle((target as HTMLInputElement).value)} />
+  <Input
+    id="image-header"
+    label="Image Header:"
+    name="image-header"
+    placeholder="Image Title"
+    value={selectedImage?.title || ''}
+    onkeyup={({ target }) => updateTitle((target as HTMLInputElement).value)} />
 
-<TextAlign element={$selectedElement} {update} title="Text Alignment" id="text-alignment" styleName="textAlign" />
+  <Input
+    id="image-caption"
+    label="Image Caption:"
+    name="image-caption"
+    type="text"
+    placeholder="Image Caption"
+    value={selectedImage?.caption || ''}
+    onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
 
-<Input
-  id="image-caption"
-  label="Image Caption:"
-  name="image-caption"
-  type="text"
-  placeholder="Image Caption"
-  value={selectedImage?.caption || ''}
-  onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
+  <FileSelector selected={selectedFile} />
+</div>
 
-<TextAlign element={$selectedElement} {update} title="Image caption Alignment" id="image-caption-alignment" styleName="imageCaptionTextAlign" />
-
-<FileSelector selected={selectedFile} />
-
-<Styles {updatePageContentWithDebounce} {update} allowCenter />
+<div hidden={activeTab !== 'style'}>
+  <TextAlign title="Text Alignment" id="text-alignment" styleName="textAlign" />
+  <TextAlign title="Image caption Alignment" id="image-caption-alignment" styleName="imageCaptionTextAlign" />
+  <Styles allowCenter />
+</div>

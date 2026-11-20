@@ -1,4 +1,5 @@
-import type { ColorType, ProjectColorKind, ProjectType } from '../types/types.ts'
+import { getCssLength } from '../blocks/shared/css.ts'
+import type { ColorType, ProjectColorKind, ProjectType, StyleValues } from '../types/types.ts'
 
 // TODO: add example menu structure for new projects
 export function getEmptyProjectStructure(id: number | string): ProjectType {
@@ -139,10 +140,54 @@ export function getProjectById(id: number | string) {
   return getEmptyProjectStructure(id)
 }
 
+const styleLengthFields = [
+  'paddingAll',
+  'paddingTop',
+  'paddingRight',
+  'paddingBottom',
+  'paddingLeft',
+  'marginTop',
+  'marginBottom',
+  'marginInlineStart',
+  'marginInlineEnd',
+  'borderRadius',
+  'splitTextPadding',
+  'splitImageMinHeight',
+] as const
+
+function normalizeStyleLengths(style: StyleValues | undefined): void {
+  if (!style) {
+    return
+  }
+  for (const key of styleLengthFields) {
+    const value = style[key]
+    const length = typeof value === 'boolean' ? '' : getCssLength(value)
+    if (length) {
+      style[key] = length
+    }
+  }
+}
+
+export function normalizeProjectLengths(project: ProjectType): ProjectType {
+  for (const page of project.pages) {
+    normalizeStyleLengths(page.style)
+    normalizeStyleLengths(page.mobileStyle)
+    for (const block of page.content) {
+      normalizeStyleLengths(block.style)
+      normalizeStyleLengths(block.mobileStyle)
+      normalizeStyleLengths(block.link?.style)
+    }
+  }
+  normalizeStyleLengths(project.footer.style)
+  normalizeStyleLengths(project.footer.mobileStyle)
+  normalizeStyleLengths(project.menu.mobileStyle)
+  return project
+}
+
 export function getProjectFromLocalStorage() {
   const project = localStorage.getItem('currentProject')
   if (project) {
-    return JSON.parse(project).data as ProjectType
+    return normalizeProjectLengths(JSON.parse(project).data as ProjectType)
   }
   return null
 }

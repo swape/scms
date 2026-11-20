@@ -20,7 +20,7 @@ import { elementsList } from './elements-list.ts'
 .block-library {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: 0.375rem;
 }
 
 .block-library :global(button) {

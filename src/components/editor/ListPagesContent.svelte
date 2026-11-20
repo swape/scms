@@ -48,7 +48,7 @@ function filterPagesByParentId(parentId: string | null): PageType[] {
 .page-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 0.125rem;
   position: relative;
 }
 .page-row :global(.page-button) {
@@ -62,23 +62,23 @@ function filterPagesByParentId(parentId: string | null): PageType[] {
   white-space: nowrap;
 }
 .page-children {
-  margin-left: 12px;
-  border-left: 1px solid var(--ui-border);
-  padding-left: 6px;
+  margin-left: 0.75rem;
+  border-left: 0.0625rem solid var(--ui-border);
+  padding-left: 0.375rem;
 }
 .submenu {
   position: absolute;
-  top: 34px;
+  top: 2.125rem;
   right: 0;
   z-index: 5;
-  width: 180px;
-  padding: 4px;
+  width: 11.25rem;
+  padding: 0.25rem;
   display: grid;
-  gap: 2px;
+  gap: 0.125rem;
   background: var(--ui-panel-raised);
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px #0005;
+  border: 0.0625rem solid var(--ui-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1.5rem #0005;
 }
 .submenu.hidden {
   display: none;

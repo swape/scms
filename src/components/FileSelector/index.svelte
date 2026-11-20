@@ -95,39 +95,39 @@ function selectFile(fileId: string) {
 <style>
 .popover {
   position-area: bottom;
-  right: 12px;
-  width: min(600px, calc(100vw - 24px));
-  max-height: min(360px, calc(100vh - 24px));
-  padding: 12px;
+  right: 0.75rem;
+  width: min(37.5rem, calc(100vw - 1.5rem));
+  max-height: min(22.5rem, calc(100vh - 1.5rem));
+  padding: 0.75rem;
   overflow-y: auto;
   color: var(--ui-text, #f5f5f5);
   background: var(--ui-panel, #2c2c2c);
-  border: 1px solid var(--ui-border, #444);
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 24%);
-  font-size: 12px;
+  border: 0.0625rem solid var(--ui-border, #444);
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 24%);
+  font-size: 0.75rem;
 }
 
 .file-selector-content {
   display: grid;
-  grid-template-columns: 144px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 0.75rem;
   align-items: start;
 }
 
 h3 {
-  margin: 0 0 8px;
-  font-size: 12px;
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
 .directory-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
   min-width: 0;
-  padding-right: 12px;
-  border-right: 1px solid var(--ui-border, #444);
+  padding-right: 0.75rem;
+  border-right: 0.0625rem solid var(--ui-border, #444);
 }
 
 .directory-list :global(.directory-button) {
@@ -136,8 +136,8 @@ h3 {
 
 .file-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(6.875rem, 1fr));
+  gap: 0.5rem;
 }
 
 .file-grid :global(.file) {
@@ -154,7 +154,7 @@ h3 {
   aspect-ratio: 4 / 3;
   background-size: cover;
   background-position: center;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
 }
 
 .file-name {
@@ -165,16 +165,16 @@ h3 {
   text-align: center;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .file-selector-content {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .directory-list {
     padding-right: 0;
-    padding-bottom: 12px;
+    padding-bottom: 0.75rem;
     border-right: 0;
-    border-bottom: 1px solid var(--ui-border, #444);
+    border-bottom: 0.0625rem solid var(--ui-border, #444);
   }
 }
 </style>

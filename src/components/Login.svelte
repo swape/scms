@@ -43,7 +43,7 @@ function signout() {
 .account-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   min-width: 0;
 }
 .account-name {
@@ -52,7 +52,7 @@ function signout() {
   text-overflow: ellipsis;
   color: var(--ui-muted);
 }
-@media (max-width: 600px) {
+@media (max-width: 37.5rem) {
   .account-name {
     display: none;
   }

@@ -12,6 +12,7 @@ export const projects: Writable<ProjectType[] | null> = writable([
 export const selectedElement = writable<PageType | ContentType | GlobalSettingsElement | null>(null)
 export const selectedPage = writable<PageType | null>(null)
 export const isDarkMode = writable<boolean>(typeof localStorage === 'undefined' ? false : (getStorage('darkMode', Infinity) ?? false))
+export const previewMode = writable<'desktop' | 'tablet' | 'phone'>('desktop')
 
 isDarkMode.subscribe((value) => {
   saveStorage('darkMode', value)

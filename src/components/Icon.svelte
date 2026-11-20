@@ -1,10 +1,10 @@
 <script lang="ts">
 import type { IconProps } from '../types/types.ts'
 
-const { name, size = 16 }: IconProps = $props()
+const { name, size = 1 }: IconProps = $props()
 </script>
 
-<span class="ui-icon" aria-hidden="true" style:font-size={`${size}px`} style:width={`${size}px`} style:height={`${size}px`}>{name}</span>
+<span class="ui-icon" aria-hidden="true" style:font-size={`${size}rem`} style:width={`${size}rem`} style:height={`${size}rem`}>{name}</span>
 
 <style>
 .ui-icon {

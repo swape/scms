@@ -45,20 +45,20 @@ let {
   display: inline-flex;
   box-sizing: border-box;
   min-width: 0;
-  min-height: 32px;
+  min-height: 2rem;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 0.375rem;
   margin: 0;
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  border-radius: 5px;
+  padding: 0.375rem 0.625rem;
+  border: 0.0625rem solid transparent;
+  border-radius: 0.3125rem;
   background: transparent;
   color: var(--ui-text, #f5f5f5);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 400;
-  line-height: 18px;
+  line-height: 1.125rem;
   text-align: center;
   text-decoration: none;
   vertical-align: middle;
@@ -104,22 +104,22 @@ let {
 }
 
 .ui-small {
-  min-height: 30px;
-  padding: 5px 8px;
+  min-height: 1.875rem;
+  padding: 0.3125rem 0.5rem;
 }
 
 .ui-icon-only {
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
   padding: 0;
   flex: 0 0 auto;
 }
 
 .ui-icon-only.ui-small {
-  width: 30px;
-  min-width: 30px;
-  height: 30px;
+  width: 1.875rem;
+  min-width: 1.875rem;
+  height: 1.875rem;
 }
 
 .ui-full-width {
@@ -127,8 +127,8 @@ let {
 }
 
 .ui-button:focus-visible {
-  outline: 2px solid var(--ui-accent, #0c8ce9);
-  outline-offset: 2px;
+  outline: 0.125rem solid var(--ui-accent, #0c8ce9);
+  outline-offset: 0.125rem;
 }
 
 .ui-button:disabled {

@@ -1,5 +1,6 @@
 import { elementsList } from '../components/editor/elements-list.ts'
 import type { ProjectType } from '../types/types.ts'
+import { normalizeProjectLengths } from './projects.ts'
 
 const blockTypes = new Set(elementsList.map((element) => element.type))
 const linkModes = ['url', 'page']
@@ -79,6 +80,22 @@ function validateStyle(value: unknown, path: string): void {
   }
 }
 
+function validateMobileStyle(value: unknown, path: string): void {
+  const style = object(value, path)
+  for (const [key, entry] of Object.entries(style)) {
+    const field = `${path}[${JSON.stringify(key)}]`
+    if (key === 'flipped' || key === 'asButton') {
+      boolean(entry, field)
+    } else if (key === 'layout') {
+      enumeration(entry, field, menuLayouts)
+    } else if (key === 'footerType') {
+      enumeration(entry, field, ['footer1'])
+    } else if (typeof entry !== 'string') {
+      number(entry, field)
+    }
+  }
+}
+
 function validateLink(value: unknown, path: string): void {
   const link = object(value, path)
   string(link.text, `${path}.text`)
@@ -136,6 +153,9 @@ function validateContent(value: unknown, path: string): void {
     if (item.style !== undefined) {
       validateStyle(item.style, `${itemPath}.style`)
     }
+    if (item.mobileStyle !== undefined) {
+      validateMobileStyle(item.mobileStyle, `${itemPath}.mobileStyle`)
+    }
     if (item.link !== undefined) {
       validateLink(item.link, `${itemPath}.link`)
     }
@@ -177,6 +197,9 @@ function validatePages(value: unknown): void {
     if (page.style !== undefined) {
       validateStyle(page.style, `${path}.style`)
     }
+    if (page.mobileStyle !== undefined) {
+      validateMobileStyle(page.mobileStyle, `${path}.mobileStyle`)
+    }
     if (page.colors !== undefined) {
       const colors = object(page.colors, `${path}.colors`)
       string(colors.textColorKey, `${path}.colors.textColorKey`)
@@ -213,6 +236,9 @@ function validateMenu(value: unknown): void {
   const menu = object(value, 'project.menu')
   if (menu.type !== 'menu1') {
     invalid('project.menu.type', 'must be menu1')
+  }
+  if (menu.mobileStyle !== undefined) {
+    validateMobileStyle(menu.mobileStyle, 'project.menu.mobileStyle')
   }
   if (menu.style !== undefined) {
     const style = object(menu.style, 'project.menu.style')
@@ -276,6 +302,9 @@ function validateFooter(value: unknown): void {
   const footer = object(value, 'project.footer')
   if (footer.type !== 'footer1') {
     invalid('project.footer.type', 'must be footer1')
+  }
+  if (footer.mobileStyle !== undefined) {
+    validateMobileStyle(footer.mobileStyle, 'project.footer.mobileStyle')
   }
   if (footer.style !== undefined) {
     validateStyle(footer.style, 'project.footer.style')
@@ -344,6 +373,6 @@ export function parseProjectJson(text: string): ProjectType {
   validateMenu(project.menu)
   validateFooter(project.footer)
 
-  // Return the parsed object itself: validation never normalizes or strips data.
-  return parsed as ProjectType
+  // Keep additional fields and explicit units intact; bare legacy lengths default to px.
+  return normalizeProjectLengths(parsed as ProjectType)
 }

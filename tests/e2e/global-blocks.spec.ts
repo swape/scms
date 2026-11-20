@@ -4,15 +4,16 @@ test('Menu edits appearance, destinations, and automatic child-page limits', asy
   await preview(page).locator('[data-items="menu"]').click()
   await expect(page.getByRole('heading', { name: 'Menu for Test project' })).toBeVisible()
   await page.getByLabel('Layout', { exact: true }).selectOption('vertical')
-  await page.getByLabel('Background', { exact: true }).fill('#123456')
-  await page.getByLabel('Background', { exact: true }).dispatchEvent('change')
+  await page.getByLabel('Background color:', { exact: true }).selectOption('bg_2')
+  await page.getByLabel('Text color:', { exact: true }).selectOption('text_2')
   const first = page.getByRole('list', { name: 'Menu items', exact: true }).locator(':scope > li').first()
   await first.getByLabel('Destination', { exact: true }).selectOption('url')
   await first.getByLabel('URL', { exact: true }).fill('https://example.com/menu')
   await first.getByLabel('Open in', { exact: true }).selectOption('_blank')
   const menu = () => preview(page).getByRole('navigation', { name: 'Project menu' })
   await expect(menu().locator(':scope > ul')).toHaveClass(/menu-vertical/)
-  await expect(preview(page).locator('[data-items="menu"]')).toHaveCSS('background-color', 'rgb(18, 52, 86)')
+  await expect(preview(page).locator('[data-items="menu"]')).toHaveCSS('background-color', 'rgb(241, 245, 249)')
+  await expect(menu().getByRole('link', { name: 'Home', exact: true })).toHaveCSS('color', 'rgb(71, 85, 105)')
   await expect(menu().getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('href', 'https://example.com/menu')
   await expect(menu().getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('rel', 'noopener noreferrer')
   await page.getByLabel('Maximum items', { exact: true }).fill('1')
@@ -23,13 +24,33 @@ test('Menu edits appearance, destinations, and automatic child-page limits', asy
   await expect(menu().getByRole('link', { name: 'Second child', exact: true })).toHaveCount(0)
 })
 
+test('Menu label edits update top-level and nested links without changing destinations', async ({ editorPage: page }) => {
+  await preview(page).locator('[data-items="menu"]').click()
+  const items = page.getByRole('list', { name: 'Menu items', exact: true }).locator(':scope > li')
+  await items.nth(0).getByLabel('Label', { exact: true }).fill('Start here')
+  await items.nth(2).getByLabel('Label', { exact: true }).fill('Documentation')
+
+  const menu = () => preview(page).getByRole('navigation', { name: 'Project menu' })
+  await expect(menu().getByRole('link', { name: 'Start here', exact: true })).toHaveAttribute('href', '#page-home')
+  await menu().getByText('Explore', { exact: true }).click()
+  await expect(menu().getByRole('link', { name: 'Documentation', exact: true })).toHaveAttribute('href', 'https://example.com/read')
+
+  await page.reload()
+  await expect(menu().getByRole('link', { name: 'Start here', exact: true })).toBeVisible()
+  await menu().getByText('Explore', { exact: true }).click()
+  await expect(menu().getByRole('link', { name: 'Documentation', exact: true })).toBeVisible()
+
+  await page.getByRole('list', { name: 'Menu items', exact: true }).locator(':scope > li').nth(1).getByLabel('Item type', { exact: true }).selectOption('link')
+  await expect(menu().getByRole('link', { name: 'Explore', exact: true })).toBeVisible()
+})
+
 test('Menu adds nested items, reorders, removes, and stays project-global', async ({ editorPage: page }) => {
   await preview(page).locator('[data-items="menu"]').click()
   await expect(page.getByRole('heading', { name: 'Menu for Test project' })).toBeVisible()
   const items = page.getByRole('list', { name: 'Menu items', exact: true }).locator(':scope > li')
-  await items.nth(1).getByRole('button', { name: '+ Link', exact: true }).click()
+  await items.nth(1).getByRole('button', { name: 'Link', exact: true }).click()
   await expect.poll(async () => (await storedProject(page)).menu.elements[1].children?.length).toBe(2)
-  await page.locator('.menu-add-actions').getByRole('button', { name: '+ Manual submenu', exact: true }).click()
+  await page.locator('.menu-add-actions').getByRole('button', { name: 'Manual submenu', exact: true }).click()
   await expect.poll(async () => (await storedProject(page)).menu.elements.length).toBe(4)
   await items.last().getByLabel('Label', { exact: true }).fill('Extra submenu')
   await page.getByRole('button', { name: 'Move Extra submenu up', exact: true }).click()
@@ -39,9 +60,9 @@ test('Menu adds nested items, reorders, removes, and stays project-global', asyn
     .getByRole('button', { name: 'Remove', exact: true })
     .click()
   await expect.poll(async () => (await storedProject(page)).menu.elements.length).toBe(3)
-  await page.locator('.menu-add-actions').getByRole('button', { name: '+ Link', exact: true }).click()
+  await page.locator('.menu-add-actions').getByRole('button', { name: 'Link', exact: true }).click()
   await expect.poll(async () => (await storedProject(page)).menu.elements.length).toBe(4)
-  await page.locator('.menu-add-actions').getByRole('button', { name: '+ Automatic pages', exact: true }).click()
+  await page.locator('.menu-add-actions').getByRole('button', { name: 'Automatic pages', exact: true }).click()
   await expect.poll(async () => (await storedProject(page)).menu.elements.length).toBe(5)
   await page.locator('.page-button', { hasText: 'About page' }).click()
   await expect(preview(page).locator('main section')).toHaveCount(0)
@@ -85,7 +106,7 @@ test('Footer adds link, text, HTML, and each supported social platform', async (
   await preview(page).locator('[data-items="footer"]').click()
   await expect(page.getByRole('heading', { name: 'Footer for Test project' })).toBeVisible()
   let count = 4
-  for (const name of ['+ Link', '+ Text', '+ Custom HTML', 'facebook', 'twitter', 'instagram', 'linkedin', 'github', 'youtube']) {
+  for (const name of ['Link', 'Text', 'Custom HTML', 'facebook', 'twitter', 'instagram', 'linkedin', 'github', 'youtube']) {
     await page.locator('.settings').getByRole('button', { name, exact: true }).click()
     count += 1
     await expect.poll(async () => (await storedProject(page)).footer.elements.length).toBe(count)

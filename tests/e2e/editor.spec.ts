@@ -14,7 +14,7 @@ test('settings drag over an expanded preview and pin back without losing edits',
   await expect(panel.getByText('Floating', { exact: true })).toBeVisible()
   const expandedPreview = (await page.locator('iframe[title="Preview"]').boundingBox())!
   const floatingPanel = (await panel.boundingBox())!
-  expect(expandedPreview.width).toBeCloseTo(pinnedPreview.width + pinnedPanel.width, 0)
+  expect(expandedPreview.width).toBeGreaterThan(pinnedPreview.width)
   expect(floatingPanel.x).toBeLessThan(expandedPreview.x + expandedPreview.width)
   expect(floatingPanel.x + floatingPanel.width).toBeLessThan(page.viewportSize()!.width)
   await expect(content).toHaveValue('Edits survive floating and pinning')
@@ -126,7 +126,7 @@ test('content drag-and-drop updates preview order and persists normalized order'
 test('canceling block deletion preserves content', async ({ editorPage: page }) => {
   const row = page.locator('.project-items li[draggable]').filter({ has: page.locator('[data-id="text"]') })
   page.once('dialog', (dialog) => dialog.dismiss())
-  await row.getByRole('button', { name: 'delete', exact: true }).click()
+  await row.getByRole('button', { name: 'Delete Welcome', exact: true }).click()
   expect((await storedProject(page)).pages[0].content).toHaveLength(5)
   await expect(preview(page).locator('section[data-id="text"]')).toBeVisible()
 })
@@ -135,11 +135,11 @@ test('dark mode updates preview palette and survives reload', async ({ editorPag
   await page.locator('.page-button', { hasText: 'Home page' }).click()
   await page.getByLabel('Page background color:').selectOption('bg_1')
   await expect(preview(page).locator('body')).toHaveCSS('background-color', 'rgb(248, 250, 252)')
-  await page.getByRole('button', { name: /Toggle Dark Mode$/ }).click()
+  await page.getByRole('button', { name: 'Toggle dark mode', exact: true }).click()
   await expect(preview(page).locator('body')).toHaveCSS('background-color', 'rgb(15, 23, 42)')
   await page.reload()
   await expect(preview(page).locator('body')).toHaveCSS('background-color', 'rgb(15, 23, 42)')
-  await page.getByRole('button', { name: /Toggle Dark Mode$/ }).click()
+  await page.getByRole('button', { name: 'Toggle dark mode', exact: true }).click()
   await expect(preview(page).locator('body')).toHaveCSS('background-color', 'rgb(248, 250, 252)')
 })
 

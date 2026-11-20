@@ -76,8 +76,8 @@ export function getEmptyProjectStructure(id: number | string): ProjectType {
       ],
       style: {
         layout: 'horizontal',
-        backgroundColor: '#932f2f',
-        textColor: '#7088bd',
+        backgroundColor: 'bg_1',
+        textColor: 'text_1',
       },
     },
     footer: {

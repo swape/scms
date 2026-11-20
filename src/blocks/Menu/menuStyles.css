@@ -1,5 +1,14 @@
 .menu-inner {
   padding: 0.65rem 1rem;
+  background-color: var(--menu-background, var(--bg_1, white));
+  color: var(--menu-text, var(--text_1, inherit));
+  flex-shrink: 0;
+}
+
+.menu-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
 .menu-list {
@@ -38,8 +47,8 @@
   padding: 0.75rem;
   margin: 0;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  background: var(--bg_1, white);
-  color: var(--text_1, inherit);
+  background-color: var(--menu-background, var(--bg_1, white));
+  color: var(--menu-text, var(--text_1, inherit));
   list-style: none;
 }
 

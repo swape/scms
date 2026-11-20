@@ -1,6 +1,10 @@
 <script lang="ts">
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { ContentType, PageType, ProjectType } from '../../types/types.ts'
+import Button from '../Button.svelte'
+import Icon from '../Icon.svelte'
+import PanelSection from '../PanelSection.svelte'
+import { getElementDefinition } from './elements-list.ts'
 
 let dragIndex: number | null = null
 
@@ -118,31 +122,61 @@ function deleteElementWithConfirmation(elementId: string | number) {
 }
 </script>
 
-<div class="p-5">Page elements</div>
+<PanelSection title="Layers">
+  {#if $selectedPage}
+    <ul class="layer-list" aria-label="Page elements">
+      {#each getSortedPageContent() as element, index (element.id)}
+        <li class="layer-row" draggable="true" ondragstart={(event) => handleDragStart(event, index)} ondragover={handleDragOver} ondrop={(event) => handleDrop(event, index)}>
+          <Button
+            variant="ghost"
+            active={$selectedElement?.id === element.id}
+            aria-pressed={$selectedElement?.id === element.id}
+            onclick={() => selectedElement.set(element)}
+            class="layer-button">
+            <span class="layer-content" data-id={element.id} data-type={element.type} data-order={element.order}>
+              <Icon name={getElementDefinition(element.type)?.icon ?? 'crop_square'} />
+              <span class="layer-name">{element.title || element.type}</span>
+            </span>
+          </Button>
+          <Button
+            variant="ghost"
+            icon="delete"
+            iconOnly
+            aria-label={`Delete ${element.title || element.type}`}
+            title="Delete element"
+            onclick={() => deleteElementWithConfirmation(element.id)} />
+        </li>
+      {:else}
+        <li class="layer-empty">Add a block to start building this page.</li>
+      {/each}
+    </ul>
+  {/if}
+</PanelSection>
 
-{#if $selectedPage}
-  <ul class="p-5">
-    {#each getSortedPageContent() as element, index (element.id)}
-      <li
-        class="flex mb-2 gap-2 justify-between"
-        draggable="true"
-        ondragstart={(event) => handleDragStart(event, index)}
-        ondragover={handleDragOver}
-        ondrop={(event) => handleDrop(event, index)}>
-        <button
-          type="button"
-          onclick={() => selectedElement.set(element)}
-          class={`flex-1 p-2 rounded cursor-pointer ${$selectedElement?.id === element.id ? 'bg-emerald-700 ring-2 ring-emerald-300' : 'bg-slate-800 hover:bg-slate-700'}`}>
-          <div class="flex gap-2 items-center" data-id={element.id} data-type={element.type} data-order={element.order}>
-            <span class="text-xs text-gray-400">({element.order})</span>
-            <span class="material-symbols-outlined">{'brick'}</span>
-            <span class="truncate max-w-40">{element.title || element.type}</span>
-          </div>
-        </button>
-        <button type="button" onclick={() => deleteElementWithConfirmation(element.id)} class=" bg-red-800 p-2 rounded cursor-pointer hover:bg-red-700">
-          <span class="material-symbols-outlined">{'delete'}</span>
-        </button>
-      </li>
-    {/each}
-  </ul>
-{/if}
+<style>
+.layer-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.layer-row :global(.layer-button) {
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-start;
+}
+.layer-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.layer-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.layer-empty {
+  color: var(--ui-muted);
+  padding: 4px 0;
+}
+</style>

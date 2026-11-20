@@ -7,26 +7,32 @@ interface Props {
 }
 
 const { title = 'SCMS' }: Props = Astro.props
+const path = Astro.url.pathname.replace(/\/$/, '') || '/'
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="theme-color" content="#FF0000" />
+    <meta name="theme-color" content="#2c2c2c" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>{title}</title>
   </head>
-  <body class="bg-slate-900 text-white">
-    <nav class="flex gap-2 container mx-auto justify-between flex-wrap items-center px-4">
-      <div class="flex gap-2">
-        <a href="/" class="btn px-4 py-2"> Home </a>
-        <a href="/dashboard" class="btn px-4 py-2"> Dashboard </a>
+  <body class="app-body">
+    <nav class="app-navigation" aria-label="Main navigation">
+      <div class="app-navigation-links">
+        <span class="app-brand">SCMS</span>
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>
+          Home
+        </a>
+        <a href="/dashboard" aria-current={path === '/dashboard' ? 'page' : undefined}>
+          Dashboard
+        </a>
       </div>
 
       <Login client:only="svelte" />
     </nav>
-    <article class="mt-4">
+    <article class="app-content">
       <slot />
     </article>
   </body>

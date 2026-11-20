@@ -2,6 +2,7 @@
 import { currentProject, projects } from '../../store.ts'
 import type { ProjectType } from '../../types/types.ts'
 import Input from '../Input.svelte'
+import Textarea from '../Textarea.svelte'
 
 let { id } = $props()
 
@@ -54,32 +55,14 @@ function save() {
   <Input label="Project title:" wrapperClass="flex flex-col gap-1 mb-2" bind:value={project.title} onkeyup={save} />
   <Input label="Url:" wrapperClass="flex flex-col gap-1 mb-2" type="url" bind:value={project.url} onkeyup={save} />
 
-  <label class="label">
-    <span>Description: </span>
-    <textarea bind:value={project.description} onkeyup={save}></textarea>
-  </label>
-
-  <label class="label">
-    <span>Extra head tags: </span>
-    <textarea bind:value={project.extra.head} onkeyup={save}></textarea>
-  </label>
-
-  <label class="label">
-    <span>Extra styles:(etc. font styles) </span>
-    <textarea bind:value={project.extra.style} onkeyup={save}></textarea>
-  </label>
+  <Textarea label="Description:" class="project-textarea" bind:value={project.description} onkeyup={save} />
+  <Textarea label="Extra head tags:" class="project-textarea" bind:value={project.extra.head} onkeyup={save} />
+  <Textarea label="Extra styles:(etc. font styles)" class="project-textarea" bind:value={project.extra.style} onkeyup={save} />
 </div>
 
 <style>
-.label {
-  display: flex;
-  gap: 4px;
-  flex-direction: column;
-  margin-block-end: 8px;
-
-  textarea {
-    min-height: 200px;
-    max-height: 500px;
-  }
+div :global(.project-textarea) {
+  min-height: 200px;
+  max-height: 500px;
 }
 </style>

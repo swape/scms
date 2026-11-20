@@ -1,10 +1,46 @@
 ---
+import Icon from '../components/Icon.svelte'
 import FrontPageLayout from '../layouts/FrontPageLayout.astro'
 ---
 
 <FrontPageLayout>
-  <div class="container mx-auto mt-10 px-4">
-    <h1 class="text-3xl">SCMS</h1>
-    <p class="mt-4">Brand new CMS from future.</p>
+  <div class="app-page">
+    <section class="app-surface home-panel" aria-labelledby="home-title">
+      <div class="home-mark">
+        <Icon name="dashboard" size={28} />
+      </div>
+      <div class="app-page-heading">
+        <h1 id="home-title">SCMS</h1>
+        <p>Brand new CMS from future.</p>
+      </div>
+    </section>
   </div>
 </FrontPageLayout>
+
+<style>
+  .home-panel {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 32px;
+  }
+  .home-mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: var(--ui-selection);
+    color: #8acfff;
+  }
+  .home-panel .app-page-heading {
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .home-panel {
+      padding: 24px;
+      gap: 16px;
+    }
+  }
+</style>

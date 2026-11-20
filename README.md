@@ -79,6 +79,11 @@ src/
 │       ├── css.ts        # CSS value validation and formatting
 │       └── helpers.ts    # Shared editor, preview, and link helpers
 ├── components/
+│   ├── Button.svelte       # Shared button variants, icons, native events and DOM ref
+│   ├── Icon.svelte         # Decorative Material Symbols icon
+│   ├── Field.svelte        # Shared field label, hint, and control styling
+│   ├── Textarea.svelte     # Shared labeled multiline field
+│   ├── PanelSection.svelte # Properties section heading, actions, and divider
 │   ├── Checkbox.svelte     # Shared accessible toggle switch
 │   ├── Input.svelte        # Shared labeled text, URL, number, and color field
 │   ├── Select.svelte       # Shared native single-select control
@@ -225,6 +230,30 @@ existing Save to server/Save and Publish actions remain placeholders; JSON backu
 - **Editor/Preview Separation:** Block editors are imported lazily. Server-side preview code uses block markup and CSS helpers without executing browser-only editor stores.
 - **Pending Edits:** Block, page, and footer editors keep their existing debounce delays. JSON export/import synchronously flushes queued edits through `src/utils/editor-save.ts` before reading or replacing the draft.
 
+## Editor Interface and Shared Controls
+
+The sidebar and settings inspector follow [Figma's own editor interface](https://help.figma.com/hc/en-us/articles/360039832014-Design-prototype-and-explore-layer-properties-in-the-right-sidebar): neutral charcoal panels, compact 32px controls, section dividers, blue selected rows, and small icon actions. The sidebar groups Pages, Add element, and Layers; the inspector shows the selected object's properties. Narrow windows stack the panels instead of squeezing the preview. **Toggle dark mode** controls the rendered page, not the editor chrome.
+
+Home and Dashboard use the same charcoal application shell, typography, rounded surfaces, and blue accents. Main navigation highlights the current page. Sign-in/out, New project, and project cards reuse `Button` and `Icon`; the project grid stacks on narrow screens. The shared 44px navigation bar also preserves the editor's viewport sizing. Authentication and project-creation behavior are unchanged.
+
+All visible sidebar, inspector, block-settings, file-picker, and toolbar buttons use `Button.svelte`; fields use `Input`, `Select`, `Checkbox`, or `Textarea`. Hidden JSON file and preview transport inputs remain native. Design tokens (`--ui-*`) live in `src/styles/global.css`; controls have fallback tokens for reuse elsewhere.
+
+- `Button`: `variant="ghost|secondary|primary|danger"`, `size="sm|md"`, `icon`, `iconPosition`, `iconOnly`, `active`, and `fullWidth`. Native events, ARIA, disabled state, and popover attributes forward to the real button. Use `bind:ref` for native focus or popover operations. Icon-only actions require an accessible label and should provide a tooltip.
+- `Icon`: a decorative Material Symbol with `name` and optional pixel `size`.
+- `Field`: the reusable `ui-field` wrapper, label, and hint used by text, numeric, select, and multiline controls. Existing `wrapperClass` hooks are retained; native controls use `ui-control`.
+- `Textarea`: `label`, optional `id`, `value`/`bind:value`, `rows`, `hint`, and native textarea attributes/events. It supports vertical resizing, a visible neutral border at rest, and the shared blue focus highlight. Project descriptions and extra markup/style fields use this component too.
+- `PanelSection`: a `title`, optional `actions` snippet, and child content for compact property groups with dividers.
+
+Floating settings retain header dragging in both axes, keyboard movement, viewport containment, and a shorter scrollable body. Switching between floating and pinned modes preserves edits.
+
+## Menu Appearance
+
+Select the menu in the preview to open its settings. Under **Appearance**, choose the layout and select **Background color** and **Text color** from the project's named palette. The menu and its dropdowns use those palette entries in both light and dark themes. **None** uses the primary project colors; older drafts with literal hex menu colors also fall back to primary colors until you choose palette entries.
+
+The menu's **Label** field controls the displayed text of links and submenu headings. Label edits update the preview without changing destinations or opening targets, including nested links and items converted to links.
+
+Enable **Sticky menu** to keep navigation at the top while the page scrolls. It is off by default, works with horizontal and vertical layouts, and stays above page content without removing the menu's initial space. In the editor, it sticks to the top of the preview iframe. Menu appearance settings are project-global and included in JSON backups.
+
 ## FAQ Block
 
 Choose **FAQ** under **Add element** to insert a question-and-answer block. Edit its title, questions, and multiline answers in Settings. Use **Add question**, the Material Symbols up/down arrows, and the delete icons to manage the list; the controls match the menu and footer settings.
@@ -279,6 +308,7 @@ Create `src/blocks/Quote/index.svelte`:
 <script lang="ts">
   import { selectedElement } from '../../store.ts';
   import type { BlockEditorProps } from '../../types/types.ts';
+  import Textarea from '../../components/Textarea.svelte';
   import Styles from '../shared/Styles.svelte';
 
   const { update, updatePageContentWithDebounce }: BlockEditorProps = $props();
@@ -294,10 +324,7 @@ Create `src/blocks/Quote/index.svelte`:
   }
 </script>
 
-<div class="input-and-label-wrapper">
-  <label for="quote-content">Quote:</label>
-  <textarea id="quote-content" value={quote} oninput={updateContent}></textarea>
-</div>
+<Textarea id="quote-content" label="Quote:" value={quote} oninput={updateContent} />
 
 <Styles {update} {updatePageContentWithDebounce} />
 ```
@@ -306,9 +333,9 @@ Each block chooses the style controls it exposes using [Styles.svelte](./src/blo
 
 For boolean settings, use [Checkbox.svelte](./src/components/Checkbox.svelte) with `id`, `label`, `checked`, and `oninput` props. It displays a toggle switch with an animated thumb, a clickable label, keyboard focus feedback, and optional `disabled` support. A native checkbox with `role="switch"` preserves keyboard interaction and exposes its state to assistive technology; animations respect reduced-motion preferences.
 
-For dropdowns, use [Select.svelte](./src/components/Select.svelte). It owns the `input-and-label-wrapper` div and associated label, wraps a native single-select, accepts native attributes and `oninput`/`onchange` handlers, and supports typed `bind:value`. Provide a `label`; `id` is optional and defaults to a unique generated ID. Pass options as child content so dynamic lists and conditional options remain local to the caller. Styling continues to use the shared native-select rules. Project panels can set `wrapperClass` for their field layout and `hint` for helper text beneath the select.
+For dropdowns, use [Select.svelte](./src/components/Select.svelte). It uses `Field.svelte` for the `ui-field` wrapper and associated label, wraps a native single-select, accepts native attributes and `oninput`/`onchange` handlers, and supports typed `bind:value`. Provide a `label`; `id` is optional and defaults to a unique generated ID. Pass options as child content so dynamic lists and conditional options remain local to the caller. Project panels can set `wrapperClass` for their field layout and `hint` for helper text beneath the select.
 
-For input fields, use [Input.svelte](./src/components/Input.svelte). It owns the same wrapper and associated label, generates an ID when omitted, and forwards native attributes and events. It defaults to `type="text"` and also supports URL, number, color, email, password, search, and telephone fields. Use `bind:value` when needed; number inputs retain native Svelte numeric binding (including `undefined` when cleared). Use `wrapperClass` to preserve grouped or project-specific layouts and `hint` for helper text. Keep hidden transport fields native, use `Checkbox.svelte` for boolean switches, and leave multiline content in textareas.
+For input fields, use [Input.svelte](./src/components/Input.svelte). It uses the same field wrapper and associated label, generates an ID when omitted, and forwards native attributes and events. It defaults to `type="text"` and also supports URL, number, color, email, password, search, and telephone fields. Use `bind:value` when needed; number inputs retain native Svelte numeric binding (including `undefined` when cleared). Use `wrapperClass` to preserve grouped or project-specific layouts and `hint` for helper text. Keep hidden transport fields native, use `Checkbox.svelte` for boolean switches, and use `Textarea.svelte` for multiline content.
 
 ```svelte
 <Input

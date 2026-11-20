@@ -49,9 +49,7 @@ export const prerender = false
   </head>
   <body class="preview-body">
     {pageColorCss && <style is:global set:html={pageColorCss} />}
-    <header>
-      <Menu menu={parsedSettings?.menu} pages={parsedSettings?.pages ?? []} />
-    </header>
+    <Menu menu={parsedSettings?.menu} pages={parsedSettings?.pages ?? []} />
     <main>
       <ElementSelector data={parsedData} />
     </main>

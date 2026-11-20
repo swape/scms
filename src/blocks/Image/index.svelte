@@ -31,7 +31,7 @@ function updateTitle(title = '') {
 </script>
 
 {#if selectedImage?.src}
-  <div class="mb-4">
+  <div class="mb-3">
     <img src={selectedImage.src} alt={selectedImage.alt} class="w-full h-auto rounded" />
   </div>
 {/if}

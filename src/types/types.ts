@@ -1,5 +1,5 @@
 import type { Component, Snippet } from 'svelte'
-import type { HTMLInputAttributes, HTMLSelectAttributes } from 'svelte/elements'
+import type { HTMLButtonAttributes, HTMLInputAttributes, HTMLSelectAttributes, HTMLTextareaAttributes } from 'svelte/elements'
 
 export interface InputProps extends Omit<HTMLInputAttributes, 'value' | 'type' | 'checked' | 'files'> {
   label: string
@@ -23,6 +23,46 @@ export interface CheckboxProps {
   checked?: boolean
   disabled?: boolean
   oninput?: HTMLInputAttributes['oninput']
+}
+
+export interface IconProps {
+  name: string
+  size?: number
+}
+
+export interface ButtonProps extends Omit<HTMLButtonAttributes, 'children'> {
+  icon?: string
+  iconPosition?: 'start' | 'end'
+  iconOnly?: boolean
+  variant?: 'ghost' | 'secondary' | 'primary' | 'danger'
+  active?: boolean
+  size?: 'sm' | 'md'
+  fullWidth?: boolean
+  ref?: HTMLButtonElement
+  children?: Snippet
+}
+
+export interface FieldProps {
+  id: string
+  label: string
+  wrapperClass?: string
+  hint?: string
+  children: Snippet
+}
+
+export interface TextareaProps extends Omit<HTMLTextareaAttributes, 'value' | 'children'> {
+  label: string
+  value?: string
+  wrapperClass?: string
+  hint?: string
+}
+
+export interface PanelSectionProps {
+  title: string
+  actions?: Snippet
+  children?: Snippet
+  class?: string
+  id?: string
 }
 
 export interface BlockEditorProps {
@@ -115,6 +155,7 @@ export interface ProjectType {
     elements: MenuElement[]
     style?: {
       layout?: 'horizontal' | 'vertical'
+      sticky?: boolean
       backgroundColor?: string
       textColor?: string
     }

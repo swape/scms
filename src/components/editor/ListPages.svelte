@@ -53,8 +53,6 @@ function toggleSubMenuFor(pageId: string) {
 }
 </script>
 
-<div>
-  <ul class="p-5">
-    <ListPagesContent parentId={null} {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
-  </ul>
-</div>
+<ul class="page-tree" aria-label="Pages">
+  <ListPagesContent parentId={null} {pages} {select} {addSubPage} {deletePageWithSubPagesAndConfirm} {toggleSubMenuFor} {showSubMenu} />
+</ul>

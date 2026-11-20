@@ -1,6 +1,9 @@
 <script lang="ts">
+import Button from '../../components/Button.svelte'
 import Checkbox from '../../components/Checkbox.svelte'
 import Input from '../../components/Input.svelte'
+import PanelSection from '../../components/PanelSection.svelte'
+import Textarea from '../../components/Textarea.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, FaqItem } from '../../types/types.ts'
 import Styles from '../shared/Styles.svelte'
@@ -44,49 +47,48 @@ function moveItem(index: number, direction: -1 | 1) {
 
 <Checkbox id="faq-close-others" label="Close other answers when opening one" checked={closeOthers} oninput={(event) => update('faqCloseOthers', event.currentTarget.checked)} />
 {#if closeOthers}
-  <p class="mb-3 text-sm">Only the first question marked Open on start will start open.</p>
+  <p class="faq-hint">Only the first question marked Open on start will start open.</p>
 {/if}
 
-<div class="faq-section">
-  <h3>Questions and answers</h3>
+<PanelSection title="Questions and answers" class="faq-section">
   {#each items as item, index (item.id)}
     <div class="faq-item-editor">
       <div class="faq-item-heading">
         <span class="faq-item-badge">Question {index + 1}</span>
         <div class="faq-item-order">
-          <button
-            type="button"
+          <Button
             class="faq-icon-button"
+            icon="arrow_upward"
+            iconOnly
+            variant="ghost"
+            size="sm"
             aria-label={`Move question ${index + 1} up`}
             title={`Move question ${index + 1} up`}
             disabled={index === 0}
-            onclick={() => moveItem(index, -1)}>
-            <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
-          </button>
-          <button
-            type="button"
+            onclick={() => moveItem(index, -1)} />
+          <Button
             class="faq-icon-button"
+            icon="arrow_downward"
+            iconOnly
+            variant="ghost"
+            size="sm"
             aria-label={`Move question ${index + 1} down`}
             title={`Move question ${index + 1} down`}
             disabled={index === items.length - 1}
-            onclick={() => moveItem(index, 1)}>
-            <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
-          </button>
+            onclick={() => moveItem(index, 1)} />
         </div>
-        <button
-          type="button"
+        <Button
           class="faq-icon-button faq-remove"
+          icon="delete"
+          iconOnly
+          variant="ghost"
+          size="sm"
           aria-label={`Remove question ${index + 1}`}
           title={`Remove question ${index + 1}`}
-          onclick={() => removeItem(item.id)}>
-          <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-        </button>
+          onclick={() => removeItem(item.id)} />
       </div>
       <Input id={`faq-question-${item.id}`} label="Question:" value={item.question} oninput={(event) => updateItem(item.id, 'question', event.currentTarget.value)} />
-      <div class="input-and-label-wrapper">
-        <label for={`faq-answer-${item.id}`}>Answer:</label>
-        <textarea id={`faq-answer-${item.id}`} rows="4" value={item.answer} oninput={(event) => updateItem(item.id, 'answer', event.currentTarget.value)}></textarea>
-      </div>
+      <Textarea id={`faq-answer-${item.id}`} label="Answer:" rows="4" value={item.answer} oninput={(event) => updateItem(item.id, 'answer', event.currentTarget.value)} />
       <Checkbox
         id={`faq-open-on-start-${item.id}`}
         label="Open on start"
@@ -94,84 +96,47 @@ function moveItem(index: number, direction: -1 | 1) {
         oninput={(event) => updateItem(item.id, 'openOnStart', event.currentTarget.checked)} />
     </div>
   {:else}
-    <p>No questions yet. Add a question below.</p>
+    <p class="faq-hint">No questions yet. Add a question below.</p>
   {/each}
-  <button type="button" class="faq-add" onclick={addItem}>
-    <span class="material-symbols-outlined" aria-hidden="true">add</span>
-    Add question
-  </button>
-</div>
+  <Button class="faq-add" icon="add" fullWidth onclick={addItem}>Add question</Button>
+</PanelSection>
 
 <TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
 <Styles {update} {updatePageContentWithDebounce} />
 
 <style>
-.faq-section {
-  margin-bottom: 1.5rem;
-}
-
-.faq-section h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
 .faq-item-editor {
   min-width: 0;
-  padding: 0.7rem;
-  margin-bottom: 0.55rem;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 4px;
-  background: rgba(128, 128, 128, 0.045);
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid var(--ui-border, #444);
+  border-radius: 6px;
+  background: var(--ui-panel, #2c2c2c);
 }
 
 .faq-item-heading {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.65rem;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
 .faq-item-badge {
   margin-right: auto;
-  color: #2563eb;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .faq-item-order {
   display: flex;
-  gap: 0.2rem;
+  gap: 2px;
 }
 
-.faq-icon-button,
-.faq-add {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  min-height: 2rem;
-  border: 1px solid rgba(128, 128, 128, 0.45);
-  border-radius: 3px;
-  padding: 0.3rem 0.55rem;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-.faq-icon-button:focus-visible,
-.faq-add:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-}
-
-.faq-icon-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.faq-remove {
-  color: #dc2626;
+.faq-hint {
+  margin: 0 0 12px;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+  line-height: 1.5;
 }
 </style>

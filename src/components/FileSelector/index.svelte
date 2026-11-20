@@ -1,4 +1,6 @@
 <script lang="ts">
+import Button from '../Button.svelte'
+
 const exampleFiles = [
   { id: '1', name: 'File 1', size: '2 MB', url: 'https://placehold.co/600x400/orange/white', alt: 'File 1', type: 'image/png', parentFolder: '' },
   { id: '2', name: 'File 2', size: '5 MB', url: 'https://placehold.co/800x400/orange/red', alt: 'File 2', type: 'image/png', parentFolder: '' },
@@ -60,33 +62,29 @@ function selectFile(fileId: string) {
 </script>
 
 <div class="file-selector relative">
-  <button class="btn btn-primary px-4 py-2" popovertarget="file-popover-wrapper">Select file</button>
-  <div popover id="file-popover-wrapper" class="popover w-full bg-slate-800 border border-gray-800 rounded shadow-lg p-4 text-gray-200">
+  <Button icon="folder_open" popovertarget="file-popover-wrapper">Select file</Button>
+  <div popover id="file-popover-wrapper" class="popover">
     <div class="file-selector-content">
       <div class="directory-list">
-        <p class="text-gray-500 text-sm mb-3">Directories</p>
+        <h3>Directories</h3>
         {#if selectedDirectory}
-          <button onclick={goBack} class="btn flex items-center gap-1 px-3 py-1.5 border border-gray-700 rounded hover:border-gray-400 text-sm">
-            <span class="material-symbols-outlined text-base">arrow_back</span>
-            Back
-          </button>
+          <Button icon="arrow_back" variant="ghost" fullWidth class="directory-button" onclick={goBack}>Back</Button>
         {/if}
 
         {#each getDirectories(selectedDirectory) as dir}
-          <button class="btn flex items-center gap-1 px-3 py-1.5" onclick={() => (selectedDirectory = selectedDirectory ? selectedDirectory + '/' + dir : dir)}>
-            <span class="material-symbols-outlined text-base">folder</span>
+          <Button icon="folder" variant="ghost" fullWidth class="directory-button" onclick={() => (selectedDirectory = selectedDirectory ? selectedDirectory + '/' + dir : dir)}>
             {dir}
-          </button>
+          </Button>
         {/each}
       </div>
       <div class="file-list">
-        <p class="text-gray-500 text-sm mb-3">Files</p>
+        <h3>Files</h3>
         <div class="file-grid">
           {#each getDirFiles(selectedDirectory) as file}
-            <button class="file" onclick={() => selectFile(file.id)}>
-              <span class="w-full h-25" style={`background-image: url('${file.url}'); background-size: cover; background-position: center;`}> </span>
+            <Button class="file" title={file.name} onclick={() => selectFile(file.id)}>
+              <span class="file-preview" style={`background-image: url('${file.url}');`} aria-hidden="true"></span>
               <span class="file-name">{file.name}</span>
-            </button>
+            </Button>
           {/each}
         </div>
       </div>
@@ -97,60 +95,86 @@ function selectFile(fileId: string) {
 <style>
 .popover {
   position-area: bottom;
-  right: 10px;
-  max-width: 600px;
-  max-height: 300px;
+  right: 12px;
+  width: min(600px, calc(100vw - 24px));
+  max-height: min(360px, calc(100vh - 24px));
+  padding: 12px;
   overflow-y: auto;
+  color: var(--ui-text, #f5f5f5);
+  background: var(--ui-panel, #2c2c2c);
+  border: 1px solid var(--ui-border, #444);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 24%);
+  font-size: 12px;
+}
 
+.file-selector-content {
+  display: grid;
+  grid-template-columns: 144px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.directory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 12px;
+  border-right: 1px solid var(--ui-border, #444);
+}
+
+.directory-list :global(.directory-button) {
+  justify-content: flex-start;
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
+}
+
+.file-grid :global(.file) {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+}
+
+.file-preview {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-size: cover;
+  background-position: center;
+  border-radius: 3px;
+}
+
+.file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
   .file-selector-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 10px;
-    color: #e5e7eb;
-    background-color: #1e293b;
-    border-radius: 1rem;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .directory-list {
-    min-width: 150px;
-    border-right: 1px solid #374151;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    align-items: flex-start;
-    padding: 12px;
-  }
-  .file-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    flex: 1;
-    width: 100%;
-    padding: 12px;
-  }
-  .file-list {
-    margin-top: 12px;
-  }
-  .file {
-    cursor: pointer;
-    width: 130px;
-    height: 130px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .file-name {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: 130px;
-      text-align: center;
-    }
+    padding-right: 0;
+    padding-bottom: 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--ui-border, #444);
   }
 }
 </style>

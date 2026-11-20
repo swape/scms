@@ -1,5 +1,6 @@
 <script lang="ts">
 import Input from '../../components/Input.svelte'
+import Textarea from '../../components/Textarea.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import { updateBlockField, updateStyleNumber as updateStyleNumberShared } from '../shared/helpers.ts'
@@ -41,10 +42,7 @@ function getBorderRadius(): string {
 
 <TextAlign element={$selectedElement} {update} title="Title Alignment" id="title-alignment" styleName="titleAlign" />
 
-<div class="input-and-label-wrapper">
-  <label for="text-content">Content:</label>
-  <textarea id="text-content" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent}></textarea>
-</div>
+<Textarea id="text-content" label="Content:" rows="6" value={($selectedElement as ContentType)?.content || ''} oninput={updateContent} />
 
 <TextAlign element={$selectedElement} {update} title="Content Alignment" id="content-alignment" styleName="textAlign" />
 

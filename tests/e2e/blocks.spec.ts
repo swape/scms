@@ -4,10 +4,7 @@ import { expect, preview, selectBlock, storedProject, test } from './fixtures'
 for (const definition of elementsList) {
   test(`${definition.name} can be inserted, styled, persisted, and deleted`, async ({ editorPage: page }) => {
     const before = (await storedProject(page)).pages[0].content.length
-    await page
-      .locator('.project-items')
-      .getByRole('button', { name: `${definition.icon} ${definition.name}`, exact: true })
-      .click()
+    await page.getByRole('region', { name: 'Add element', exact: true }).getByRole('button', { name: definition.name, exact: true }).click()
     await expect.poll(async () => (await storedProject(page)).pages[0].content.length).toBe(before + 1)
     const block = (await storedProject(page)).pages[0].content.at(-1)!
     expect(block.type).toBe(definition.type)
@@ -37,7 +34,7 @@ for (const definition of elementsList) {
     await expect(styled()).toHaveCSS('padding-top', '12px')
     const row = page.locator('.project-items li').filter({ has: page.locator(`[data-id="${block.id}"]`) })
     page.once('dialog', (dialog) => dialog.accept())
-    await row.getByRole('button', { name: 'delete', exact: true }).click()
+    await row.getByRole('button', { name: `Delete ${block.title}`, exact: true }).click()
     await expect(section()).toHaveCount(0)
     await expect.poll(async () => (await storedProject(page)).pages[0].content.length).toBe(before)
   })

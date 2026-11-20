@@ -225,6 +225,9 @@ function validateMenu(value: unknown): void {
     if (style.textColor !== undefined) {
       string(style.textColor, 'project.menu.style.textColor')
     }
+    if (style.sticky !== undefined) {
+      boolean(style.sticky, 'project.menu.style.sticky')
+    }
   }
 
   const keys = new Set<string>()

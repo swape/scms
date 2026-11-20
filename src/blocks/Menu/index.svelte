@@ -1,9 +1,13 @@
 <script lang="ts">
+import Button from '../../components/Button.svelte'
+import Checkbox from '../../components/Checkbox.svelte'
 import Input from '../../components/Input.svelte'
+import PanelSection from '../../components/PanelSection.svelte'
 import Select from '../../components/Select.svelte'
 import { currentProject } from '../../store.ts'
 import type { BlockEditorProps, LinkSettings, MenuElement, PageType, ProjectType } from '../../types/types.ts'
 import { createMenuElement, saveMenuToProject } from '../../utils/menu.ts'
+import ColorSelect from '../shared/ColorSelect.svelte'
 
 const {}: BlockEditorProps = $props()
 
@@ -141,9 +145,14 @@ function dropItem(event: DragEvent, targetPath: number[]) {
   save()
 }
 
-function updateStyle(key: 'layout' | 'backgroundColor' | 'textColor', value: string) {
+function updateStyle<Key extends keyof NonNullable<ProjectType['menu']['style']>>(key: Key, value: NonNullable<ProjectType['menu']['style']>[Key]) {
   menuStyle = { ...menuStyle, [key]: value }
   save()
+}
+
+function updateColor(key: 'backgroundColor' | 'textColor', event: Event) {
+  const select = event.currentTarget as HTMLSelectElement
+  updateStyle(key, select.value)
 }
 
 function pageName(pageId: string, pages: PageType[]): string {
@@ -152,37 +161,38 @@ function pageName(pageId: string, pages: PageType[]): string {
 </script>
 
 {#if project}
-  <h2 class="mb-5 text-2xl">Menu for {project.title}</h2>
+  <h2 class="menu-title">Menu for {project.title}</h2>
 
-  <section class="menu-section" aria-labelledby="menu-style-title">
-    <h3 id="menu-style-title" class="menu-section-title">Appearance</h3>
+  <PanelSection title="Appearance" id="menu-style-title" class="menu-section">
     <div class="menu-style-fields">
       <Select
         label="Layout"
         wrapperClass="menu-field"
         class="menu-select"
         value={menuStyle.layout ?? 'horizontal'}
-        onchange={(event) => updateStyle('layout', event.currentTarget.value)}>
+        onchange={(event) => updateStyle('layout', event.currentTarget.value as 'horizontal' | 'vertical')}>
         <option value="horizontal">Horizontal</option>
         <option value="vertical">Vertical</option>
       </Select>
-      <Input
-        label="Background"
-        wrapperClass="menu-field"
-        type="color"
-        value={menuStyle.backgroundColor ?? '#ffffff'}
-        onchange={(event) => updateStyle('backgroundColor', event.currentTarget.value)} />
-      <Input
-        label="Text"
-        wrapperClass="menu-field"
-        type="color"
-        value={menuStyle.textColor ?? '#111827'}
-        onchange={(event) => updateStyle('textColor', event.currentTarget.value)} />
+      <ColorSelect
+        element={{ style: menuStyle }}
+        title="Background color"
+        id="menu-background-color"
+        styleName="backgroundColor"
+        update={(event: Event) => updateColor('backgroundColor', event)}
+        isBgColors={true} />
+      <ColorSelect
+        element={{ style: menuStyle }}
+        title="Text color"
+        id="menu-text-color"
+        styleName="textColor"
+        update={(event: Event) => updateColor('textColor', event)}
+        isBgColors={false} />
     </div>
-  </section>
+    <Checkbox id="menu-sticky" label="Sticky menu" checked={Boolean(menuStyle.sticky)} oninput={(event) => updateStyle('sticky', event.currentTarget.checked)} />
+  </PanelSection>
 
-  <section class="menu-section" aria-labelledby="menu-items-title">
-    <h3 id="menu-items-title" class="menu-section-title">Menu structure</h3>
+  <PanelSection title="Menu structure" id="menu-items-title" class="menu-section">
     {#if rows.length === 0}
       <p class="menu-empty">No menu items yet.</p>
     {/if}
@@ -206,28 +216,36 @@ function pageName(pageId: string, pages: PageType[]): string {
           <div class="menu-item-heading">
             <span class="menu-item-kind">{row.element.type}</span>
             <div class="menu-item-order">
-              <button
-                type="button"
+              <Button
                 class="menu-icon-button"
+                icon="arrow_upward"
+                iconOnly
+                variant="ghost"
+                size="sm"
                 aria-label={`Move ${row.element.title} up`}
                 title={`Move ${row.element.title} up`}
                 disabled={row.path[row.path.length - 1] === 0}
-                onclick={() => moveItem(row.path, -1)}>
-                <span class="material-symbols-outlined" aria-hidden="true">arrow_upward</span>
-              </button>
-              <button
-                type="button"
+                onclick={() => moveItem(row.path, -1)} />
+              <Button
                 class="menu-icon-button"
+                icon="arrow_downward"
+                iconOnly
+                variant="ghost"
+                size="sm"
                 aria-label={`Move ${row.element.title} down`}
                 title={`Move ${row.element.title} down`}
                 disabled={row.path[row.path.length - 1] === (row.depth === 0 ? elements.length : (findParent(row.path)?.children?.length ?? 0)) - 1}
-                onclick={() => moveItem(row.path, 1)}>
-                <span class="material-symbols-outlined" aria-hidden="true">arrow_downward</span>
-              </button>
+                onclick={() => moveItem(row.path, 1)} />
             </div>
-            <button type="button" class="menu-remove" aria-label="Remove" title={`Remove ${row.element.title}`} onclick={() => removeItem(row.path)}>
-              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
-            </button>
+            <Button
+              class="menu-remove"
+              icon="delete"
+              iconOnly
+              variant="ghost"
+              size="sm"
+              aria-label="Remove"
+              title={`Remove ${row.element.title}`}
+              onclick={() => removeItem(row.path)} />
           </div>
 
           <div class="menu-item-fields">
@@ -320,9 +338,9 @@ function pageName(pageId: string, pages: PageType[]): string {
           {#if row.element.type === 'dropdown'}
             <div class="menu-child-actions" aria-label={`Add item inside ${row.element.title}`}>
               <span>Submenu items</span>
-              <button type="button" class="menu-add-button" onclick={() => addItem('link', row.path)}>+ Link</button>
-              <button type="button" class="menu-add-button" onclick={() => addItem('dropdown', row.path)}>+ Submenu</button>
-              <button type="button" class="menu-add-button" onclick={() => addItem('auto', row.path)}>+ Automatic pages</button>
+              <Button class="menu-add-button" icon="add" onclick={() => addItem('link', row.path)}>Link</Button>
+              <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown', row.path)}>Submenu</Button>
+              <Button class="menu-add-button" icon="add" onclick={() => addItem('auto', row.path)}>Automatic pages</Button>
             </div>
           {/if}
         </li>
@@ -330,64 +348,59 @@ function pageName(pageId: string, pages: PageType[]): string {
     </ol>
 
     <div class="menu-add-actions" aria-label="Add menu item">
-      <button type="button" class="menu-add-button" onclick={() => addItem('link')}>+ Link</button>
-      <button type="button" class="menu-add-button" onclick={() => addItem('dropdown')}>+ Manual submenu</button>
-      <button type="button" class="menu-add-button" onclick={() => addItem('auto')}>+ Automatic pages</button>
+      <Button class="menu-add-button" icon="add" onclick={() => addItem('link')}>Link</Button>
+      <Button class="menu-add-button" icon="add" onclick={() => addItem('dropdown')}>Manual submenu</Button>
+      <Button class="menu-add-button" icon="add" onclick={() => addItem('auto')}>Automatic pages</Button>
     </div>
-  </section>
+  </PanelSection>
 {/if}
 
 <style>
-.menu-section {
-  margin-bottom: 1.5rem;
-}
-
-.menu-section-title {
-  margin-bottom: 0.65rem;
-  font-size: 1rem;
-  font-weight: 650;
+.menu-title {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ui-text, #f5f5f5);
 }
 
 .menu-style-fields,
-.menu-item-fields,
+.menu-item-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr));
+  align-items: end;
+  gap: 8px;
+}
+
+.menu-style-fields {
+  margin-bottom: 12px;
+}
+
+.menu-style-fields :global(.ui-field),
+.menu-item-fields :global(.ui-field) {
+  min-width: 0;
+  margin: 0;
+}
+
+.menu-item-fields :global(.menu-title-field),
+.menu-item-fields :global(.menu-destination-field) {
+  grid-column: 1 / -1;
+}
+
 .menu-add-actions,
 .menu-child-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
-  gap: 0.65rem;
+  align-items: center;
+  gap: 8px;
 }
 
-.menu-section :global(.menu-field) {
-  display: grid;
-  gap: 0.3rem;
-  min-width: 10rem;
-  flex: 1;
-  font-size: 0.8rem;
-}
-
-.menu-section :global(.menu-field input[type='color']) {
-  width: 3rem;
-  height: 2.1rem;
-  padding: 0.15rem;
-}
-
-.menu-section :global(.menu-input),
-.menu-section :global(.menu-select) {
-  width: 100%;
-  min-width: 0;
-}
-
-.menu-icon-button:focus-visible,
-.menu-add-button:focus-visible,
-.menu-remove:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
+.menu-add-actions {
+  margin-top: 12px;
 }
 
 .menu-items {
   display: grid;
-  gap: 0.55rem;
+  gap: 8px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -395,11 +408,11 @@ function pageName(pageId: string, pages: PageType[]): string {
 
 .menu-item {
   min-width: 0;
-  margin-inline-start: calc(var(--menu-depth) * 1.15rem);
-  padding: 0.7rem;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 4px;
-  background: rgba(128, 128, 128, 0.045);
+  margin-inline-start: min(calc(var(--menu-depth) * 12px), 36px);
+  padding: 8px;
+  border: 1px solid var(--ui-border, #444);
+  border-radius: 6px;
+  background: var(--ui-panel, #2c2c2c);
 }
 
 .menu-item.dragging {
@@ -409,89 +422,40 @@ function pageName(pageId: string, pages: PageType[]): string {
 .menu-item-heading {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-bottom: 0.6rem;
+  gap: 4px;
+  margin-bottom: 8px;
 }
 
 .menu-item-kind {
   margin-right: auto;
-  color: #2563eb;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .menu-item-order {
   display: flex;
-  gap: 0.2rem;
-}
-
-.menu-icon-button,
-.menu-remove,
-.menu-add-button {
-  min-height: 2rem;
-  border: 1px solid rgba(128, 128, 128, 0.45);
-  border-radius: 3px;
-  padding: 0.3rem 0.55rem;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-.menu-icon-button,
-.menu-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.menu-icon-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.menu-remove {
-  color: #dc2626;
-}
-
-.menu-section :global(.menu-title-field),
-.menu-section :global(.menu-destination-field) {
-  flex: 2;
-}
-
-.menu-section :global(.menu-number) {
-  max-width: 8rem;
-}
-
-.menu-section :global(.menu-field small) {
-  opacity: 0.7;
+  gap: 2px;
 }
 
 .menu-child-actions {
-  margin-top: 0.65rem;
-  padding-top: 0.6rem;
-  border-top: 1px solid rgba(128, 128, 128, 0.25);
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ui-border, #444);
 }
 
 .menu-child-actions > span {
-  margin-right: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  flex-basis: 100%;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .menu-empty {
-  margin: 0 0 0.75rem;
-  opacity: 0.7;
-}
-
-@media (max-width: 640px) {
-  .menu-section :global(.menu-field) {
-    min-width: min(100%, 12rem);
-  }
-
-  .menu-item {
-    margin-inline-start: calc(var(--menu-depth) * 0.55rem);
-    padding: 0.55rem;
-  }
+  margin: 0;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+  line-height: 1.5;
 }
 </style>

@@ -1,5 +1,33 @@
 ## 2026-11-20
 
+- Files: `src/blocks/Menu/MenuItem.astro`, `tests/e2e/global-blocks.spec.ts`, `README.md`
+- Made menu links render the edited item title instead of stale link-settings text, fixing top-level and nested label updates as well as dropdown-to-link conversions.
+- Verified updated labels and unchanged destinations in the live preview; added regression coverage for nested links, reload persistence, and type conversion. All five global-block browser tests and Astro checks passed.
+
+- Files: `src/components/Textarea.svelte`, `src/components/project/Edit.svelte`, `README.md`
+- Added a visible default textarea border while retaining the shared blue focus highlight; migrated remaining project-edit textareas to the shared component, preserving bindings and 200–500px height limits.
+- Verified idle/hover/focus border colors and project textarea dimensions in the browser. Both affected editing tests and Astro checks passed.
+
+- Files: `src/components/editor/EditorTopMenu.svelte`, `tests/e2e/editor.spec.ts`, `README.md`
+- Renamed Preview theme to Toggle dark mode, used the visible label as its accessible name, and preserved toggle behavior.
+- Verified the displayed label in the editor and passed the dark-mode/reload browser test.
+
+- Files: `src/layouts/FrontPageLayout.astro`, `src/styles/global.css`, `src/pages/{index,dashboard}.astro`, `src/components/Login.svelte`, `src/components/projects/index.svelte`, `tests/e2e/pages.spec.ts`, `README.md`
+- Applied the editor's charcoal theme, typography, compact navigation, active-page accents, and rounded surfaces to Home and Dashboard; replaced page-specific old-color styling with shared application classes.
+- Migrated authentication and project actions to shared Button/Icon controls and restyled projects as responsive cards with descriptive accessible names.
+- Verified desktop/mobile appearance, project creation/opening, active navigation, sign-in/out, and reload behavior. All 25 affected page/editor tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
+- Files: `src/components/{Button,Icon,Field,Input,Select,Checkbox,Textarea,PanelSection}.svelte`, `src/components/editor/{Sidebar,ListPages,ListPagesContent,ElementsList,PageElements,Settings,EditorTopMenu}.svelte`, `src/components/FileSelector/index.svelte`, `src/blocks/{FAQ,Footer,Menu,Text,SplitBlock,Image}/index.svelte`, `src/blocks/shared/{Styles,Margin,Padding}.svelte`, `src/blocks/Image/figureStyles.css`, `src/types/types.ts`, `src/styles/global.css`, `src/pages/editor.astro`, `tests/e2e/{blocks,editor,global-blocks,pages}.spec.ts`, `README.md`
+- Restyled the sidebar and inspector around Figma's own compact charcoal UI, separated page/layer/property sections, and added responsive stacked panels while preserving floating settings movement and edits.
+- Centralized visible buttons, icons, fields, switches, textareas, and panel sections in reusable typed components; migrated all editor/block/file-picker controls and removed duplicated button/form styles.
+- Fixed tall preview images overflowing their figure and covering adjacent blocks at the wider preview size. Updated semantic control selectors and removed an icon-text assertion that pinned presentation rather than behavior.
+- Verified desktop/narrow layouts, fields and palettes, FAQ controls, popover Escape/focus, drag bounds, resize containment, both drag axes, and pinning without data loss. All 40 browser tests passed with retries disabled; Astro checks reported zero errors, warnings, or hints.
+
+- Files: `src/blocks/Menu/{index.svelte,Menu.astro,menuStyles.css}`, `src/pages/preview/index.astro`, `src/types/types.ts`, `src/utils/{projects,project-json}.ts`, `tests/e2e/{fixtures,global-blocks.spec}.ts`, `README.md`
+- Added a persisted Sticky menu switch and moved the menu's header into the menu component so sticky positioning spans the page rather than a short parent wrapper.
+- Replaced literal-color inputs with the shared project palette selectors, used palette variables for the menu and dropdowns, updated defaults and fixtures, and validated the optional sticky boolean in JSON imports.
+- Verified sticky/nonsticky scrolling, stacking and dropdown colors, light/dark palettes, modified palette values, primary-color fallback, reload/JSON persistence, invalid sticky rejection, and narrow vertical navigation. All 19 affected browser tests and Astro checks passed.
+
 - Files: `src/blocks/FAQ/{Preview.astro,faqStyles.css}`, `src/pages/preview/index.astro`, `README.md`
 - Replaced native FAQ markers with trailing Material Symbols chevrons, added row spacing and hover feedback, and rotated the icons with disclosure state while preserving native keyboard behavior.
 - Loaded the existing Material Symbols font in previews containing FAQ blocks and kept icons decorative for assistive technology.

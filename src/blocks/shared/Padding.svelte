@@ -65,8 +65,8 @@ function updatePaddingValue(key: string, event: Event) {
 {#if getPaddingMode() === 'all'}
   <Input id="padding-all" label="Padding (px):" type="number" min="0" value={getStyleNumberValue('paddingAll')} oninput={(event) => updatePaddingValue('paddingAll', event)} />
 {:else}
-  <div class="input-and-label-wrapper">
-    <span>Padding Individual (px):</span>
+  <fieldset class="padding-fields">
+    <legend>Padding Individual (px):</legend>
     <div class="padding-grid">
       <Input
         id="padding-top"
@@ -105,14 +105,30 @@ function updatePaddingValue(key: string, event: Event) {
         value={getStyleNumberValue('paddingLeft')}
         oninput={(event) => updatePaddingValue('paddingLeft', event)} />
     </div>
-  </div>
+  </fieldset>
 {/if}
 
 <style>
+.padding-fields {
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.padding-fields legend {
+  margin-bottom: 8px;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+}
+
 .padding-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  padding-bottom: 8px;
+}
+
+.padding-grid :global(.ui-field) {
+  margin: 0;
 }
 </style>

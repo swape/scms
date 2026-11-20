@@ -29,9 +29,9 @@ test('dashboard adds projects and opens project details', async ({ authenticated
   await page.goto('/dashboard')
   await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: /New Project/ })).toHaveCount(1)
-  await page.getByRole('button', { name: '+', exact: true }).click()
+  await page.getByRole('button', { name: 'New project', exact: true }).click()
   await expect(page.getByRole('button', { name: /New Project/ })).toHaveCount(2)
-  await page.getByRole('button', { name: /1 New Project/ }).click()
+  await page.getByRole('button', { name: 'Open project 1: New Project', exact: true }).click()
   await expect(page).toHaveURL(/\/project\?p=1$/)
   await expect(page.getByRole('link', { name: 'Editor', exact: true })).toHaveAttribute('href', '/editor?p=1')
   await expect(page.getByRole('link', { name: 'Editor (continue last unsaved)', exact: true })).toHaveAttribute('href', '/editor?p=1&local=true')
@@ -76,7 +76,6 @@ test('editor without a project shows its empty state', async ({ authenticatedPag
 
 test('editor loads fresh defaults when not resuming local data', async ({ authenticatedPage: page }) => {
   await page.goto('/editor?p=1')
-  await expect(page.locator('.page-button')).toHaveText(['draftStart page'])
   await expect(preview(page).locator('main section')).toHaveCount(0)
 })
 

@@ -36,7 +36,7 @@ export function createProject(): ProjectType {
   ]
   project.menu = {
     type: 'menu1',
-    style: { layout: 'horizontal', backgroundColor: '#ffffff', textColor: '#111827' },
+    style: { layout: 'horizontal', backgroundColor: 'bg_1', textColor: 'text_1' },
     elements: [
       { id: 'home-link', type: 'link', title: 'Home', link: { ...link, text: 'Home', mode: 'page', pageId } },
       { id: 'dropdown', type: 'dropdown', title: 'Explore', children: [{ id: 'nested-link', type: 'link', title: 'Docs', link: { ...link, text: 'Docs' } }] },

@@ -4,6 +4,8 @@ import { removeStorage, saveStorage } from '../../localstorage.ts'
 import { currentProject, isDarkMode, selectedPage } from '../../store.ts'
 import { flushPendingEdits } from '../../utils/editor-save.ts'
 import { parseProjectJson } from '../../utils/project-json.ts'
+import Button from '../Button.svelte'
+import Icon from '../Icon.svelte'
 
 let path = $state('')
 let fileInput: HTMLInputElement | undefined = $state()
@@ -110,78 +112,74 @@ selectedPage.subscribe((page) => {
 })
 </script>
 
-<div class="flex flex-wrap gap-2 p-5 border-b border-gray-600 items-center justify-between">
-  <div class="flex gap-2 items-center">
+<div class="editor-toolbar">
+  <div class="toolbar-breadcrumb">
     <div>
       {$currentProject?.title || 'No project selected'}
     </div>
 
-    <div class="overflow-hidden whitespace-nowrap text-ellipsis max-w-[50vw]">
+    <div class="toolbar-path">
       {#if $selectedPage}
         <span class="text-gray-400">{path}</span>
       {/if}
     </div>
   </div>
-  <button class="top-menu-button btn" onclick={toggleDarkMode}>
-    <span class="material-symbols-outlined">dark_mode</span>
-    <span>Toggle Dark Mode</span>
-  </button>
+  <Button variant="ghost" icon="dark_mode" onclick={toggleDarkMode}>Toggle dark mode</Button>
 
   <div class="save-load-actions">
-    <button bind:this={actionTrigger} type="button" class="top-menu-button btn save-load-trigger" popovertarget="save-load-menu" aria-controls="save-load-menu">
-      <span class="material-symbols-outlined" aria-hidden="true">save</span>
+    <Button bind:ref={actionTrigger} variant="primary" icon="save" class="save-load-trigger" popovertarget="save-load-menu" aria-controls="save-load-menu">
       <span>Save &amp; load</span>
-      <span class="material-symbols-outlined dropdown-chevron" aria-hidden="true">expand_more</span>
-    </button>
+      <span class="dropdown-chevron"><Icon name="expand_more" /></span>
+    </Button>
 
     <div bind:this={actionMenu} popover id="save-load-menu" class="save-load-menu" role="group" aria-label="Save and load actions" aria-busy={isLoadingJson}>
       <section class="save-load-group" aria-labelledby="server-actions-title">
         <h3 id="server-actions-title" class="save-load-group-title">
-          <span class="material-symbols-outlined" aria-hidden="true">cloud</span>
+          <Icon name="cloud" />
           Server
         </h3>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          fullWidth
+          icon="cloud_upload"
           class="save-load-item"
           onclick={() => {
             closeActionMenu()
             alert('Save functionality not implemented yet')
           }}>
-          <span class="material-symbols-outlined" aria-hidden="true">cloud_upload</span>
-          <span>Save to server</span>
-        </button>
-        <button
-          type="button"
+          Save to server
+        </Button>
+        <Button
+          variant="ghost"
+          fullWidth
+          icon="publish"
           class="save-load-item"
           onclick={() => {
             closeActionMenu()
             alert('Save functionality not implemented yet')
           }}>
-          <span class="material-symbols-outlined" aria-hidden="true">publish</span>
-          <span>Save and Publish</span>
-        </button>
+          Save and Publish
+        </Button>
       </section>
 
       <section class="save-load-group" aria-labelledby="json-actions-title">
         <h3 id="json-actions-title" class="save-load-group-title">
-          <span class="material-symbols-outlined" aria-hidden="true">data_object</span>
+          <Icon name="data_object" />
           JSON files
         </h3>
-        <button type="button" class="save-load-item" disabled={!$currentProject || isLoadingJson} onclick={saveAsJson}>
-          <span class="material-symbols-outlined" aria-hidden="true">download</span>
-          <span>Save as JSON</span>
-        </button>
-        <button
-          type="button"
+        <Button variant="ghost" fullWidth icon="download" class="save-load-item" disabled={!$currentProject || isLoadingJson} onclick={saveAsJson}>Save as JSON</Button>
+        <Button
+          variant="ghost"
+          fullWidth
+          icon="upload_file"
           class="save-load-item"
           disabled={isLoadingJson}
           onclick={() => {
             closeActionMenu()
             fileInput?.click()
           }}>
-          <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
-          <span>{isLoadingJson ? 'Loading JSON…' : 'Load from JSON'}</span>
-        </button>
+          {isLoadingJson ? 'Loading JSON…' : 'Load from JSON'}
+        </Button>
       </section>
     </div>
   </div>
@@ -192,6 +190,30 @@ selectedPage.subscribe((page) => {
 </div>
 
 <style>
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  min-height: 48px;
+  background: var(--ui-panel);
+  border-bottom: 1px solid var(--ui-border);
+}
+.toolbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.toolbar-path {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 35vw;
+  color: var(--ui-muted);
+}
 .save-load-menu {
   position-area: bottom span-left;
   position-try-fallbacks: flip-inline, flip-block;
@@ -200,17 +222,17 @@ selectedPage.subscribe((page) => {
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
   padding: 0.4rem;
-  border: 1px solid #475569;
-  border-radius: 0.5rem;
-  background: #0f172a;
-  color: #f8fafc;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-panel);
+  color: var(--ui-text);
   box-shadow: 0 12px 30px rgb(0 0 0 / 35%);
 }
 
 .save-load-group + .save-load-group {
   margin-top: 0.4rem;
   padding-top: 0.4rem;
-  border-top: 1px solid #334155;
+  border-top: 1px solid var(--ui-border);
 }
 
 .save-load-group-title {
@@ -218,38 +240,13 @@ selectedPage.subscribe((page) => {
   align-items: center;
   gap: 0.5rem;
   padding: 0.45rem 0.65rem;
-  color: #94a3b8;
-  font-size: 0.75rem;
+  color: var(--ui-muted);
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
 }
 
-.save-load-item {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  width: 100%;
-  min-height: 2.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.3rem;
-  text-align: left;
-  font-size: 0.875rem;
-}
-
-.save-load-item:hover:not(:disabled) {
-  background: #1e293b;
-}
-
-.save-load-item:focus-visible,
-.save-load-trigger:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: -2px;
-}
-
-.save-load-item:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.save-load-menu :global(.save-load-item) {
+  justify-content: flex-start;
 }
 
 .save-load-actions:has(:popover-open) .dropdown-chevron {

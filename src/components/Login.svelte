@@ -2,6 +2,7 @@
 import { resetAllStorage } from '../localstorage.ts'
 import { userObj } from '../store.ts'
 import type { UserType } from '../types/types.ts'
+import Button from './Button.svelte'
 
 let scms = window.localStorage.getItem('scms') || null
 if (scms) {
@@ -28,12 +29,32 @@ function signout() {
 }
 </script>
 
-<div class="flex gap-3 items-center flex-wrap">
+<div class="account-controls">
   {#if $userObj?.uid}
-    <span> Hello {$userObj.displayName}</span>
-    <button onclick={signout} class="btn px-4 py-2">Sign out</button>
+    <span class="account-name">Hello {$userObj.displayName}</span>
+    <Button variant="ghost" size="sm" icon="logout" onclick={signout}>Sign out</Button>
   {/if}
   {#if !$userObj}
-    <button onclick={login} class="btn px-4 py-2">Sign in</button>
+    <Button variant="primary" size="sm" icon="login" onclick={login}>Sign in</Button>
   {/if}
 </div>
+
+<style>
+.account-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.account-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ui-muted);
+}
+@media (max-width: 600px) {
+  .account-name {
+    display: none;
+  }
+}
+</style>

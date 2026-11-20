@@ -37,8 +37,8 @@ function updateMarginValue(key: string, event: Event) {
 }
 </script>
 
-<div class="input-and-label-wrapper">
-  <span>Margin Block (px):</span>
+<fieldset class="margin-fields">
+  <legend>Margin Block (px):</legend>
   <div class="margin-block-grid">
     <Input
       id="margin-top"
@@ -57,13 +57,29 @@ function updateMarginValue(key: string, event: Event) {
       value={getStyleNumberValue('marginBottom')}
       oninput={(event) => updateMarginValue('marginBottom', event)} />
   </div>
-</div>
+</fieldset>
 
 <style>
+.margin-fields {
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.margin-fields legend {
+  margin-bottom: 8px;
+  color: var(--ui-muted, #b3b3b3);
+  font-size: 12px;
+}
+
 .margin-block-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  padding-bottom: 8px;
+}
+
+.margin-block-grid :global(.ui-field) {
+  margin: 0;
 }
 </style>

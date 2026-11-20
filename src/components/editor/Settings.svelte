@@ -3,6 +3,8 @@ import { onDestroy } from 'svelte'
 import { currentProject, selectedElement, selectedPage } from '../../store.ts'
 import type { ContentType } from '../../types/types.ts'
 import { createPendingSave } from '../../utils/editor-save.ts'
+import Button from '../Button.svelte'
+import Icon from '../Icon.svelte'
 import { getEditorDefinition } from './elements-list.ts'
 
 let isFloating = $state(false)
@@ -178,7 +180,7 @@ function updatePageContentWithDebounce() {
 
 <div
   bind:this={panel}
-  class="settings bg-slate-900"
+  class="settings editor-panel"
   class:settings-floating={isFloating}
   class:settings-moved={isFloating && floatingPosition !== null}
   class:settings-dragging={isDragging}
@@ -188,8 +190,8 @@ function updatePageContentWithDebounce() {
   aria-label="Settings">
   <div class="settings-header">
     <h2 class="settings-drag-heading">
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         class="settings-drag-handle"
         disabled={!isFloating}
         aria-label={isFloating ? 'Move settings panel' : 'Settings panel is pinned'}
@@ -201,31 +203,31 @@ function updatePageContentWithDebounce() {
         onlostpointercapture={finishDrag}
         onkeydown={moveWithKeyboard}>
         {#if isFloating}
-          <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+          <Icon name="drag_indicator" />
         {/if}
-        <span class="font-semibold">Settings</span>
-        <span class="text-xs text-gray-400">{isFloating ? 'Floating' : 'Pinned'}</span>
-      </button>
+        <span class="inspector-title">Design</span>
+        <span class="panel-mode">{isFloating ? 'Floating' : 'Pinned'}</span>
+      </Button>
     </h2>
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      icon={isFloating ? 'push_pin' : 'open_in_new'}
+      iconOnly
       title={isFloating ? 'Pin settings panel to side' : 'Float settings panel'}
       aria-label={isFloating ? 'Pin settings panel to side' : 'Float settings panel'}
-      class="btn flex p-2 rounded-full settings-pin-button"
-      onclick={toggleFloating}>
-      <span class="material-symbols-outlined" aria-hidden="true">{isFloating ? 'push_pin' : 'open_in_new'}</span>
-    </button>
+      class="settings-pin-button"
+      onclick={toggleFloating} />
   </div>
   {#if $selectedElement}
-    <div class="p-5 mb-4 border-b border-gray-800">
-      <div class="flex gap-2 items-center">
-        <span class="text-gray-500 min-w-15 inline-block">Type:</span> <span class="material-symbols-outlined">{$selectedElement.type === 'page' ? 'draft' : 'brick'}</span>
-        {$selectedElement.type}
+    <div class="selection-info">
+      <div class="selection-name">
+        <Icon name={definition?.icon ?? 'crop_square'} />
+        <strong>{$selectedElement.title || definition?.name}</strong>
+        <span class="selection-type">{definition?.name ?? $selectedElement.type}</span>
       </div>
-      <div><span class="text-gray-500 min-w-15 inline-block">Title:</span> {$selectedElement.title}</div>
-      <small class="text-gray-500"><span class="min-w-15 inline-block">ID:</span> {$selectedElement.id}</small>
+      <span class="selection-id">ID: {$selectedElement.id}</span>
     </div>
-    <div class="p-5">
+    <div class="settings-content">
       {#if editorModule}
         {#await editorModule}
           <p role="status">Loading block editor...</p>
@@ -238,30 +240,33 @@ function updatePageContentWithDebounce() {
         <p role="alert">No editor registered for block type: {$selectedElement.type}</p>
       {/if}
     </div>
+  {:else}
+    <div class="panel-empty">
+      <Icon name="touch_app" size={28} />
+      <p>Select a page or block to edit its properties.</p>
+    </div>
   {/if}
 </div>
 
 <style>
 .settings {
   min-width: 0;
-  max-height: 100svh;
+  height: 100%;
   overflow-y: auto;
-  background-color: black;
   position: relative;
 }
 
 .settings-header {
   position: sticky;
   top: 0;
-  padding: 12px;
-  z-index: 1;
+  padding: 8px;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  background: inherit;
+  gap: 8px;
+  border-bottom: 1px solid var(--ui-border);
+  background: var(--ui-panel);
 }
 
 .settings-drag-heading {
@@ -269,30 +274,63 @@ function updatePageContentWithDebounce() {
   min-width: 0;
 }
 
-.settings-drag-handle {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.settings :global(.settings-drag-handle) {
   width: 100%;
-  min-height: 2.5rem;
-  text-align: left;
+  justify-content: flex-start;
   touch-action: none;
   user-select: none;
   cursor: grab;
 }
 
-.settings-drag-handle:disabled {
+.settings :global(.settings-drag-handle:disabled) {
   cursor: default;
+  opacity: 1;
 }
 
-.settings-dragging .settings-drag-handle {
+.settings-dragging :global(.settings-drag-handle) {
   cursor: grabbing;
 }
-
-.settings-drag-handle:focus-visible,
-.settings-pin-button:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 2px;
+.inspector-title {
+  font-weight: 600;
+}
+.panel-mode {
+  margin-left: auto;
+  color: var(--ui-muted);
+  font-size: 10px;
+  font-weight: 400;
+}
+.selection-info {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ui-border);
+}
+.selection-name {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+.selection-name strong {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.selection-type {
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.selection-id {
+  display: block;
+  margin: 4px 0 0 24px;
+  color: var(--ui-muted);
+  font-size: 10px;
+}
+.settings-content {
+  padding: 16px;
+}
+.panel-empty p {
+  margin-top: 12px;
 }
 
 .settings-floating {
@@ -303,11 +341,11 @@ function updatePageContentWithDebounce() {
   right: 1rem;
   height: var(--floating-panel-height);
   z-index: 20;
-  width: min(60vw, 48rem);
-  min-width: min(22rem, calc(100vw - 2rem));
+  width: min(380px, calc(100vw - 2rem));
+  min-width: min(280px, calc(100vw - 2rem));
   max-width: calc(100vw - 2rem);
   max-height: calc(100dvh - 2rem);
-  border: 1px solid #475569;
+  border: 1px solid var(--ui-border);
   border-radius: 0.75rem;
   box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
 }

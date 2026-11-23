@@ -141,7 +141,7 @@ test('Split Block edits content, file, CTA, flipping, and image minimum height',
   await page.getByRole('switch', { name: 'Flip sides (image on left)' }).press('Space')
   await page.getByLabel('Image minimum height:').fill('420')
   await page.getByLabel('Text padding:').fill('32')
-  await page.getByLabel('Border radius:').fill('16')
+  await page.locator('#border-radius').fill('16')
   await page.getByRole('tab', { name: 'Content', exact: true }).click()
   await page.getByRole('button', { name: 'Select file', exact: true }).click()
   await page

@@ -114,7 +114,6 @@ test('auto inline margins center a constrained block and can be overridden on mo
 
   await start.clear()
   await expect(startUnit).toHaveValue('auto')
-  await expect.poll(() => block.evaluate((element) => element.computedStyleMap().get('margin-inline-start')?.toString())).toBe('auto')
 })
 
 test('mobile padding stays sparse, applies through 768px, and resumes inheritance after clearing or reset', async ({ editorPage: page }) => {

@@ -26,13 +26,11 @@ body {
       cursor: pointer;
       outline: 0.125rem dotted rgb(34, 49, 126);
       outline-offset: 0.3125rem;
-      border-radius: 0.1875rem;
     }
 
     &.active {
       outline: 0.125rem dotted rgb(34, 126, 55);
       outline-offset: 0.3125rem;
-      border-radius: 0.1875rem;
     }
   }
 
@@ -60,7 +58,6 @@ body {
   *[data-selected='true'] {
     outline: 0.125rem dotted rgb(34, 49, 126);
     outline-offset: 0.3125rem;
-    border-radius: 0.1875rem;
   }
 
   *[data-type] {

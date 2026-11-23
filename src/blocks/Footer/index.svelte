@@ -83,7 +83,7 @@ function updateElementField(elementId: string, field: 'title' | 'text' | 'html' 
       return element.link ? { ...element, link: { ...element.link, url: value } } : element
     }
 
-    return { ...element, [field]: value }
+    return { ...element, [field]: value, ...(field === 'title' && element.link && { link: { ...element.link, text: value } }) }
   })
   saveDebounced()
 }

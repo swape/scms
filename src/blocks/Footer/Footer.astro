@@ -22,7 +22,7 @@ const elements: FooterElement[] = footer?.elements ?? []
           href={sanitizeHref(href)}
           target={target}
           rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
-          {element.type === 'social' ? (element.socialPlatform ?? element.title) : element.link?.text || element.title}
+          {element.type === 'social' ? (element.socialPlatform ?? element.title) : element.title || element.link?.text}
         </a>
       )
     }

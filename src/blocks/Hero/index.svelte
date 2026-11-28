@@ -13,6 +13,7 @@ import ImageSource from '../shared/ImageSource.svelte'
 import LinkDestination from '../shared/LinkDestination.svelte'
 import LinkTarget from '../shared/LinkTarget.svelte'
 import { getDefaultLinkSettings, updateSelectedLink } from '../shared/helpers.ts'
+import HeaderSizeSelect from '../shared/HeaderSizeSelect.svelte'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
@@ -106,10 +107,6 @@ function updateLink(change: (link: LinkSettings) => void) {
 </div>
 
 <div hidden={activeTab !== 'other'}>
-  <Select id="hero-level" label="Heading level:" value={block?.headerLevel ?? 'h1'} onchange={(event) => update('headerLevel', event.currentTarget.value)}>
-    <option value="h1">H1</option>
-    <option value="h2">H2</option>
-    <option value="h3">H3</option>
-  </Select>
+  <HeaderSizeSelect id="hero-level" maxLevel={3} value={block?.headerLevel ?? 'h1'} onchange={(level) => update('headerLevel', level)} />
   <LinkTarget id="hero-target" link={block?.link} onchange={updateLink} />
 </div>

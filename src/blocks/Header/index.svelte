@@ -1,11 +1,11 @@
 <script lang="ts">
 import Input from '../../components/Input.svelte'
-import Select from '../../components/Select.svelte'
 import SizeInput from '../../components/SizeInput.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
 import { updateBlockField } from '../shared/helpers.ts'
+import HeaderSizeSelect from '../shared/HeaderSizeSelect.svelte'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
@@ -18,21 +18,13 @@ function updateContent(event: Event) {
   updateBlockField('content', input.value, update, updatePageContentWithDebounce)
 }
 
-function updateLevel(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateBlockField('headerLevel', select.value, update, updatePageContentWithDebounce)
+function updateLevel(level: string) {
+  updateBlockField('headerLevel', level, update, updatePageContentWithDebounce)
 }
 </script>
 
 <div hidden={activeTab !== 'content'}>
-  <Select id="header-level" label="Level:" value={selectedBlock?.headerLevel || 'h2'} onchange={updateLevel}>
-    <option value="h1">H1</option>
-    <option value="h2">H2</option>
-    <option value="h3">H3</option>
-    <option value="h4">H4</option>
-    <option value="h5">H5</option>
-    <option value="h6">H6</option>
-  </Select>
+  <HeaderSizeSelect id="header-level" label="Level:" value={selectedBlock?.headerLevel || 'h2'} onchange={updateLevel} />
 
   <Input id="header-content" label="Text:" value={selectedBlock?.content || ''} oninput={updateContent} />
 </div>

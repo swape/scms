@@ -9,6 +9,7 @@ import Textarea from '../../components/Textarea.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
+import HeaderSizeSelect from '../shared/HeaderSizeSelect.svelte'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
@@ -107,14 +108,7 @@ const style = getStyleEditor()
       native controls.
     </p>
   </PanelSection>
-  <Select id="video-heading-level" label="Heading level:" value={block?.headerLevel ?? 'h2'} onchange={(event) => update('headerLevel', event.currentTarget.value)}>
-    <option value="h1">H1</option>
-    <option value="h2">H2</option>
-    <option value="h3">H3</option>
-    <option value="h4">H4</option>
-    <option value="h5">H5</option>
-    <option value="h6">H6</option>
-  </Select>
+  <HeaderSizeSelect id="video-heading-level" value={block?.headerLevel ?? 'h2'} onchange={(level) => update('headerLevel', level)} />
 </div>
 
 <style>

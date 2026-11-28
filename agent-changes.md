@@ -1,3 +1,22 @@
+## 2026-11-28
+
+- Files: `src/blocks/Video/{vimeo.ts,Preview.astro,css.ts,videoStyles.css,index.svelte}`, `tests/e2e/blocks.spec.ts`, `README.md`
+- Added Vimeo support to the Video block: public, unlisted, channel and player URLs render an embedded player with playback options mapped to the player; look-alike hosts are rejected.
+- Verified URL parsing, embed URLs, editor autoplay suppression, and standalone autoplay with Vimeo stubbed; 21 block tests and type checks pass. Not checked against live Vimeo.
+
+- Files: `src/components/FileSelector/index.svelte`, `src/components/editor/Settings.svelte`, `src/blocks/{Image,SplitBlock,Hero,CardGrid,Video}/index.svelte`, `tests/e2e/blocks.spec.ts`, `README.md`
+- Added file selection and custom URL options to every block image field, including card images and video posters. Gave each picker a unique popover ID and made shared field updates immutable so file choices immediately updated source inputs.
+- Verified file/custom URL switching and reloads for all five image surfaces; all 64 browser checks passed, including five temporary smoke cases. Retained image-sync and multi-card picker regression coverage and removed the temporary smoke file. Type checks passed with no errors.
+
+- Files: `src/blocks/{CardGrid,CallToAction,Video}/*`, `src/components/editor/elements-list.ts`, `src/types/types.ts`, `src/utils/project-json.ts`, `src/pages/preview/{ElementSelector,index}.astro`, `tests/e2e/blocks.spec.ts`, `README.md`
+- Added Card Grid, Call to Action, and native Video blocks with reusable controls, mobile styles, palette colors, and validated JSON persistence. Preserved native video controls and disabled editor autoplay while keeping configured muted autoplay in standalone previews.
+- Fixed Card Grid list reactivity discovered during smoke verification and retained regression coverage for edits, destinations, ordering, mobile columns, and duplicate-card import rejection.
+- Verified desktop/phone layouts and actual video decoding/playback. Type checks, all 25 block/responsive tests, and three targeted smoke scenarios passed. Removed the temporary smoke file and generated video fixture afterward.
+
+- Files: `src/blocks/Hero/{index.svelte,Preview.astro,css.ts,heroStyles.css}`, `src/components/editor/elements-list.ts`, `README.md`
+- Added Hero with editable heading, description, background image, optional link button, reusable settings controls, palette colors, dimensions, overlay, and mobile overrides.
+- Verified insertion, styling, persistence, deletion, content editing, link targets, image removal, heading levels, responsive sizes, and JSON parsing. Type checks and the Hero registry test passed; the temporary interaction smoke scenario also passed and was removed.
+
 ## 2026-11-20
 
 - Files: `src/components/project/{Edit,Fonts}.svelte`, `src/utils/project-fonts.ts`, `tests/e2e/pages.spec.ts`, `README.md`

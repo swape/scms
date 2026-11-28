@@ -334,13 +334,7 @@ function update(key: string, value: unknown) {
   if ($selectedElement?.type === 'footer' || $selectedElement?.type === 'menu') {
     return
   }
-  selectedElement.update((element) => {
-    if (element) {
-      // @ts-expect-error update the property dynamically
-      ;(element as ContentType)[key] = value
-    }
-    return element
-  })
+  selectedElement.update((element) => (element ? { ...element, [key]: value } : element))
   updatePageContentWithDebounce()
 }
 

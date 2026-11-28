@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
+import { getVimeoEmbedUrl, parseVimeoUrl } from '../../src/blocks/Video/vimeo'
 import { elementsList } from '../../src/components/editor/elements-list'
-import { expect, preview, seedProject, selectBlock, storedProject, test } from './fixtures'
+import { parseProjectJson } from '../../src/utils/project-json'
+import { expect, openPreview, preview, seedProject, selectBlock, storedProject, test } from './fixtures'
 
 for (const definition of elementsList) {
   test(`${definition.name} can be inserted, styled, persisted, and deleted`, async ({ editorPage: page }) => {
@@ -84,8 +86,9 @@ test('Header updates its text and all six heading levels', async ({ editorPage: 
 test('Image selects a file and edits its title and caption', async ({ editorPage: page }) => {
   await selectBlock(page, 'image')
   await page.getByRole('button', { name: 'Select file', exact: true }).click()
-  await page.locator('#file-popover-wrapper').getByRole('button', { name: 'File 1', exact: true }).click()
-  await expect(page.locator('#file-popover-wrapper')).not.toBeVisible()
+  await page.locator('.file-selector [popover]:popover-open').getByRole('button', { name: 'File 1', exact: true }).click()
+  await expect(page.locator('.file-selector [popover]:popover-open')).toHaveCount(0)
+  await expect(page.locator('#image-url')).toHaveValue('https://placehold.co/600x400/orange/white')
   await page.getByLabel('Image Header:').fill('Updated image')
   await page.getByLabel('Image Header:').press('End')
   await page.getByLabel('Image Caption:').fill('Updated caption')
@@ -95,6 +98,10 @@ test('Image selects a file and edits its title and caption', async ({ editorPage
   await expect(block.locator('figcaption')).toHaveText('Updated caption')
   await expect(block.getByRole('img', { name: 'File 1', exact: true })).toHaveAttribute('src', 'https://placehold.co/600x400/orange/white')
   await expect.poll(async () => (await storedProject(page)).pages[0].content[2]).toMatchObject({ imageId: '1', alt: 'File 1', caption: 'Updated caption' })
+  await page.locator('#image-url').fill('/favicon.svg')
+  await expect(block.locator('img')).toHaveAttribute('src', '/favicon.svg')
+  await page.reload()
+  await expect(block.locator('img')).toHaveAttribute('src', '/favicon.svg')
 })
 
 test('Link switches URL/page destinations, targets, and button appearance', async ({ editorPage: page }) => {
@@ -145,10 +152,10 @@ test('Split Block edits content, file, CTA, flipping, and image minimum height',
   await page.getByRole('tab', { name: 'Content', exact: true }).click()
   await page.getByRole('button', { name: 'Select file', exact: true }).click()
   await page
-    .locator('#file-popover-wrapper')
+    .locator('.file-selector [popover]:popover-open')
     .getByRole('button', { name: /folder2$/ })
     .click()
-  await page.locator('#file-popover-wrapper').getByRole('button', { name: 'File 3', exact: true }).click()
+  await page.locator('.file-selector [popover]:popover-open').getByRole('button', { name: 'File 3', exact: true }).click()
   const block = () => preview(page).locator('section[data-id="splitBlock"]')
   await expect(block().getByRole('heading', { name: 'Updated feature' })).toBeVisible()
   await expect(block().locator('p')).toHaveText('Updated feature body')
@@ -293,4 +300,93 @@ test('mixed spacing units retain fractions, zero, and cleared values through JSO
       element.style.fontSize = '20px'
     })
   await expectSpacing(20)
+})
+test('Card grid edits, reorders, links and responsive columns', async ({ editorPage: page }) => {
+  await page.getByRole('region', { name: 'Add element', exact: true }).getByRole('button', { name: 'Card Grid', exact: true }).click()
+  const grid = preview(page).locator('.card-grid-items')
+  await page.locator('#card-title-card-1').fill('First service')
+  await page.locator('#card-content-card-1').fill('First line\nSecond line')
+  await page.locator('#card-image-card-1').fill('/favicon.svg')
+  await page.locator('#card-alt-card-1').fill('Service image')
+  await page.locator('#card-link-text-card-1').fill('Read service')
+  await page.locator('#card-link-mode-card-1').selectOption('page')
+  await page.locator('#card-link-page-card-1').selectOption('about')
+  await expect(grid.getByRole('link', { name: 'Read service' })).toHaveAttribute('href', '#page-about')
+  await expect(grid.getByRole('img', { name: 'Service image' })).toHaveAttribute('src', '/favicon.svg')
+  await page.getByRole('button', { name: 'Move card 1 down', exact: true }).click()
+  await expect(grid.locator('article').nth(1).locator('h3')).toHaveText('First service')
+  await page.getByRole('button', { name: 'Remove card 1', exact: true }).click()
+  await expect(grid.locator('article').first().locator('h3')).toHaveText('First service')
+  await page.getByRole('button', { name: 'Add card', exact: true }).click()
+  await expect(grid.locator('article').last().locator('h3')).toHaveText('New card')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await page.locator('#card-grid-columns').fill('3')
+  await expect.poll(async () => (await grid.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).split(' ').length).toBe(3)
+  await page.getByRole('button', { name: 'Desktop preview', exact: true }).click()
+  await expect.poll(async () => (await grid.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).split(' ').length).toBe(1)
+  await page.getByRole('tab', { name: 'Mobile overrides', exact: true }).click()
+  await page.locator('#card-grid-columns').fill('2')
+  await expect.poll(async () => (await grid.evaluate((el) => getComputedStyle(el).gridTemplateColumns)).split(' ').length).toBe(2)
+  const saved = await storedProject(page)
+  const imported = parseProjectJson(JSON.stringify(saved))
+  expect(imported.pages[0].content.at(-1)?.cardItems?.[0]).toMatchObject({ title: 'First service', link: { pageId: 'about' } })
+  const bad = structuredClone(saved)
+  const cards = bad.pages[0].content.at(-1)!.cardItems!
+  cards[1].id = cards[0].id
+  expect(() => parseProjectJson(JSON.stringify(bad))).toThrow(/duplicates another card/)
+  await page.reload()
+  await expect(grid.getByRole('heading', { name: 'First service' })).toBeVisible()
+})
+
+test('card image pickers target their own card after reordering', async ({ editorPage: page }) => {
+  await page.getByRole('region', { name: 'Add element', exact: true }).getByRole('button', { name: 'Card Grid', exact: true }).click()
+  const card = page.locator('.card-item-editor').filter({ has: page.locator('#card-title-card-2') })
+  await card.getByRole('button', { name: 'Select file', exact: true }).click()
+  await page.locator('[popover]:popover-open').getByRole('button', { name: 'File 2', exact: true }).click()
+  await expect(page.locator('#card-image-card-2')).toHaveValue('https://placehold.co/800x400/orange/red')
+  await expect(page.locator('#card-image-card-1')).toHaveValue('')
+  await expect(page.locator('#card-image-card-3')).toHaveValue('')
+  await card.getByRole('button', { name: 'Move card 2 up', exact: true }).click()
+  await card.getByRole('button', { name: 'Select file', exact: true }).click()
+  await page.locator('[popover]:popover-open').getByRole('button', { name: 'File 1', exact: true }).click()
+  await expect(page.locator('#card-image-card-2')).toHaveValue('https://placehold.co/600x400/orange/white')
+  await expect(preview(page).locator('.card-grid-card').first().locator('img')).toHaveAttribute('src', 'https://placehold.co/600x400/orange/white')
+  await page.locator('#card-image-card-2').fill('/favicon.svg')
+  await expect(preview(page).locator('.card-grid-card').first().locator('img')).toHaveAttribute('src', '/favicon.svg')
+})
+
+test('Vimeo URL forms parse; look-alike hosts and non-video pages are rejected', () => {
+  expect(parseVimeoUrl('https://vimeo.com/123456789')).toEqual({ id: '123456789', hash: undefined })
+  expect(parseVimeoUrl('https://vimeo.com/123456789/abcdef1234')).toEqual({ id: '123456789', hash: 'abcdef1234' })
+  expect(parseVimeoUrl('https://player.vimeo.com/video/123456789?h=abcdef1234')).toEqual({ id: '123456789', hash: 'abcdef1234' })
+  expect(parseVimeoUrl('https://vimeo.com/channels/staffpicks/123456789')).toEqual({ id: '123456789', hash: undefined })
+  expect(parseVimeoUrl('https://vimeo.com.evil.example/123456789')).toBeUndefined()
+  expect(parseVimeoUrl('https://evilvimeo.com/123456789')).toBeUndefined()
+  expect(parseVimeoUrl('https://vimeo.com/staffpicks')).toBeUndefined()
+  expect(parseVimeoUrl('javascript:alert(1)')).toBeUndefined()
+  expect(getVimeoEmbedUrl({ id: '1', hash: 'abc' }, { autoplay: true, loop: true, muted: false, controls: false })).toBe(
+    'https://player.vimeo.com/video/1?h=abc&dnt=1&playsinline=1&autoplay=1&loop=1&muted=1&controls=0'
+  )
+})
+
+test('Video block embeds a Vimeo link and keeps autoplay off inside the editor', async ({ editorPage: page }) => {
+  await page.route('https://player.vimeo.com/**', (route) => route.fulfill({ contentType: 'text/html', body: '<p>stub</p>' }))
+  await page.getByRole('region', { name: 'Add element', exact: true }).getByRole('button', { name: 'Video', exact: true }).click()
+  await page.locator('#video-title').fill('Vimeo demo')
+  await page.locator('#video-src').fill('https://vimeo.com/123456789/abcdef1234')
+  const frame = preview(page).locator('iframe[data-video-provider="vimeo"]')
+  await expect(frame).toHaveAttribute('src', 'https://player.vimeo.com/video/123456789?h=abcdef1234&dnt=1&playsinline=1')
+  await expect(frame).toHaveAttribute('title', 'Vimeo demo')
+  await page.getByRole('tab', { name: 'Other settings', exact: true }).click()
+  await page.locator('#video-autoplay').check()
+  await expect(frame).toHaveAttribute('src', 'https://player.vimeo.com/video/123456789?h=abcdef1234&dnt=1&playsinline=1')
+  await page.getByRole('tab', { name: 'Style', exact: true }).click()
+  await page.locator('#video-aspect-ratio').selectOption('auto')
+  await expect(frame).toHaveCSS('aspect-ratio', '16 / 9')
+  const saved = await storedProject(page)
+  await openPreview(page, saved)
+  await expect(page.locator('iframe[data-video-provider="vimeo"]')).toHaveAttribute(
+    'src',
+    'https://player.vimeo.com/video/123456789?h=abcdef1234&dnt=1&playsinline=1&autoplay=1&muted=1'
+  )
 })

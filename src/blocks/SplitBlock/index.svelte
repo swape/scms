@@ -115,6 +115,15 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
     {/if}
 
     <FileSelector selected={selectedFile} />
+    <Input
+      id="split-image-url"
+      label="Custom image URL:"
+      value={selectedBlock?.src ?? ''}
+      oninput={(event) => {
+        update('src', event.currentTarget.value.trim())
+        update('imageId', '')
+        update('imageType', '')
+      }} />
   </PanelSection>
 </div>
 

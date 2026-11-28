@@ -130,6 +130,7 @@ export interface BlockStylesProps {
 
 export interface BlockPreviewProps {
   data: ContentType
+  isEditor?: boolean
 }
 
 export interface BlockCssRule {
@@ -240,6 +241,15 @@ export interface FaqItem {
   openOnStart?: boolean
 }
 
+export interface CardItem {
+  id: string
+  title: string
+  content: string
+  src?: string
+  alt?: string
+  link?: LinkSettings
+}
+
 export interface ContentType {
   id: string | number
   order: number
@@ -267,6 +277,14 @@ export interface ContentType {
   // FAQ block
   faqItems?: FaqItem[]
   faqCloseOthers?: boolean
+  // card grid
+  cardItems?: CardItem[]
+  // video
+  poster?: string
+  videoControls?: boolean
+  videoAutoplay?: boolean
+  videoLoop?: boolean
+  videoMuted?: boolean
 }
 
 export type FooterElementType = 'link' | 'social' | 'html' | 'text'

@@ -10,6 +10,8 @@ const exampleFiles = [
 ]
 
 const { selected } = $props()
+const uid = $props.id()
+const popoverId = `file-popover-${uid}`
 
 let selectedDirectory = $state('')
 
@@ -53,7 +55,7 @@ function selectFile(fileId: string) {
   if (file) {
     selected(file)
     // close the popover
-    const popover = document.getElementById('file-popover-wrapper')
+    const popover = document.getElementById(popoverId)
     if (popover) {
       popover.hidePopover()
     }
@@ -62,8 +64,8 @@ function selectFile(fileId: string) {
 </script>
 
 <div class="file-selector relative">
-  <Button icon="folder_open" popovertarget="file-popover-wrapper">Select file</Button>
-  <div popover id="file-popover-wrapper" class="popover">
+  <Button icon="folder_open" popovertarget={popoverId}>Select file</Button>
+  <div popover id={popoverId} class="popover">
     <div class="file-selector-content">
       <div class="directory-list">
         <h3>Directories</h3>

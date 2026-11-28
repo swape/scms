@@ -48,7 +48,7 @@ export const prerender = false
     {pageColorCss && <style is:global set:html={pageColorCss} />}
     <Menu menu={parsedSettings?.menu} pages={parsedSettings?.pages ?? []} />
     <main>
-      <ElementSelector data={parsedData} />
+      <ElementSelector data={parsedData} isEditor={Astro.request.method === 'POST'} />
     </main>
     <Footer footer={parsedSettings?.footer} />
     <!-- debug info and preview functionality -->
@@ -90,8 +90,8 @@ export const prerender = false
             selectable.addEventListener('click', (event) => {
               const target = event.currentTarget
               event.stopPropagation()
-              // Keep native disclosure controls usable while still selecting their block.
-              if (!(event.target instanceof Element && event.target.closest('details > summary'))) {
+              // Keep native disclosure and media controls usable while selecting their block.
+              if (!(event.target instanceof Element && event.target.closest('details > summary, video'))) {
                 event.preventDefault()
               }
 

@@ -1,0 +1,35 @@
+---
+import type { BlockPreviewProps } from '../../types/types.ts'
+import { sanitizeHref } from '../shared/helpers.ts'
+import './cardGridStyles.css'
+
+interface Props extends BlockPreviewProps {}
+const { data } = Astro.props
+const items = data.cardItems ?? []
+---
+
+<section data-id={String(data.id)} class:list={['card-grid', `scms_${data.id}`, data.style?.wrapper]}>
+  {data.title && <h2 class="card-grid-title">{data.title}</h2>}
+  {data.content && <p class="card-grid-description">{data.content}</p>}
+  <div class="card-grid-items">
+    {items.map((item) => {
+      const link = item.link
+      const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
+      const target = link?.target === '_blank' ? '_blank' : '_self'
+      return (
+        <article class="card-grid-card">
+          {item.src && <img class="card-grid-image" src={sanitizeHref(item.src)} alt={item.alt ?? ''} loading="lazy" />}
+          <div class="card-grid-body">
+            {item.title && <h3 class="card-grid-card-title">{item.title}</h3>}
+            {item.content && <p class="card-grid-card-content">{item.content}</p>}
+            {link?.text && (
+              <a class="card-grid-link" href={sanitizeHref(href)} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+                {link.text}
+              </a>
+            )}
+          </div>
+        </article>
+      )
+    })}
+  </div>
+</section>

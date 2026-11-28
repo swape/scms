@@ -127,6 +127,29 @@ function validateFaqItems(value: unknown, path: string): void {
   })
 }
 
+function validateCardItems(value: unknown, path: string): void {
+  const ids = new Set<string>()
+  array(value, path).forEach((entry, index) => {
+    const itemPath = `${path}[${index}]`
+    const item = object(entry, itemPath)
+    const id = string(item.id, `${itemPath}.id`)
+    if (ids.has(id)) {
+      invalid(`${itemPath}.id`, 'duplicates another card ID')
+    }
+    ids.add(id)
+    string(item.title, `${itemPath}.title`)
+    string(item.content, `${itemPath}.content`)
+    for (const field of ['src', 'alt']) {
+      if (item[field] !== undefined) {
+        string(item[field], `${itemPath}.${field}`)
+      }
+    }
+    if (item.link !== undefined) {
+      validateLink(item.link, `${itemPath}.link`)
+    }
+  })
+}
+
 function validateContent(value: unknown, path: string): void {
   const ids = new Set<string | number>()
   array(value, path).forEach((entry, index) => {
@@ -170,6 +193,17 @@ function validateContent(value: unknown, path: string): void {
     }
     if (item.faqCloseOthers !== undefined) {
       boolean(item.faqCloseOthers, `${itemPath}.faqCloseOthers`)
+    }
+    if (item.cardItems !== undefined) {
+      validateCardItems(item.cardItems, `${itemPath}.cardItems`)
+    }
+    if (item.poster !== undefined) {
+      string(item.poster, `${itemPath}.poster`)
+    }
+    for (const field of ['videoControls', 'videoAutoplay', 'videoLoop', 'videoMuted']) {
+      if (item[field] !== undefined) {
+        boolean(item[field], `${itemPath}.${field}`)
+      }
     }
   })
 }

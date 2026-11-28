@@ -8,26 +8,25 @@ const previews = import.meta.glob<{ default: AstroComponentFactory }>('/src/bloc
 
 interface Props {
   data: PageType | null
+  isEditor?: boolean
 }
 
-const { data }: Props = Astro.props
+const { data, isEditor = false }: Props = Astro.props
 
 const content: ContentType[] = data?.content || []
 const combinedCss = getCombinedCss(content || [])
 ---
 
-{
-  content.map((item: ContentType) => {
-    const definition = getElementDefinition(item.type)
-    if (definition) {
-      const Preview = previews[definition.preview]?.default
-      if (!Preview) {
-        throw new Error(`Missing preview for block type "${item.type}": ${definition.preview}`)
-      }
-      return <Preview data={item} />
+{content.map((item: ContentType) => {
+  const definition = getElementDefinition(item.type)
+  if (definition) {
+    const Preview = previews[definition.preview]?.default
+    if (!Preview) {
+      throw new Error(`Missing preview for block type "${item.type}": ${definition.preview}`)
     }
+    return <Preview data={item} {isEditor} />
+  }
 
-    return <div class={`${item.style?.wrapper || ''} scms_${String(item.id)}`.trim()}>{item.type}</div>
-  })
-}
+  return <div class={`${item.style?.wrapper || ''} scms_${String(item.id)}`.trim()}>{item.type}</div>
+})}
 <style is:global set:html={combinedCss}></style>

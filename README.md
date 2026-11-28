@@ -15,7 +15,7 @@ A visual, component-based page builder CMS for building responsive websites — 
 ## Features
 
 - **Visual Editor** — Add, edit, delete, and drag to reorder content blocks, with a live iframe preview.
-- **Content Blocks** — Text, Header, Image, Link, Split Block, and FAQ, plus separate page-level settings.
+- **Content Blocks** — Hero, Card Grid, Call to Action, Video, Text, Header, Image, Link, Split Block, and FAQ, plus separate page-level settings.
 - **Project Management** — Create and edit projects with nested pages, project settings, and project color palettes.
 - **Customizable Menus** — Project-global navigation with links, manual dropdowns, and automatically generated sub-page items; edit and reorder items from the preview. Menu settings use labeled Material Symbols arrow and delete buttons for moving and removing items.
 - **Customizable Footers** — Project-global link, social, text, and custom HTML elements; add, edit, remove, and reorder them from the preview. Footer settings match the menu's item cards and accessible Material Symbols arrow and delete controls.
@@ -291,6 +291,27 @@ Select the menu in the preview to open its settings. Under **Style → Appearanc
 The menu's **Label** field controls the displayed text of links and submenu headings. Label edits update the preview without changing destinations or opening targets, including nested links and items converted to links.
 
 Enable **Other settings → Sticky menu** to keep navigation at the top while the page scrolls. It is off by default, works with horizontal and vertical layouts, and stays above page content without removing the menu's initial space. In the editor, it sticks to the top of the preview iframe. Menu appearance settings are project-global and included in JSON backups.
+
+## Image Sources
+
+Every image field in Image, Split Block, Hero, Card Grid cards, and Video posters offers **Select file** and a **Custom image URL** (or **Custom poster image URL**) input. Both edit the same source and update immediately. Each card has an independent picker, including after reordering. A custom URL clears obsolete library ID/type metadata where those fields are stored. The shared file selector still uses the project's existing example-file catalog; this does not add uploads or a production media library.
+
+## Hero Block
+
+Choose **Hero** under **Add element** to add an introduction with a heading, multiline description, optional background image, and button. Select an image from the file picker or enter its URL; **Remove image** also removes its dark overlay. Background images are decorative, so important information belongs in the heading or description. Clear **Button text** to hide the button; its destination can be a URL or project page.
+
+Under **Style**, set alignment, minimum height, content width, heading size, image overlay percentage, project palette colors, border radius, padding, and margins. Size controls support px/rem/ch; heading sizes default to rem. Normal and Mobile overrides share the existing 768px breakpoint. Choose readable text colors for your background image. **Other settings** contains the heading level and button target. Hero content and styles persist in drafts and JSON backups.
+
+## Card Grid, Call to Action, and Video
+
+Choose these blocks under **Add element**. Each uses the shared **Content**, **Style**, and **Other settings** tabs, project palette selectors, spacing and border radius controls, normal/mobile styles, and JSON backups.
+
+- **Card Grid:** starts with three cards. Edit titles, multiline descriptions, optional image URLs and image descriptions, and optional URL/page links. Add, reorder, and remove cards using the Material Symbols buttons; link targets are under Other settings. Style controls include 1–6 columns, gap, card padding, corner radius, image height, and card colors. The grid defaults to one column at 768px and below; set Mobile overrides columns to change that independently of desktop.
+- **Call to Action:** a compact heading, description, and button. Clear the button text to hide it. Choose a URL or project-page destination and opening target. Style controls include alignment, content width, heading size, and button palette colors.
+- **Video:** enter a direct MP4/WebM media URL or a Vimeo link, an optional poster image URL, and a caption displayed below the player. YouTube page embeds and timed subtitle tracks are not supported. Other settings includes native controls, autoplay, loop, mute, and heading level. Autoplay forces muted playback and remains subject to browser policy. The editor disables autoplay and uses no preload for direct files; use the native controls to start playback. Style controls include maximum width, aspect ratio, fit, and heading/caption sizes.
+  **Vimeo:** paste a `vimeo.com/ID`, `vimeo.com/ID/HASH` (unlisted), channel/group, or `player.vimeo.com/video/ID` link and the block embeds Vimeo's player (only exact `vimeo.com`/`player.vimeo.com` hosts are accepted; embeds use `dnt=1`). Native controls, loop, mute, and autoplay map to the player options; autoplay is still off in the editor and always muted. Vimeo shows its own thumbnail, so the poster image applies only to direct files, and the embed loads from Vimeo when rendered (including in the editor). Whether a video may be embedded or its controls hidden is set in the Vimeo account. YouTube page URLs remain unsupported.
+
+Card imports reject duplicate card IDs and malformed link data. Video imports validate playback booleans. New size fields accept px/rem/ch, with heading and caption sizes defaulting to rem.
 
 ## FAQ Block
 

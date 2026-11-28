@@ -55,6 +55,16 @@ function updateTitle(title = '') {
     onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
 
   <FileSelector selected={selectedFile} />
+  <Input
+    id="image-url"
+    label="Custom image URL:"
+    value={selectedImage?.src ?? ''}
+    oninput={(event) => {
+      update('src', event.currentTarget.value.trim())
+      update('imageId', '')
+      update('imageType', '')
+      update('size', '')
+    }} />
 </div>
 
 <div hidden={activeTab !== 'style'}>

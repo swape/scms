@@ -1,0 +1,84 @@
+---
+import type { BlockPreviewProps } from '../../types/types.ts'
+import { sanitizeHref } from '../shared/helpers.ts'
+import './videoStyles.css'
+import { getVimeoEmbedUrl, parseVimeoUrl } from './vimeo.ts'
+
+interface Props extends BlockPreviewProps {}
+
+const { data, isEditor = false } = Astro.props
+const Heading = data.headerLevel ?? 'h2'
+const title = data.title?.trim() ?? ''
+const caption = data.caption ?? ''
+const titleId = `video-title-${data.id}`
+const captionId = `video-caption-${data.id}`
+const autoplay = data.videoAutoplay === true
+
+function mediaSource(value: string | undefined): string | undefined {
+  const source = sanitizeHref(value?.trim() ?? '')
+  if (source.startsWith('#')) {
+    return undefined
+  }
+  try {
+    const url = new URL(source, 'https://scms.invalid')
+    return url.protocol === 'http:' || url.protocol === 'https:' ? source : undefined
+  } catch {
+    return undefined
+  }
+}
+
+const src = mediaSource(data.src)
+const poster = mediaSource(data.poster)
+const vimeo = parseVimeoUrl(data.src)
+const vimeoSrc = vimeo
+  ? getVimeoEmbedUrl(vimeo, { autoplay: autoplay && !isEditor, loop: data.videoLoop === true, muted: data.videoMuted === true, controls: data.videoControls !== false })
+  : undefined
+---
+
+<section data-id={String(data.id)} class:list={['video-block', `scms_${data.id}`, data.style?.wrapper]}>
+  <div class="video-content">
+    {title && (
+      <Heading id={titleId} class="video-heading">
+        {title}
+      </Heading>
+    )}
+    <figure>
+      {vimeoSrc ? (
+        <iframe
+          class="video-player video-embed"
+          src={vimeoSrc}
+          title={title || 'Vimeo video'}
+          loading="lazy"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+          aria-describedby={caption ? captionId : undefined}
+          data-video-provider="vimeo"
+          data-video-autoplay={String(autoplay)}
+        />
+      ) : src ? (
+        <video
+          class="video-player"
+          src={src}
+          poster={poster}
+          controls={data.videoControls !== false}
+          autoplay={autoplay && !isEditor}
+          loop={data.videoLoop === true}
+          muted={data.videoMuted === true || autoplay}
+          playsinline
+          preload="none"
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : 'Video'}
+          aria-describedby={caption ? captionId : undefined}
+          data-video-autoplay={String(autoplay)}>
+          Your browser does not support HTML5 video. <a href={src}>Open the video file</a>.
+        </video>
+      ) : (
+        <div class="video-player video-placeholder">
+          <p>Add a video URL to display a video. Direct MP4 and WebM files and Vimeo links are supported; YouTube page URLs are not.</p>
+        </div>
+      )}
+      {caption && <figcaption id={captionId}>{caption}</figcaption>}
+    </figure>
+  </div>
+</section>

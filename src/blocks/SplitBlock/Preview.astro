@@ -2,7 +2,7 @@
 import '../Link/linkStyles.css'
 import './splitBlockStyles.css'
 import type { BlockPreviewProps } from '../../types/types.ts'
-import { sanitizeHref } from '../shared/helpers.ts'
+import { getLinkAttrs, sanitizeHref } from '../shared/helpers.ts'
 
 interface Props extends BlockPreviewProps {}
 
@@ -15,9 +15,7 @@ const alt = data?.alt || ''
 const flipped = Boolean(data?.flipped)
 const link = data?.link
 const buttonText = link?.text || 'Learn more'
-const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
-const target = link?.target === '_blank' ? '_blank' : '_self'
-const rel = target === '_blank' ? 'noopener noreferrer' : undefined
+const { href, target, rel } = getLinkAttrs(link)
 const containerClass = String(data?.style?.wrapper || '')
 ---
 
@@ -37,7 +35,7 @@ const containerClass = String(data?.style?.wrapper || '')
           </p>
         )}
       </div>
-      <a class="link-button" href={sanitizeHref(href)} target={target} rel={rel}>
+      <a class="link-button" href={href} target={target} rel={rel}>
         {buttonText}
       </a>
     </div>

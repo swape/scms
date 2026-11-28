@@ -1,15 +1,16 @@
 <script lang="ts">
 import Checkbox from '../../components/Checkbox.svelte'
-import FileSelector from '../../components/FileSelector/index.svelte'
 import Input from '../../components/Input.svelte'
 import PanelSection from '../../components/PanelSection.svelte'
-import Select from '../../components/Select.svelte'
 import SizeInput from '../../components/SizeInput.svelte'
 import Textarea from '../../components/Textarea.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
-import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
+import type { BlockEditorProps, ContentType, LinkSettings } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
 import { getDefaultSplitBlockLinkSettings, updateBlockField, updateSelectedLink } from '../shared/helpers.ts'
+import ImageSource from '../shared/ImageSource.svelte'
+import LinkDestination from '../shared/LinkDestination.svelte'
+import LinkTarget from '../shared/LinkTarget.svelte'
 import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, update, activeTab = 'content' }: BlockEditorProps = $props()
@@ -44,41 +45,6 @@ function updateButtonText(event: Event) {
   })
 }
 
-function updateMode(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((link) => {
-    link.mode = select.value as LinkMode
-  })
-}
-
-function updateUrl(event: Event) {
-  const input = event.target as HTMLInputElement
-  updateLinkElement((link) => {
-    link.url = input.value.trim()
-  })
-}
-
-function updatePageId(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((link) => {
-    link.pageId = select.value
-  })
-}
-
-function updateTarget(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((link) => {
-    link.target = select.value as LinkTarget
-  })
-}
-
-function selectedFile(file: { id: string; name: string; size: string; url: string; alt: string; type: string; parentFolder: string; caption: string }) {
-  update('src', file.url)
-  update('alt', file.alt)
-  update('imageType', file.type)
-  update('imageId', file.id)
-  updatePageContentWithDebounce()
-}
 </script>
 
 <div hidden={activeTab !== 'content'}>
@@ -91,20 +57,7 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
   <PanelSection title="Button">
     <Input id="split-button-text" label="Button text:" value={selectedBlock?.link?.text || ''} oninput={updateButtonText} />
 
-    <Select id="split-button-mode" label="Destination type:" value={selectedBlock?.link?.mode || 'url'} oninput={updateMode}>
-      <option value="url">URL</option>
-      <option value="page">Page</option>
-    </Select>
-
-    {#if (selectedBlock?.link?.mode || 'url') === 'url'}
-      <Input id="split-button-url" label="URL:" type="url" value={selectedBlock?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
-    {:else}
-      <Select id="split-button-page" label="Page:" value={selectedBlock?.link?.pageId || ''} oninput={updatePageId}>
-        {#each $currentProject?.pages || [] as page}
-          <option value={page.id}>{page.title}</option>
-        {/each}
-      </Select>
-    {/if}
+    <LinkDestination idPrefix="split-button" link={selectedBlock?.link} onchange={updateLinkElement} />
   </PanelSection>
 
   <PanelSection title="Image">
@@ -114,16 +67,7 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
       </div>
     {/if}
 
-    <FileSelector selected={selectedFile} />
-    <Input
-      id="split-image-url"
-      label="Custom image URL:"
-      value={selectedBlock?.src ?? ''}
-      oninput={(event) => {
-        update('src', event.currentTarget.value.trim())
-        update('imageId', '')
-        update('imageType', '')
-      }} />
+    <ImageSource id="split-image-url" src={selectedBlock?.src ?? ''} {update} onfile={updatePageContentWithDebounce} />
   </PanelSection>
 </div>
 
@@ -158,9 +102,6 @@ function selectedFile(file: { id: string; name: string; size: string; url: strin
 
 <div hidden={activeTab !== 'other'}>
   <PanelSection title="Button">
-    <Select id="split-button-target" label="Target:" value={selectedBlock?.link?.target || '_self'} oninput={updateTarget}>
-      <option value="_self">Same tab</option>
-      <option value="_blank">New tab</option>
-    </Select>
+    <LinkTarget id="split-button-target" link={selectedBlock?.link} onchange={updateLinkElement} />
   </PanelSection>
 </div>

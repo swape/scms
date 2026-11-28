@@ -1,5 +1,5 @@
 import type { BlockCssRule, ContentType } from '../../types/types.ts'
-import { getColorValue, getCssLength, getTextAlign } from '../shared/css.ts'
+import { getButtonColorDeclarations, getCssLength, getTextAlign } from '../shared/css.ts'
 
 export function getCss(item: ContentType, selector: string): BlockCssRule[] {
   const style = item.style ?? {}
@@ -9,9 +9,6 @@ export function getCss(item: ContentType, selector: string): BlockCssRule[] {
     { selector: `${selector} .hero-content`, declarations: [`max-width: ${getCssLength(style.heroContentWidth) || '720px'};`] },
     { selector: `${selector} .hero-content :is(h1, h2, h3, h4, h5, h6)`, declarations: [`font-size: ${getCssLength(style.heroHeadingSize) || '3rem'};`] },
     { selector: `${selector} .hero-overlay`, declarations: [`opacity: ${Number.isFinite(overlay) ? Math.min(100, Math.max(0, overlay)) / 100 : 0.4};`] },
-    {
-      selector: `${selector} .hero-button`,
-      declarations: [`background-color: ${getColorValue(style.heroButtonColor) || 'var(--text_1)'};`, `color: ${getColorValue(style.heroButtonTextColor) || 'var(--bg_1)'};`],
-    },
+    { selector: `${selector} .hero-button`, declarations: getButtonColorDeclarations(style.heroButtonColor, style.heroButtonTextColor) },
   ]
 }

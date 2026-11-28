@@ -31,3 +31,7 @@ export function getColorValue(value: string | number | undefined): string {
 export function getTextAlign(value: string | number | undefined): string {
   return ['left', 'center', 'right', 'justify'].includes(String(value)) ? `text-align: ${value};` : ''
 }
+
+export function getButtonColorDeclarations(background: string | number | undefined, text: string | number | undefined): string[] {
+  return [`background-color: ${getColorValue(background) || 'var(--text_1)'};`, `color: ${getColorValue(text) || 'var(--bg_1)'};`]
+}

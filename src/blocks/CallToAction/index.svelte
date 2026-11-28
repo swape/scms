@@ -1,13 +1,14 @@
 <script lang="ts">
 import Input from '../../components/Input.svelte'
 import PanelSection from '../../components/PanelSection.svelte'
-import Select from '../../components/Select.svelte'
 import SizeInput from '../../components/SizeInput.svelte'
 import Textarea from '../../components/Textarea.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
-import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
+import type { BlockEditorProps, ContentType, LinkSettings } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
+import LinkDestination from '../shared/LinkDestination.svelte'
+import LinkTarget from '../shared/LinkTarget.svelte'
 import { getDefaultLinkSettings, updateSelectedLink } from '../shared/helpers.ts'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
@@ -42,40 +43,7 @@ function updateLink(change: (link: LinkSettings) => void) {
         updateLink((link) => {
           link.text = event.currentTarget.value
         })} />
-    <Select
-      id="cta-button-mode"
-      label="Destination type:"
-      value={block?.link?.mode ?? 'url'}
-      onchange={(event) =>
-        updateLink((link) => {
-          link.mode = event.currentTarget.value as LinkMode
-        })}>
-      <option value="url">URL</option>
-      <option value="page">Page</option>
-    </Select>
-    {#if (block?.link?.mode ?? 'url') === 'url'}
-      <Input
-        id="cta-button-url"
-        label="URL:"
-        value={block?.link?.url ?? ''}
-        oninput={(event) =>
-          updateLink((link) => {
-            link.url = event.currentTarget.value.trim()
-          })} />
-    {:else}
-      <Select
-        id="cta-button-page"
-        label="Page:"
-        value={block?.link?.pageId ?? ''}
-        onchange={(event) =>
-          updateLink((link) => {
-            link.pageId = event.currentTarget.value
-          })}>
-        {#each $currentProject?.pages ?? [] as page}
-          <option value={page.id}>{page.title}</option>
-        {/each}
-      </Select>
-    {/if}
+    <LinkDestination idPrefix="cta-button" link={block?.link} onchange={updateLink} />
   </PanelSection>
 </div>
 
@@ -105,15 +73,5 @@ function updateLink(change: (link: LinkSettings) => void) {
 </div>
 
 <div hidden={activeTab !== 'other'}>
-  <Select
-    id="cta-target"
-    label="Target:"
-    value={block?.link?.target ?? '_self'}
-    onchange={(event) =>
-      updateLink((link) => {
-        link.target = event.currentTarget.value as LinkTarget
-      })}>
-    <option value="_self">Same tab</option>
-    <option value="_blank">New tab</option>
-  </Select>
+  <LinkTarget id="cta-target" link={block?.link} onchange={updateLink} />
 </div>

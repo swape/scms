@@ -1,5 +1,11 @@
 ## 2026-11-28
 
+- Files: `src/blocks/shared/{helpers.ts,css.ts,LinkDestination.svelte,LinkTarget.svelte,ImageSource.svelte}`, Hero, CallToAction, Link, SplitBlock, Image, CardGrid, Footer and Menu blocks, `README.md`
+- Moved duplicated code into shared pieces: `getLinkAttrs` (href, target, rel) for every preview, `getButtonColorDeclarations` for button CSS, and the `LinkDestination`, `LinkTarget` and `ImageSource` editor components.
+- Verified type checks and all 61 browser tests.
+
+## 2026-11-28
+
 - Files: `src/blocks/Menu/MenuItems.astro`, removed `src/blocks/Menu/MenuItem.astro`, `README.md`
 - Removed the MenuItem/MenuItems circular import by rendering links, dropdowns, and automatic page lists in one component that recurses through `Astro.self` for nested dropdowns.
 - Verified type checks and all 61 browser tests (including menu rendering); fallow is not available locally, so the cycle report itself was not re-run.

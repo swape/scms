@@ -1,12 +1,13 @@
 <script lang="ts">
 import Checkbox from '../../components/Checkbox.svelte'
 import Input from '../../components/Input.svelte'
-import Select from '../../components/Select.svelte'
 import { currentProject, selectedElement } from '../../store.ts'
-import type { BlockEditorProps, ContentType, LinkMode, LinkSettings, LinkTarget } from '../../types/types.ts'
+import type { BlockEditorProps, ContentType, LinkSettings } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
 import { getDefaultLinkEditorSettings, updateSelectedLink } from '../shared/helpers.ts'
+import LinkDestination from '../shared/LinkDestination.svelte'
+import LinkTarget from '../shared/LinkTarget.svelte'
 import Styles from '../shared/Styles.svelte'
 
 const { updatePageContentWithDebounce, activeTab = 'content' }: BlockEditorProps = $props()
@@ -26,59 +27,19 @@ function updateText(event: Event) {
   })
 }
 
-function updateMode(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((_element, link) => {
-    link.mode = select.value as LinkMode
-  })
-}
-
-function updateTarget(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((_element, link) => {
-    link.target = select.value as LinkTarget
-  })
-}
-
-function updateUrl(event: Event) {
-  const input = event.target as HTMLInputElement
-  updateLinkElement((_element, link) => {
-    link.url = input.value.trim()
-  })
-}
-
-function updatePageId(event: Event) {
-  const select = event.target as HTMLSelectElement
-  updateLinkElement((_element, link) => {
-    link.pageId = select.value
-  })
+function updateLink(change: (link: LinkSettings) => void) {
+  updateLinkElement((_element, link) => change(link))
 }
 </script>
 
 <div hidden={activeTab !== 'content'}>
   <Input id="link-text" label="Text:" value={($selectedElement as ContentType)?.link?.text || ''} oninput={updateText} />
 
-  <Select id="link-mode" label="Destination Type:" value={($selectedElement as ContentType)?.link?.mode || 'url'} oninput={updateMode}>
-    <option value="url">URL</option>
-    <option value="page">Page</option>
-  </Select>
-
-  {#if (($selectedElement as ContentType)?.link?.mode || 'url') === 'url'}
-    <Input id="link-url" label="URL:" type="url" value={($selectedElement as ContentType)?.link?.url || ''} placeholder="https://example.com" oninput={updateUrl} />
-  {:else}
-    <Select id="link-page" label="Page:" value={($selectedElement as ContentType)?.link?.pageId || ''} oninput={updatePageId}>
-      {#each $currentProject?.pages ?? [] as page}
-        <option value={page.id}>{page.title}</option>
-      {/each}
-    </Select>
-  {/if}
+  <LinkDestination idPrefix="link" modeLabel="Destination Type:" link={($selectedElement as ContentType)?.link} onchange={updateLink} />
 </div>
 
 <div hidden={activeTab !== 'other'}>
-  <Select id="link-target" label="Target:" value={($selectedElement as ContentType)?.link?.target || '_self'} oninput={updateTarget}>
-    <option value="_self">Same tab</option>
-    <option value="_blank">New tab</option>
-  </Select>
+  <LinkTarget id="link-target" link={($selectedElement as ContentType)?.link} onchange={updateLink} />
 </div>
 
 <div hidden={activeTab !== 'style'}>

@@ -1,9 +1,9 @@
 <script lang="ts">
-import FileSelector from '../../components/FileSelector/index.svelte'
 import Input from '../../components/Input.svelte'
 import { selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType } from '../../types/types.ts'
 import { updateBlockField } from '../shared/helpers.ts'
+import ImageSource from '../shared/ImageSource.svelte'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
@@ -11,13 +11,9 @@ const { updatePageContentWithDebounce, update, activeTab = 'content' }: BlockEdi
 
 const selectedImage = $derived($selectedElement as ContentType)
 
-function selectedFile(file: { id: string; name: string; size: string; url: string; alt: string; type: string; parentFolder: string; caption: string }) {
-  update('src', file.url)
-  update('alt', file.alt)
+function selectedFile(file: { name: string; size: string }) {
   update('title', file.name)
-  update('imageType', file.type)
   update('size', file.size)
-  update('imageId', file.id)
   updatePageContentWithDebounce()
 }
 
@@ -54,17 +50,7 @@ function updateTitle(title = '') {
     value={selectedImage?.caption || ''}
     onkeyup={({ target }) => updateCaption((target as HTMLInputElement).value)} />
 
-  <FileSelector selected={selectedFile} />
-  <Input
-    id="image-url"
-    label="Custom image URL:"
-    value={selectedImage?.src ?? ''}
-    oninput={(event) => {
-      update('src', event.currentTarget.value.trim())
-      update('imageId', '')
-      update('imageType', '')
-      update('size', '')
-    }} />
+  <ImageSource id="image-url" src={selectedImage?.src ?? ''} {update} onfile={selectedFile} clearKeys={['size']} />
 </div>
 
 <div hidden={activeTab !== 'style'}>

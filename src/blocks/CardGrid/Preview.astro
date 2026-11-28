@@ -1,6 +1,6 @@
 ---
 import type { BlockPreviewProps } from '../../types/types.ts'
-import { sanitizeHref } from '../shared/helpers.ts'
+import { getLinkAttrs, sanitizeHref } from '../shared/helpers.ts'
 import './cardGridStyles.css'
 
 interface Props extends BlockPreviewProps {}
@@ -14,8 +14,7 @@ const items = data.cardItems ?? []
   <div class="card-grid-items">
     {items.map((item) => {
       const link = item.link
-      const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
-      const target = link?.target === '_blank' ? '_blank' : '_self'
+      const { href, target, rel } = getLinkAttrs(link)
       return (
         <article class="card-grid-card">
           {item.src && <img class="card-grid-image" src={sanitizeHref(item.src)} alt={item.alt ?? ''} loading="lazy" />}
@@ -23,7 +22,7 @@ const items = data.cardItems ?? []
             {item.title && <h3 class="card-grid-card-title">{item.title}</h3>}
             {item.content && <p class="card-grid-card-content">{item.content}</p>}
             {link?.text && (
-              <a class="card-grid-link" href={sanitizeHref(href)} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+              <a class="card-grid-link" href={href} target={target} rel={rel}>
                 {link.text}
               </a>
             )}

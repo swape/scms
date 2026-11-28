@@ -1,13 +1,12 @@
 ---
 import type { BlockPreviewProps } from '../../types/types.ts'
-import { sanitizeHref } from '../shared/helpers.ts'
+import { getLinkAttrs } from '../shared/helpers.ts'
 import './callToActionStyles.css'
 
 interface Props extends BlockPreviewProps {}
 const { data } = Astro.props
 const link = data.link
-const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
-const target = link?.target === '_blank' ? '_blank' : '_self'
+const { href, target, rel } = getLinkAttrs(link)
 ---
 
 <section data-id={String(data.id)} class:list={['call-to-action', `scms_${data.id}`, data.style?.wrapper]}>
@@ -15,7 +14,7 @@ const target = link?.target === '_blank' ? '_blank' : '_self'
     {data.title && <h2>{data.title}</h2>}
     {data.content && <p>{data.content}</p>}
     {link?.text && (
-      <a class="cta-button" href={sanitizeHref(href)} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+      <a class="cta-button" href={href} target={target} rel={rel}>
         {link.text}
       </a>
     )}

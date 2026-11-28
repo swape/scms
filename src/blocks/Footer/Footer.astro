@@ -1,7 +1,7 @@
 ---
 import './footerStyles.css'
 import type { FooterElement, ProjectType } from '../../types/types.ts'
-import { sanitizeHref } from '../shared/helpers.ts'
+import { getLinkAttrs } from '../shared/helpers.ts'
 
 interface Props {
   footer?: ProjectType['footer']
@@ -14,14 +14,13 @@ const elements: FooterElement[] = footer?.elements ?? []
 <footer id="footer" data-items="footer" class:list={['footer-inner', footer?.type ?? 'footer1', elements.length === 0 && 'footer-empty']} aria-label="Project footer">
   {elements.map((element) => {
     if (element.type === 'link' || element.type === 'social') {
-      const href = element.link?.mode === 'page' ? `#page-${element.link.pageId ?? ''}` : (element.link?.url ?? '#')
-      const target = element.link?.target === '_blank' ? '_blank' : '_self'
+      const { href, target, rel } = getLinkAttrs(element.link)
       return (
         <a
           class={element.type === 'social' ? 'footer-social' : 'footer-link'}
-          href={sanitizeHref(href)}
+          href={href}
           target={target}
-          rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+          rel={rel}>
           {element.type === 'social' ? (element.socialPlatform ?? element.title) : element.title || element.link?.text}
         </a>
       )

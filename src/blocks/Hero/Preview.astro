@@ -1,14 +1,13 @@
 ---
 import type { BlockPreviewProps } from '../../types/types.ts'
-import { sanitizeHref } from '../shared/helpers.ts'
+import { getLinkAttrs, sanitizeHref } from '../shared/helpers.ts'
 import './heroStyles.css'
 
 interface Props extends BlockPreviewProps {}
 const { data } = Astro.props
 const Heading = data.headerLevel ?? 'h1'
 const link = data.link
-const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
-const target = link?.target === '_blank' ? '_blank' : '_self'
+const { href, target, rel } = getLinkAttrs(link)
 ---
 
 <section data-id={String(data.id)} class:list={['hero', `scms_${data.id}`, data.style?.wrapper]}>
@@ -18,7 +17,7 @@ const target = link?.target === '_blank' ? '_blank' : '_self'
     {data.title && <Heading>{data.title}</Heading>}
     {data.content && <p>{data.content}</p>}
     {link?.text && (
-      <a class="hero-button" href={sanitizeHref(href)} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+      <a class="hero-button" href={href} target={target} rel={rel}>
         {link.text}
       </a>
     )}

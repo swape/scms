@@ -9,11 +9,11 @@ import { currentProject, selectedElement } from '../../store.ts'
 import type { BlockEditorProps, ContentType, LinkSettings } from '../../types/types.ts'
 import { getStyleEditor } from '../../utils/editor-style.ts'
 import ColorSelect from '../shared/ColorSelect.svelte'
+import HeaderSizeSelect from '../shared/HeaderSizeSelect.svelte'
+import { getDefaultLinkSettings, updateSelectedLink } from '../shared/helpers.ts'
 import ImageSource from '../shared/ImageSource.svelte'
 import LinkDestination from '../shared/LinkDestination.svelte'
 import LinkTarget from '../shared/LinkTarget.svelte'
-import { getDefaultLinkSettings, updateSelectedLink } from '../shared/helpers.ts'
-import HeaderSizeSelect from '../shared/HeaderSizeSelect.svelte'
 import Styles from '../shared/Styles.svelte'
 import TextAlign from '../shared/TextAlign.svelte'
 
@@ -30,7 +30,6 @@ function updateLink(change: (link: LinkSettings) => void) {
     updatePageContentWithDebounce
   )
 }
-
 </script>
 
 <div hidden={activeTab !== 'content'}>

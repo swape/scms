@@ -97,10 +97,14 @@ test('auto inline margins center a constrained block and can be overridden on mo
   await endUnit.selectOption('auto')
   await expect(start).toBeDisabled()
   await expect.poll(async () => (await storedProject(page)).pages[0].content[0].style).toMatchObject({ marginInlineStart: 'auto', marginInlineEnd: 'auto' })
-  await expect.poll(() => block.evaluate((element) => {
-    const { marginLeft, marginRight } = getComputedStyle(element)
-    return parseFloat(marginLeft) > 0 && marginLeft === marginRight
-  })).toBe(true)
+  await expect
+    .poll(() =>
+      block.evaluate((element) => {
+        const { marginLeft, marginRight } = getComputedStyle(element)
+        return parseFloat(marginLeft) > 0 && marginLeft === marginRight
+      })
+    )
+    .toBe(true)
 
   await page.getByRole('tab', { name: 'Mobile overrides', exact: true }).click()
   await expect(startUnit).toHaveValue('auto')

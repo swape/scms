@@ -44,7 +44,6 @@ function updateButtonText(event: Event) {
     link.text = input.value
   })
 }
-
 </script>
 
 <div hidden={activeTab !== 'content'}>

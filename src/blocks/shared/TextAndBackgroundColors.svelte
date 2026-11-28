@@ -1,7 +1,7 @@
 <script lang="ts">
-import ColorSelect from './ColorSelect.svelte'
 import SizeInput from '../../components/SizeInput.svelte'
 import { getStyleEditor } from '../../utils/editor-style.ts'
+import ColorSelect from './ColorSelect.svelte'
 
 const style = getStyleEditor()
 </script>

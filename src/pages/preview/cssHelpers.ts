@@ -98,9 +98,7 @@ function addMobileWrapperRules(item: ContentType, rules: Map<string, Set<string>
   const defaultMargin = wrapper === 'container' ? 'auto' : '0'
   addRule(rules, wrapperSelector, [
     `max-width: ${wrapper === 'container' ? '1024px' : 'none'};`,
-    ...inlineMarginSides.map((side) =>
-      separateWrapper || !getInlineMargin(item.style?.[`marginInline${side}`]) ? `margin-inline-${side.toLowerCase()}: ${defaultMargin};` : ''
-    ),
+    ...inlineMarginSides.map((side) => (separateWrapper || !getInlineMargin(item.style?.[`marginInline${side}`]) ? `margin-inline-${side.toLowerCase()}: ${defaultMargin};` : '')),
     `box-sizing: ${wrapper === 'container' ? 'border-box' : 'content-box'};`,
     `display: ${wrapper === 'center' ? 'flex' : 'block'};`,
     `justify-content: ${wrapper === 'center' ? 'center' : 'normal'};`,

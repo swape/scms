@@ -364,9 +364,9 @@ Create `src/blocks/Quote/index.svelte`:
 
 ```svelte
 <script lang="ts">
+  import Textarea from '../../components/Textarea.svelte';
   import { selectedElement } from '../../store.ts';
   import type { BlockEditorProps } from '../../types/types.ts';
-  import Textarea from '../../components/Textarea.svelte';
   import Styles from '../shared/Styles.svelte';
 
   const { update, activeTab = 'content' }: BlockEditorProps = $props();
@@ -383,7 +383,11 @@ Create `src/blocks/Quote/index.svelte`:
 </script>
 
 <div hidden={activeTab !== 'content'}>
-  <Textarea id="quote-content" label="Quote:" value={quote} oninput={updateContent} />
+  <Textarea
+    id="quote-content"
+    label="Quote:"
+    value={quote}
+    oninput={updateContent} />
 </div>
 
 <div hidden={activeTab !== 'style'}>

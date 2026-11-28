@@ -16,11 +16,7 @@ const elements: FooterElement[] = footer?.elements ?? []
     if (element.type === 'link' || element.type === 'social') {
       const { href, target, rel } = getLinkAttrs(element.link)
       return (
-        <a
-          class={element.type === 'social' ? 'footer-social' : 'footer-link'}
-          href={href}
-          target={target}
-          rel={rel}>
+        <a class={element.type === 'social' ? 'footer-social' : 'footer-link'} href={href} target={target} rel={rel}>
           {element.type === 'social' ? (element.socialPlatform ?? element.title) : element.title || element.link?.text}
         </a>
       )

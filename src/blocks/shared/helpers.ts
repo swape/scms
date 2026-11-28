@@ -70,3 +70,15 @@ export function sanitizeHref(url: string): string {
     return '#'
   }
 }
+
+export interface LinkAttrs {
+  href: string
+  target: '_blank' | '_self'
+  rel: string | undefined
+}
+
+export function getLinkAttrs(link: LinkSettings | undefined): LinkAttrs {
+  const href = link?.mode === 'page' ? `#page-${link.pageId || ''}` : link?.url || '#'
+  const target = link?.target === '_blank' ? '_blank' : '_self'
+  return { href: sanitizeHref(href), target, rel: target === '_blank' ? 'noopener noreferrer' : undefined }
+}

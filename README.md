@@ -56,7 +56,6 @@ src/
 │   ├── Menu/              # Project-global menu editor and preview
 │   │   ├── index.svelte   # Project-global menu settings editor
 │   │   ├── Menu.astro
-│   │   ├── MenuItem.astro
 │   │   ├── MenuItems.astro
 │   │   └── menuStyles.css
 │   ├── SplitBlock/

@@ -1,5 +1,11 @@
 ## 2026-11-28
 
+- Files: `src/blocks/Menu/MenuItems.astro`, removed `src/blocks/Menu/MenuItem.astro`, `README.md`
+- Removed the MenuItem/MenuItems circular import by rendering links, dropdowns, and automatic page lists in one component that recurses through `Astro.self` for nested dropdowns.
+- Verified type checks and all 61 browser tests (including menu rendering); fallow is not available locally, so the cycle report itself was not re-run.
+
+## 2026-11-28
+
 - Files: `src/blocks/Video/{vimeo.ts,Preview.astro,css.ts,videoStyles.css,index.svelte}`, `tests/e2e/blocks.spec.ts`, `README.md`
 - Added Vimeo support to the Video block: public, unlisted, channel and player URLs render an embedded player with playback options mapped to the player; look-alike hosts are rejected.
 - Verified URL parsing, embed URLs, editor autoplay suppression, and standalone autoplay with Vimeo stubbed; 21 block tests and type checks pass. Not checked against live Vimeo.

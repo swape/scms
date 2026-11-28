@@ -1,6 +1,6 @@
 ---
 import type { MenuElement, PageType } from '../../types/types.ts'
-import MenuItem from './MenuItem.astro'
+import { sanitizeHref } from '../shared/helpers.ts'
 
 interface Props {
   items: MenuElement[]
@@ -9,10 +9,50 @@ interface Props {
 }
 
 const { items, pages, layout } = Astro.props
+// Dropdowns render nested lists by recursing into this component without importing it.
+const MenuItems = Astro.self
 ---
 
 <ul class:list={['menu-list', layout === 'vertical' && 'menu-vertical']}>
-  {items.map((item) => (
-    <MenuItem item={item} pages={pages} layout={layout} />
-  ))}
+  {items.map((item) => {
+    if (item.type === 'link') {
+      const href = item.link?.mode === 'page' ? `#page-${item.link.pageId ?? ''}` : (item.link?.url ?? '#')
+      const target = item.link?.target === '_blank' ? '_blank' : '_self'
+      return (
+        <li>
+          <a href={sanitizeHref(href)} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+            {item.title}
+          </a>
+        </li>
+      )
+    }
+
+    if (item.type === 'dropdown') {
+      return (
+        <li>
+          <details>
+            <summary>{item.title}</summary>
+            <MenuItems items={item.children ?? []} pages={pages} layout={layout} />
+          </details>
+        </li>
+      )
+    }
+
+    if (item.type === 'auto') {
+      const childPages = pages.filter((page) => page.parentId === item.autoParentPageId).sort((first, second) => first.order - second.order)
+      const visiblePages = item.autoMaxItems && item.autoMaxItems > 0 ? childPages.slice(0, item.autoMaxItems) : childPages
+      return (
+        <li class="menu-auto">
+          <span>{item.title}</span>
+          <ul>
+            {visiblePages.map((page) => (
+              <li>
+                <a href={sanitizeHref(`#page-${page.id}`)}>{page.title}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      )
+    }
+  })}
 </ul>
